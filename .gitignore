@@ -39,3 +39,14 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# build outputs / caches
+build/
+.gradle/
+myspace-web/dist/
+.expo-contrast-check/
+
+# local env files
+.env
+.env.local
+myspace-web/.env*

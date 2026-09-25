@@ -1,0 +1,168 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens mirror theme.ts's lightColors/darkColors (see
+ * ../../theme.ts) so the web client reads as the same product as the
+ * mobile app. Light values are the :root default; dark values apply
+ * under prefers-color-scheme so a user in dark mode on their phone gets a
+ * visually consistent web experience automatically (no theme switcher yet
+ * — just following the OS, same as most of the rest of this stack).
+ */
+:root {
+  --mc-bg: #f6f4f1; /* Paper */
+  --mc-surface: #e4ded2; /* Stone — cards and fields */
+  --mc-border: rgba(60, 45, 30, 0.14);
+  --mc-text: #000000;
+  --mc-text-muted: rgba(0, 0, 0, 0.5);
+  --mc-error-text: #a32b1c;
+  /* Primary controls: Black on Paper, like the app's buttonBackground. */
+  --mc-accent: #000000;
+  --mc-accent-hover: #1a1a1a;
+  --mc-accent-soft: #d3ccbd;
+  --mc-accent-contrast: #f6f4f1;
+  --mc-red: #e5432f;
+  --mc-coral: #f95c4b;
+  --mc-yellow: #f5c542;
+  --mc-story-start: #ff3d68;
+  --mc-story-end: #ff7a59;
+  --mc-nav-hover: rgba(60, 45, 30, 0.1);
+  --mc-secondary: #d3ccbd;
+  --mc-shadow: none;
+  --mc-shadow-up: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  --mc-skeleton-base: #d3ccbd;
+  --mc-skeleton-shine: rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --mc-bg: #0c0b0a;
+    --mc-surface: #1b1917;
+    --mc-border: rgba(246, 244, 241, 0.12);
+    --mc-text: #f6f4f1;
+    --mc-text-muted: rgba(246, 244, 241, 0.5);
+    --mc-error-text: #f2b8b0;
+    --mc-accent: #f6f4f1;
+    --mc-accent-hover: #ffffff;
+    --mc-accent-soft: #33302c;
+    --mc-accent-contrast: #000000;
+    --mc-nav-hover: rgba(246, 244, 241, 0.08);
+    --mc-secondary: #33302c;
+    --mc-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    --mc-shadow-up: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    --mc-skeleton-base: #25221f;
+    --mc-skeleton-shine: rgba(246, 244, 241, 0.06);
+  }
+}
+
+/* Manual theme choice (Settings > Appearance) wins over the OS setting. */
+:root[data-theme='dark'] {
+  --mc-bg: #0c0b0a;
+  --mc-surface: #1b1917;
+  --mc-border: rgba(246, 244, 241, 0.12);
+  --mc-text: #f6f4f1;
+  --mc-text-muted: rgba(246, 244, 241, 0.5);
+  --mc-error-text: #f2b8b0;
+  --mc-accent: #f6f4f1;
+  --mc-accent-hover: #ffffff;
+  --mc-accent-soft: #33302c;
+  --mc-accent-contrast: #000000;
+  --mc-nav-hover: rgba(246, 244, 241, 0.08);
+  --mc-secondary: #33302c;
+  --mc-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --mc-shadow-up: 0 -4px 20px rgba(0, 0, 0, 0.4);
+  --mc-skeleton-base: #25221f;
+  --mc-skeleton-shine: rgba(246, 244, 241, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--mc-bg);
+  color: var(--mc-text);
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+/* One shape language with the app: text fields are squares with slightly
+   softened corners everywhere (unlayered on purpose so it beats Tailwind's
+   rounded-full utilities), buttons a moderate rounded rectangle. */
+input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='range']),
+textarea,
+select {
+  border-radius: 10px;
+}
+
+/* Reserved for the handful of true hero moments. */
+
+.font-display {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* The MyCircle wordmark. */
+.font-brand {
+  font-family: 'Unbounded', 'Poppins', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--mc-border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes mc-skeleton-shine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.mc-skeleton {
+  background-image: linear-gradient(
+    100deg,
+    var(--mc-skeleton-base) 30%,
+    var(--mc-skeleton-shine) 50%,
+    var(--mc-skeleton-base) 70%
+  );
+  background-size: 200% 100%;
+  animation: mc-skeleton-shine 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-skeleton {
+    animation: none;
+  }
+}
