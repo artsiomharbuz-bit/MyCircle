@@ -1,0 +1,122 @@
+{
+  "en": {
+    "addSoundButton": "Add sound",
+    "savingButton": "Saving…",
+    "addToStoryLabel": "Add to story",
+    "addedToStoryTitle": "Added to Story",
+    "addedToStoryMessage": "It'll be visible to your friends for 24 hours. Keep going to post it here too.",
+    "addedToStoryConfirm": "Nice",
+    "addToStoryErrorTitle": "Couldn't add to story",
+    "addToStoryErrorConfirm": "Okay"
+  },
+  "de": {
+    "addSoundButton": "Sound hinzufügen",
+    "savingButton": "Wird gespeichert…",
+    "addToStoryLabel": "Zur Story hinzufügen",
+    "addedToStoryTitle": "Zur Story hinzugefügt",
+    "addedToStoryMessage": "Sie ist 24 Stunden lang für deine Freunde sichtbar. Mach weiter, um sie auch hier zu posten.",
+    "addedToStoryConfirm": "Super",
+    "addToStoryErrorTitle": "Konnte nicht zur Story hinzugefügt werden",
+    "addToStoryErrorConfirm": "Okay"
+  },
+  "es": {
+    "addSoundButton": "Añadir sonido",
+    "savingButton": "Guardando…",
+    "addToStoryLabel": "Añadir a la historia",
+    "addedToStoryTitle": "Añadido a la historia",
+    "addedToStoryMessage": "Será visible para tus amigos durante 24 horas. Continúa para publicarlo aquí también.",
+    "addedToStoryConfirm": "Genial",
+    "addToStoryErrorTitle": "No se pudo añadir a la historia",
+    "addToStoryErrorConfirm": "Vale"
+  },
+  "fr": {
+    "addSoundButton": "Ajouter un son",
+    "savingButton": "Enregistrement…",
+    "addToStoryLabel": "Ajouter à la story",
+    "addedToStoryTitle": "Ajouté à la story",
+    "addedToStoryMessage": "Elle sera visible par vos amis pendant 24 heures. Continuez pour la publier ici aussi.",
+    "addedToStoryConfirm": "Super",
+    "addToStoryErrorTitle": "Impossible d'ajouter à la story",
+    "addToStoryErrorConfirm": "D'accord"
+  },
+  "pt": {
+    "addSoundButton": "Adicionar som",
+    "savingButton": "Salvando…",
+    "addToStoryLabel": "Adicionar ao story",
+    "addedToStoryTitle": "Adicionado ao Story",
+    "addedToStoryMessage": "Ficará visível para seus amigos por 24 horas. Continue para publicar aqui também.",
+    "addedToStoryConfirm": "Legal",
+    "addToStoryErrorTitle": "Não foi possível adicionar ao story",
+    "addToStoryErrorConfirm": "Ok"
+  },
+  "it": {
+    "addSoundButton": "Aggiungi audio",
+    "savingButton": "Salvataggio…",
+    "addToStoryLabel": "Aggiungi alla storia",
+    "addedToStoryTitle": "Aggiunto alla Storia",
+    "addedToStoryMessage": "Sarà visibile ai tuoi amici per 24 ore. Continua per pubblicarlo anche qui.",
+    "addedToStoryConfirm": "Fantastico",
+    "addToStoryErrorTitle": "Impossibile aggiungere alla storia",
+    "addToStoryErrorConfirm": "Ok"
+  },
+  "tr": {
+    "addSoundButton": "Ses ekle",
+    "savingButton": "Kaydediliyor…",
+    "addToStoryLabel": "Hikayeye ekle",
+    "addedToStoryTitle": "Hikayeye Eklendi",
+    "addedToStoryMessage": "24 saat boyunca arkadaşların tarafından görülebilecek. Burada da paylaşmak için devam et.",
+    "addedToStoryConfirm": "Harika",
+    "addToStoryErrorTitle": "Hikayeye eklenemedi",
+    "addToStoryErrorConfirm": "Tamam"
+  },
+  "pl": {
+    "addSoundButton": "Dodaj dźwięk",
+    "savingButton": "Zapisywanie…",
+    "addToStoryLabel": "Dodaj do relacji",
+    "addedToStoryTitle": "Dodano do relacji",
+    "addedToStoryMessage": "Będzie widoczne dla Twoich znajomych przez 24 godziny. Kontynuuj, aby opublikować to również tutaj.",
+    "addedToStoryConfirm": "Super",
+    "addToStoryErrorTitle": "Nie udało się dodać do relacji",
+    "addToStoryErrorConfirm": "Ok"
+  },
+  "ar": {
+    "addSoundButton": "إضافة صوت",
+    "savingButton": "جارٍ الحفظ…",
+    "addToStoryLabel": "إضافة إلى القصة",
+    "addedToStoryTitle": "تمت الإضافة إلى القصة",
+    "addedToStoryMessage": "ستكون مرئية لأصدقائك لمدة 24 ساعة. تابع لنشرها هنا أيضًا.",
+    "addedToStoryConfirm": "رائع",
+    "addToStoryErrorTitle": "تعذّرت الإضافة إلى القصة",
+    "addToStoryErrorConfirm": "حسنًا"
+  },
+  "id": {
+    "addSoundButton": "Tambahkan suara",
+    "savingButton": "Menyimpan…",
+    "addToStoryLabel": "Tambahkan ke story",
+    "addedToStoryTitle": "Ditambahkan ke Story",
+    "addedToStoryMessage": "Akan terlihat oleh teman-temanmu selama 24 jam. Lanjutkan untuk memposting di sini juga.",
+    "addedToStoryConfirm": "Mantap",
+    "addToStoryErrorTitle": "Gagal menambahkan ke story",
+    "addToStoryErrorConfirm": "Oke"
+  },
+  "ru": {
+    "addSoundButton": "Добавить звук",
+    "savingButton": "Сохранение…",
+    "addToStoryLabel": "Добавить в историю",
+    "addedToStoryTitle": "Добавлено в историю",
+    "addedToStoryMessage": "Она будет видна вашим друзьям в течение 24 часов. Продолжите, чтобы опубликовать это и здесь.",
+    "addedToStoryConfirm": "Отлично",
+    "addToStoryErrorTitle": "Не удалось добавить в историю",
+    "addToStoryErrorConfirm": "Хорошо"
+  },
+  "uk": {
+    "addSoundButton": "Додати звук",
+    "savingButton": "Збереження…",
+    "addToStoryLabel": "Додати до історії",
+    "addedToStoryTitle": "Додано до історії",
+    "addedToStoryMessage": "Вона буде видима вашим друзям протягом 24 годин. Продовжте, щоб опублікувати це й тут.",
+    "addedToStoryConfirm": "Чудово",
+    "addToStoryErrorTitle": "Не вдалося додати до історії",
+    "addToStoryErrorConfirm": "Гаразд"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "en": {
+    "accountBannedTitle": "This account is banned",
+    "permanentBanMessage": "This ban is permanent. This account cannot be used again.",
+    "temporaryBanMessage": "This ban lifts on {{date}}. You can sign back in after that.",
+    "strikesMessage": "The account reached three strikes for breaking the community guidelines.",
+    "supportMessage": "If you believe this is a mistake, contact support through the MyCircle website. Creating another account to get around a ban is also against the guidelines.",
+    "logoutButton": "Log out"
+  },
+  "de": {
+    "accountBannedTitle": "Dieses Konto ist gesperrt",
+    "permanentBanMessage": "Diese Sperre ist dauerhaft. Dieses Konto kann nicht mehr verwendet werden.",
+    "temporaryBanMessage": "Diese Sperre endet am {{date}}. Danach kannst du dich wieder anmelden.",
+    "strikesMessage": "Das Konto hat drei Verwarnungen wegen Verstößen gegen die Community-Richtlinien erhalten.",
+    "supportMessage": "Wenn du glaubst, dass dies ein Fehler ist, wende dich über die MyCircle-Website an den Support. Ein neues Konto zu erstellen, um eine Sperre zu umgehen, verstößt ebenfalls gegen die Richtlinien.",
+    "logoutButton": "Abmelden"
+  },
+  "es": {
+    "accountBannedTitle": "Esta cuenta está suspendida",
+    "permanentBanMessage": "Esta suspensión es permanente. Esta cuenta no se puede volver a usar.",
+    "temporaryBanMessage": "Esta suspensión se levanta el {{date}}. Podrás volver a iniciar sesión después de eso.",
+    "strikesMessage": "La cuenta acumuló tres infracciones por incumplir las normas de la comunidad.",
+    "supportMessage": "Si crees que esto es un error, contacta con soporte a través del sitio web de MyCircle. Crear otra cuenta para evadir una suspensión también va en contra de las normas.",
+    "logoutButton": "Cerrar sesión"
+  },
+  "fr": {
+    "accountBannedTitle": "Ce compte est banni",
+    "permanentBanMessage": "Ce bannissement est permanent. Ce compte ne peut plus être utilisé.",
+    "temporaryBanMessage": "Ce bannissement se termine le {{date}}. Vous pourrez vous reconnecter après cette date.",
+    "strikesMessage": "Le compte a atteint trois avertissements pour non-respect des règles de la communauté.",
+    "supportMessage": "Si vous pensez qu'il s'agit d'une erreur, contactez le support via le site MyCircle. Créer un autre compte pour contourner un bannissement est également interdit par les règles.",
+    "logoutButton": "Se déconnecter"
+  },
+  "pt": {
+    "accountBannedTitle": "Esta conta está banida",
+    "permanentBanMessage": "Este banimento é permanente. Esta conta não pode ser usada novamente.",
+    "temporaryBanMessage": "Este banimento termina em {{date}}. Você poderá entrar novamente depois disso.",
+    "strikesMessage": "A conta atingiu três strikes por violar as diretrizes da comunidade.",
+    "supportMessage": "Se você acredita que isso é um engano, entre em contato com o suporte pelo site da MyCircle. Criar outra conta para contornar um banimento também é proibido pelas diretrizes.",
+    "logoutButton": "Sair"
+  },
+  "it": {
+    "accountBannedTitle": "Questo account è bandito",
+    "permanentBanMessage": "Questo ban è permanente. Questo account non potrà più essere utilizzato.",
+    "temporaryBanMessage": "Questo ban termina il {{date}}. Dopo potrai accedere di nuovo.",
+    "strikesMessage": "L'account ha raggiunto tre segnalazioni per violazione delle linee guida della community.",
+    "supportMessage": "Se ritieni che si tratti di un errore, contatta l'assistenza tramite il sito web di MyCircle. Anche creare un altro account per aggirare un ban viola le linee guida.",
+    "logoutButton": "Esci"
+  },
+  "tr": {
+    "accountBannedTitle": "Bu hesap yasaklandı",
+    "permanentBanMessage": "Bu yasak kalıcıdır. Bu hesap bir daha kullanılamaz.",
+    "temporaryBanMessage": "Bu yasak {{date}} tarihinde kalkıyor. Ondan sonra tekrar giriş yapabilirsin.",
+    "strikesMessage": "Hesap, topluluk kurallarını ihlal ettiği için üç ihtar aldı.",
+    "supportMessage": "Bunun bir hata olduğunu düşünüyorsan MyCircle web sitesi üzerinden destek ekibiyle iletişime geç. Yasağı atlatmak için başka bir hesap oluşturmak da kurallara aykırıdır.",
+    "logoutButton": "Çıkış yap"
+  },
+  "pl": {
+    "accountBannedTitle": "To konto zostało zablokowane",
+    "permanentBanMessage": "Ta blokada jest trwała. Tego konta nie można już używać.",
+    "temporaryBanMessage": "Ta blokada zostanie zdjęta {{date}}. Będziesz mógł się wtedy ponownie zalogować.",
+    "strikesMessage": "Konto otrzymało trzy ostrzeżenia za naruszenie zasad społeczności.",
+    "supportMessage": "Jeśli uważasz, że to pomyłka, skontaktuj się z pomocą techniczną przez stronę MyCircle. Tworzenie kolejnego konta w celu obejścia blokady jest również niezgodne z zasadami.",
+    "logoutButton": "Wyloguj się"
+  },
+  "ar": {
+    "accountBannedTitle": "هذا الحساب محظور",
+    "permanentBanMessage": "هذا الحظر دائم. لا يمكن استخدام هذا الحساب مرة أخرى.",
+    "temporaryBanMessage": "ينتهي هذا الحظر في {{date}}. يمكنك تسجيل الدخول مرة أخرى بعد ذلك.",
+    "strikesMessage": "وصل الحساب إلى ثلاث مخالفات بسبب انتهاك إرشادات المجتمع.",
+    "supportMessage": "إذا كنت تعتقد أن هذا خطأ، تواصل مع الدعم عبر موقع MyCircle. إنشاء حساب آخر للتحايل على الحظر يخالف الإرشادات أيضًا.",
+    "logoutButton": "تسجيل الخروج"
+  },
+  "id": {
+    "accountBannedTitle": "Akun ini diblokir",
+    "permanentBanMessage": "Blokir ini bersifat permanen. Akun ini tidak dapat digunakan lagi.",
+    "temporaryBanMessage": "Blokir ini berakhir pada {{date}}. Kamu bisa masuk lagi setelah itu.",
+    "strikesMessage": "Akun ini mendapat tiga peringatan karena melanggar pedoman komunitas.",
+    "supportMessage": "Jika menurutmu ini adalah kesalahan, hubungi dukungan melalui situs web MyCircle. Membuat akun lain untuk menghindari blokir juga melanggar pedoman.",
+    "logoutButton": "Keluar"
+  },
+  "ru": {
+    "accountBannedTitle": "Этот аккаунт заблокирован",
+    "permanentBanMessage": "Эта блокировка постоянная. Этот аккаунт больше нельзя использовать.",
+    "temporaryBanMessage": "Блокировка снимается {{date}}. После этого вы сможете снова войти.",
+    "strikesMessage": "Аккаунт получил три предупреждения за нарушение правил сообщества.",
+    "supportMessage": "Если вы считаете, что это ошибка, свяжитесь со службой поддержки через сайт MyCircle. Создание другого аккаунта в обход блокировки также запрещено правилами.",
+    "logoutButton": "Выйти"
+  },
+  "uk": {
+    "accountBannedTitle": "Цей акаунт заблоковано",
+    "permanentBanMessage": "Це блокування є постійним. Цей акаунт більше не можна використовувати.",
+    "temporaryBanMessage": "Це блокування знімається {{date}}. Після цього ви зможете знову увійти.",
+    "strikesMessage": "Акаунт отримав три попередження за порушення правил спільноти.",
+    "supportMessage": "Якщо ви вважаєте, що це помилка, зверніться до підтримки через сайт MyCircle. Створення іншого акаунта, щоб обійти блокування, також порушує правила.",
+    "logoutButton": "Вийти"
+  }
+}

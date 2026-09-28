@@ -40,7 +40,8 @@
       "@react-native-community/datetimepicker",
       "expo-notifications",
       "expo-camera",
-      "expo-video"
+      "expo-video",
+      "expo-localization"
     ]
   }
 }

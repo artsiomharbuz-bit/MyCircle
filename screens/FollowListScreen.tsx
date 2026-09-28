@@ -1,6 +1,7 @@
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { HugeiconsIcon } from '@hugeicons/react-native';
@@ -32,6 +33,7 @@ export default function FollowListScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['followList', 'common']);
   const users = useQuery(
     type === 'followers' ? api.follows.getFollowers : api.follows.getFollowingUsers,
     { userId }
@@ -92,7 +94,7 @@ export default function FollowListScreen({
         {users && users.length === 0 && (
           <EmptyState
             icon={UserGroupIcon}
-            message={type === 'followers' ? 'No followers yet.' : 'Not following anyone yet.'}
+            message={type === 'followers' ? t('noFollowersMessage') : t('noFollowingMessage')}
             style={styles.emptyState}
           />
         )}
@@ -102,7 +104,7 @@ export default function FollowListScreen({
         <Pressable style={styles.backButton} onPress={onBack}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>{type === 'followers' ? 'Followers' : 'Following'}</Text>
+        <Text style={styles.title}>{type === 'followers' ? t('followersTitle') : t('followingTitle')}</Text>
       </View>
 
       <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />

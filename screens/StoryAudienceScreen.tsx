@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
@@ -32,6 +33,7 @@ export default function StoryAudienceScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['storyAudience', 'common']);
   const entrance = useEntranceAnimation();
   // No selected circles means "Friends"; otherwise the story is visible to
   // members of any selected circle.
@@ -87,8 +89,8 @@ export default function StoryAudienceScreen({
       </Pressable>
 
       <Animated.View style={[styles.titleWrap, entrance]}>
-        <Text style={styles.title}>Who's this for?</Text>
-        <Text style={styles.subtitle}>Your story disappears in 24 hours. Choose one or more circles.</Text>
+        <Text style={styles.title}>{t('titleText')}</Text>
+        <Text style={styles.subtitle}>{t('subtitleText')}</Text>
       </Animated.View>
 
       <Animated.View style={[styles.options, entrance]}>
@@ -97,7 +99,7 @@ export default function StoryAudienceScreen({
           onPress={() => setSelectedCircleIds([])}
         >
           <View style={[styles.optionDot, { backgroundColor: colors.coral }]} />
-          <Text style={styles.optionLabel}>Friends</Text>
+          <Text style={styles.optionLabel}>{t('friendsLabel')}</Text>
         </Pressable>
 
         {myCircles?.map((circle) => (
@@ -118,7 +120,7 @@ export default function StoryAudienceScreen({
       {error && <Text style={styles.error}>{error}</Text>}
 
       <View style={styles.shareButtonWrap}>
-        <PrimaryButton label="Share Story" onPress={handleShare} loading={submitting} />
+        <PrimaryButton label={t('shareStoryButton')} onPress={handleShare} loading={submitting} />
       </View>
 
       <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />

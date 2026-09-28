@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
@@ -29,6 +30,7 @@ export default function CreateGroupScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['createGroup', 'common']);
   const [name, setName] = useState('');
   const [selectedIds, setSelectedIds] = useState<Id<'users'>[]>([]);
   const [creating, setCreating] = useState(false);
@@ -58,15 +60,15 @@ export default function CreateGroupScreen({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel="Go back">
+        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel={t('goBackLabel')}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>New Group</Text>
+        <Text style={styles.title}>{t('title')}</Text>
       </View>
 
       <TextField
         style={styles.nameInput}
-        placeholder="Group name"
+        placeholder={t('groupNamePlaceholder')}
         value={name}
         onChangeText={setName}
         cursorColor={colors.coral}
@@ -74,7 +76,7 @@ export default function CreateGroupScreen({
       />
 
       <Text style={styles.sectionLabel}>
-        {selectedIds.length > 0 ? `${selectedIds.length} selected` : 'Add people'}
+        {selectedIds.length > 0 ? t('selectedCount', { count: selectedIds.length }) : t('addPeople')}
       </Text>
 
       <ScrollView
@@ -95,7 +97,7 @@ export default function CreateGroupScreen({
           ))}
 
         {people?.length === 0 && (
-          <EmptyState message="Follow people to add them to a group." style={styles.empty} />
+          <EmptyState message={t('followToAddEmpty')} style={styles.empty} />
         )}
 
         {people?.map((person) => {
@@ -135,7 +137,7 @@ export default function CreateGroupScreen({
 
       <View style={styles.createButtonWrap}>
         <PrimaryButton
-          label="Create Group"
+          label={t('createGroupButton')}
           onPress={handleCreate}
           disabled={!canCreate}
           loading={creating}

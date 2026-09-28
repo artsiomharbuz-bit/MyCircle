@@ -1,0 +1,98 @@
+{
+  "en": {
+    "someoneFallback": "Someone",
+    "loginButton": "Log In",
+    "nothingHereMessage": "Nothing here yet.",
+    "bannerMessage": "Create an account to like, comment and post",
+    "joinButton": "Join MyCircle",
+    "notNowButton": "Not now"
+  },
+  "de": {
+    "someoneFallback": "Jemand",
+    "loginButton": "Anmelden",
+    "nothingHereMessage": "Hier gibt es noch nichts.",
+    "bannerMessage": "Erstelle ein Konto, um zu liken, zu kommentieren und zu posten",
+    "joinButton": "MyCircle beitreten",
+    "notNowButton": "Nicht jetzt"
+  },
+  "es": {
+    "someoneFallback": "Alguien",
+    "loginButton": "Iniciar sesión",
+    "nothingHereMessage": "Todavía no hay nada aquí.",
+    "bannerMessage": "Crea una cuenta para dar me gusta, comentar y publicar",
+    "joinButton": "Unirse a MyCircle",
+    "notNowButton": "Ahora no"
+  },
+  "fr": {
+    "someoneFallback": "Quelqu'un",
+    "loginButton": "Se connecter",
+    "nothingHereMessage": "Il n'y a encore rien ici.",
+    "bannerMessage": "Créez un compte pour aimer, commenter et publier",
+    "joinButton": "Rejoindre MyCircle",
+    "notNowButton": "Pas maintenant"
+  },
+  "pt": {
+    "someoneFallback": "Alguém",
+    "loginButton": "Entrar",
+    "nothingHereMessage": "Ainda não há nada aqui.",
+    "bannerMessage": "Crie uma conta para curtir, comentar e publicar",
+    "joinButton": "Entrar no MyCircle",
+    "notNowButton": "Agora não"
+  },
+  "it": {
+    "someoneFallback": "Qualcuno",
+    "loginButton": "Accedi",
+    "nothingHereMessage": "Non c'è ancora niente qui.",
+    "bannerMessage": "Crea un account per mettere like, commentare e pubblicare",
+    "joinButton": "Unisciti a MyCircle",
+    "notNowButton": "Non ora"
+  },
+  "tr": {
+    "someoneFallback": "Biri",
+    "loginButton": "Giriş Yap",
+    "nothingHereMessage": "Burada henüz bir şey yok.",
+    "bannerMessage": "Beğenmek, yorum yapmak ve paylaşmak için bir hesap oluştur",
+    "joinButton": "MyCircle'a Katıl",
+    "notNowButton": "Şimdi değil"
+  },
+  "pl": {
+    "someoneFallback": "Ktoś",
+    "loginButton": "Zaloguj się",
+    "nothingHereMessage": "Nic tu jeszcze nie ma.",
+    "bannerMessage": "Załóż konto, aby polubić, komentować i publikować",
+    "joinButton": "Dołącz do MyCircle",
+    "notNowButton": "Nie teraz"
+  },
+  "ar": {
+    "someoneFallback": "شخص ما",
+    "loginButton": "تسجيل الدخول",
+    "nothingHereMessage": "لا يوجد شيء هنا بعد.",
+    "bannerMessage": "أنشئ حسابًا للإعجاب والتعليق والنشر",
+    "joinButton": "انضم إلى MyCircle",
+    "notNowButton": "ليس الآن"
+  },
+  "id": {
+    "someoneFallback": "Seseorang",
+    "loginButton": "Masuk",
+    "nothingHereMessage": "Belum ada apa-apa di sini.",
+    "bannerMessage": "Buat akun untuk menyukai, mengomentari, dan memposting",
+    "joinButton": "Gabung MyCircle",
+    "notNowButton": "Nanti saja"
+  },
+  "ru": {
+    "someoneFallback": "Кто-то",
+    "loginButton": "Войти",
+    "nothingHereMessage": "Здесь пока ничего нет.",
+    "bannerMessage": "Создайте аккаунт, чтобы ставить лайки, комментировать и публиковать",
+    "joinButton": "Присоединиться к MyCircle",
+    "notNowButton": "Не сейчас"
+  },
+  "uk": {
+    "someoneFallback": "Хтось",
+    "loginButton": "Увійти",
+    "nothingHereMessage": "Тут поки що нічого немає.",
+    "bannerMessage": "Створіть акаунт, щоб ставити вподобайки, коментувати та публікувати",
+    "joinButton": "Приєднатися до MyCircle",
+    "notNowButton": "Не зараз"
+  }
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery } from '../SessionContext';
 import { api } from '../convex/_generated/api';
 import BackButton from '../components/BackButton';
@@ -25,6 +26,7 @@ export default function OnboardingUsernameScreen({
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const entrance = useEntranceAnimation();
+  const { t } = useTranslation(['onboardingUsername', 'common']);
   const [username, setUsername] = useState('');
   const [debounced, setDebounced] = useState('');
 
@@ -42,13 +44,13 @@ export default function OnboardingUsernameScreen({
 
   let statusText = '';
   if (username.length > 0 && debounced.length < 3) {
-    statusText = 'At least 3 characters.';
+    statusText = t('minLengthHint');
   } else if (debounced.length >= 3 && available === undefined) {
-    statusText = 'Checking availability…';
+    statusText = t('checkingAvailability');
   } else if (available === false) {
-    statusText = 'That username is taken.';
+    statusText = t('usernameTaken');
   } else if (available === true) {
-    statusText = 'Available!';
+    statusText = t('usernameAvailable');
   }
 
   return (
@@ -57,10 +59,10 @@ export default function OnboardingUsernameScreen({
 
       <Animated.View style={[styles.titleWrap, entrance]}>
         <Text variant="display" style={styles.title}>
-          Pick a username
+          {t('title')}
         </Text>
         <Text variant="body" style={styles.subtitle}>
-          Letters, numbers and underscores only.
+          {t('subtitle')}
         </Text>
       </Animated.View>
 
@@ -71,7 +73,7 @@ export default function OnboardingUsernameScreen({
           </Text>
           <TextField
             style={styles.input}
-            placeholder="username"
+            placeholder={t('usernamePlaceholder')}
             autoCapitalize="none"
             autoCorrect={false}
             value={username}
@@ -94,7 +96,7 @@ export default function OnboardingUsernameScreen({
         )}
 
         <PrimaryButton
-          label="Continue"
+          label={t('continueButton')}
           tone="primary"
           disabled={!canContinue}
           onPress={() => canContinue && onNext(debounced)}

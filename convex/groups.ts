@@ -4,6 +4,7 @@ import { Id } from './_generated/dataModel';
 import { conversationId } from './messages';
 import { rateLimiter } from './lib/rateLimit';
 import { requireUser } from './lib/session';
+import { displayName, pushPreview, sendPush } from './lib/notify';
 
 async function userSummary(ctx: QueryCtx, userId: Id<'users'>) {
   const user = await ctx.db.get(userId);
@@ -43,6 +44,7 @@ async function createGroupAndInvite(
   const groupId = await ctx.db.insert('groupChats', { creatorId, name: trimmed });
   await ctx.db.insert('groupMemberships', { groupId, userId: creatorId, status: 'joined' });
 
+  const creator = await ctx.db.get(creatorId);
   const invitees = [...new Set(memberIds)].filter((id) => id !== creatorId);
   for (const inviteeId of invitees) {
     // Added straight in — no invite to accept. They can leave any time.
@@ -53,6 +55,13 @@ async function createGroupAndInvite(
       recipientId: inviteeId,
       text: `Added you to the group "${trimmed}"`,
     });
+    await sendPush(
+      ctx,
+      inviteeId,
+      'Added to group',
+      `${displayName(creator)} added you to "${trimmed}"`,
+      { type: 'added_to_group', groupId }
+    );
   }
 
   return groupId;
@@ -275,16 +284,30 @@ export const sendGroupMessage = mutation({
       throw new ConvexError("You're not a member of this group.");
     }
 
+    const messageText =
+      trimmed ||
+      (stickerId ? 'Sent a sticker' : mediaType === 'video' ? 'Sent a video' : mediaStorageId ? 'Sent a photo' : '');
+
     await ctx.db.insert('groupMessages', {
       groupId,
       senderId,
-      text:
-        trimmed ||
-        (stickerId ? 'Sent a sticker' : mediaType === 'video' ? 'Sent a video' : mediaStorageId ? 'Sent a photo' : ''),
+      text: messageText,
       stickerId,
       mediaStorageId,
       mediaType,
     });
+
+    const group = await ctx.db.get(groupId);
+    const sender = await ctx.db.get(senderId);
+    const members = await listJoinedMembers(ctx, groupId);
+    const title = `${displayName(sender)} in ${group?.name ?? 'group chat'}`;
+    await Promise.all(
+      members
+        .filter((member) => member._id !== senderId)
+        .map((member) =>
+          sendPush(ctx, member._id, title, pushPreview(messageText), { type: 'group_message', groupId })
+        )
+    );
   },
 });
 

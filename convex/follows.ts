@@ -9,6 +9,7 @@ import { normalizeLocationName } from './lib/locations';
 import { FRIEND_SCORE_WEIGHTS } from './lib/rankingConfig';
 import { rateLimiter } from './lib/rateLimit';
 import { requireUser } from './lib/session';
+import { displayName, sendPush } from './lib/notify';
 
 export const follow = mutation({
   args: { followerId: v.id('users'), followingId: v.id('users'), sessionToken: v.string() },
@@ -32,6 +33,15 @@ export const follow = mutation({
     if (existing) return;
 
     await ctx.db.insert('follows', { followerId, followingId });
+
+    const follower = await ctx.db.get(followerId);
+    await sendPush(
+      ctx,
+      followingId,
+      'New follower',
+      `${displayName(follower)} started following you`,
+      { type: 'follow', userId: followerId }
+    );
   },
 });
 

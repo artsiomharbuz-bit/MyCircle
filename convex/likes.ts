@@ -3,6 +3,7 @@ import { v } from 'convex/values';
 import { bumpMeaningfulInteraction } from './users';
 import { rateLimiter } from './lib/rateLimit';
 import { requireUser } from './lib/session';
+import { displayName, sendPush } from './lib/notify';
 
 export const toggleLike = mutation({
   args: { postId: v.id('posts'), userId: v.id('users'), sessionToken: v.string() },
@@ -24,6 +25,18 @@ export const toggleLike = mutation({
     // Only on the "adding interest" direction — un-liking doesn't erase the
     // signal that the user engaged with something at some point.
     await bumpMeaningfulInteraction(ctx, userId);
+
+    const post = await ctx.db.get(postId);
+    if (post && post.authorId !== userId) {
+      const liker = await ctx.db.get(userId);
+      await sendPush(
+        ctx,
+        post.authorId,
+        'New like',
+        `${displayName(liker)} liked your ${post.kind === 'clip' ? 'clip' : 'post'}`,
+        { type: 'like', postId }
+      );
+    }
     return true;
   },
 });

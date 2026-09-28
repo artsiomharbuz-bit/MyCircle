@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, StyleSheet, View, ViewToken } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { GridViewIcon, Notification01Icon, UserAdd01Icon } from '@hugeicons/core-free-icons';
 import { NAV_BAR_HEIGHT } from '../components/BottomNavBar';
@@ -47,6 +48,7 @@ export default function HomeScreen({
   onOpenClip: (postId: Id<'posts'>) => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['home', 'common']);
   const styles = createStyles(colors);
   const posts = useQuery(api.posts.listHomeFeed, { viewerId: userId });
   const followingIds = useQuery(api.follows.getFollowingIds, { followerId: userId });
@@ -214,16 +216,16 @@ export default function HomeScreen({
           ) : hasFriends ? (
             <EmptyState
               icon={GridViewIcon}
-              message="Nothing here yet."
-              buttonLabel="Create a Post"
+              message={t('nothingHereMessage')}
+              buttonLabel={t('createPostButton')}
               onPressButton={onOpenCamera}
               style={styles.emptyState}
             />
           ) : (
             <EmptyState
               icon={UserAdd01Icon}
-              message="You're not following anyone yet."
-              buttonLabel="Find Friends"
+              message={t('notFollowingMessage')}
+              buttonLabel={t('findFriendsButton')}
               onPressButton={onOpenDiscoverFriends}
               style={styles.emptyState}
             />
@@ -245,7 +247,7 @@ export default function HomeScreen({
       />
 
       <CollapsibleHeader
-        title="MyCircle"
+        title={t('common:appName')}
         brand
         altTitle={selectedCircleLabel}
         altSwitchAt={64}

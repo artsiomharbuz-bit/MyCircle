@@ -1,0 +1,62 @@
+{
+  "en": {
+    "headerTitle": "Ad review",
+    "emptyStateMessage": "No ads waiting for review.",
+    "unknownUsername": "unknown"
+  },
+  "de": {
+    "headerTitle": "Anzeigenüberprüfung",
+    "emptyStateMessage": "Keine Anzeigen warten auf Überprüfung.",
+    "unknownUsername": "unbekannt"
+  },
+  "es": {
+    "headerTitle": "Revisión de anuncios",
+    "emptyStateMessage": "No hay anuncios esperando revisión.",
+    "unknownUsername": "desconocido"
+  },
+  "fr": {
+    "headerTitle": "Examen des publicités",
+    "emptyStateMessage": "Aucune publicité en attente d'examen.",
+    "unknownUsername": "inconnu"
+  },
+  "pt": {
+    "headerTitle": "Revisão de anúncios",
+    "emptyStateMessage": "Nenhum anúncio aguardando revisão.",
+    "unknownUsername": "desconhecido"
+  },
+  "it": {
+    "headerTitle": "Revisione annunci",
+    "emptyStateMessage": "Nessun annuncio in attesa di revisione.",
+    "unknownUsername": "sconosciuto"
+  },
+  "tr": {
+    "headerTitle": "Reklam incelemesi",
+    "emptyStateMessage": "İnceleme bekleyen reklam yok.",
+    "unknownUsername": "bilinmiyor"
+  },
+  "pl": {
+    "headerTitle": "Weryfikacja reklam",
+    "emptyStateMessage": "Brak reklam oczekujących na weryfikację.",
+    "unknownUsername": "nieznany"
+  },
+  "ar": {
+    "headerTitle": "مراجعة الإعلانات",
+    "emptyStateMessage": "لا توجد إعلانات بانتظار المراجعة.",
+    "unknownUsername": "غير معروف"
+  },
+  "id": {
+    "headerTitle": "Tinjauan iklan",
+    "emptyStateMessage": "Tidak ada iklan yang menunggu tinjauan.",
+    "unknownUsername": "tidak dikenal"
+  },
+  "ru": {
+    "headerTitle": "Проверка рекламы",
+    "emptyStateMessage": "Нет рекламы, ожидающей проверки.",
+    "unknownUsername": "неизвестно"
+  },
+  "uk": {
+    "headerTitle": "Перевірка реклами",
+    "emptyStateMessage": "Немає реклами, що очікує перевірки.",
+    "unknownUsername": "невідомо"
+  }
+}

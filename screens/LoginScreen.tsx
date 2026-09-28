@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Animated, Pressable, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAction } from 'convex/react';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ViewIcon, ViewOffSlashIcon } from '@hugeicons/core-free-icons';
@@ -21,14 +22,20 @@ export default function LoginScreen({
   onBack,
   onSwitchToRegister,
   onLoggedIn,
+  onGuest,
 }: {
   onBack: () => void;
   onSwitchToRegister: () => void;
   onLoggedIn: (userId: Id<'users'>, sessionToken: string, onboardingComplete: boolean) => void;
+  // Not shown while switching into an already-logged-in account (see
+  // App.tsx's isAddingAccount) — guest browsing only makes sense as the
+  // very first thing someone does, not mid-account-switch.
+  onGuest?: () => void;
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const entrance = useEntranceAnimation();
+  const { t } = useTranslation(['login', 'common']);
   const login = useAction(api.auth.login);
 
   const [email, setEmail] = useState('');
@@ -41,7 +48,7 @@ export default function LoginScreen({
     setError(null);
 
     if (!email.trim() || !password) {
-      setError('Enter an email and password.');
+      setError(t('emptyFieldsError'));
       return;
     }
 
@@ -69,16 +76,16 @@ export default function LoginScreen({
 
       <Animated.View style={[styles.titleWrap, entrance]}>
         <Text variant="display" style={styles.title}>
-          Welcome Back
+          {t('welcomeBackTitle')}
         </Text>
         <Text variant="body" style={styles.subtitle}>
-          Log in to keep up with your circle.
+          {t('subtitle')}
         </Text>
       </Animated.View>
 
       <Animated.View style={[styles.actions, entrance]}>
         <TextField
-          placeholder="Email"
+          placeholder={t('emailPlaceholder')}
           autoCapitalize="none"
           keyboardType="email-address"
           value={email}
@@ -88,7 +95,7 @@ export default function LoginScreen({
         <View style={styles.passwordWrap}>
           <TextField
             style={styles.passwordInput}
-            placeholder="Password"
+            placeholder={t('passwordPlaceholder')}
             secureTextEntry={!showPassword}
             value={password}
             onChangeText={setPassword}
@@ -116,17 +123,25 @@ export default function LoginScreen({
             <ActivityIndicator color={colors.accentText} />
           ) : (
             <Text variant="h3" style={styles.primaryButtonText}>
-              Login
+              {t('loginButton')}
             </Text>
           )}
         </AnimatedPressable>
 
         <Text variant="callout" style={styles.switchText}>
-          Don't have an account?{' '}
+          {t('noAccountText')}{' '}
           <Text variant="calloutBold" style={styles.link} onPress={onSwitchToRegister}>
-            Register
+            {t('registerLink')}
           </Text>
         </Text>
+
+        {onGuest && (
+          <AnimatedPressable style={styles.guestButton} onPress={onGuest}>
+            <Text variant="callout" style={styles.guestButtonText}>
+              {t('guestButton')}
+            </Text>
+          </AnimatedPressable>
+        )}
       </Animated.View>
 
       <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />
@@ -203,5 +218,14 @@ const createStyles = (colors: Colors) =>
     link: {
       textDecorationLine: 'underline',
       color: colors.textLink,
+    },
+    guestButton: {
+      marginTop: space.md,
+      alignItems: 'center',
+      paddingVertical: space.xs,
+    },
+    guestButtonText: {
+      color: colors.textMuted,
+      textDecorationLine: 'underline',
     },
   });

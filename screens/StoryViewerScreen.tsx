@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Animated, Dimensions, Easing, Image, Pressable, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -85,6 +86,7 @@ export default function StoryViewerScreen({
   onOpenClip: (postId: Id<'posts'>) => void;
 }) {
   const styles = createStyles();
+  const { t } = useTranslation('storyViewer');
   const author = useQuery(api.users.getUser, { userId: authorId });
   const stories = useQuery(api.stories.getStoriesByAuthor, { authorId, viewerId });
   const toggleStoryLike = useMutation(api.stories.toggleStoryLike);
@@ -225,7 +227,7 @@ export default function StoryViewerScreen({
     );
   }
 
-  const displayName = author?.name ?? author?.username ?? 'Someone';
+  const displayName = author?.name ?? author?.username ?? t('someoneFallback');
   const letter = (author?.username ?? displayName).charAt(0).toUpperCase();
   const gradient = (author?.avatarGradient as [string, string]) ?? [colors.red, colors.coral];
 

@@ -1,0 +1,134 @@
+{
+  "en": {
+    "welcomeBackTitle": "Welcome Back",
+    "subtitle": "Log in to keep up with your circle.",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "loginButton": "Login",
+    "noAccountText": "Don't have an account?",
+    "registerLink": "Register",
+    "guestButton": "Try it out as a guest",
+    "emptyFieldsError": "Enter an email and password."
+  },
+  "de": {
+    "welcomeBackTitle": "Willkommen zurück",
+    "subtitle": "Melde dich an, um mit deinem Kreis in Kontakt zu bleiben.",
+    "emailPlaceholder": "E-Mail",
+    "passwordPlaceholder": "Passwort",
+    "loginButton": "Anmelden",
+    "noAccountText": "Noch kein Konto?",
+    "registerLink": "Registrieren",
+    "guestButton": "Als Gast ausprobieren",
+    "emptyFieldsError": "Gib eine E-Mail-Adresse und ein Passwort ein."
+  },
+  "es": {
+    "welcomeBackTitle": "Bienvenido de nuevo",
+    "subtitle": "Inicia sesión para mantenerte al día con tu círculo.",
+    "emailPlaceholder": "Correo electrónico",
+    "passwordPlaceholder": "Contraseña",
+    "loginButton": "Iniciar sesión",
+    "noAccountText": "¿No tienes una cuenta?",
+    "registerLink": "Registrarse",
+    "guestButton": "Probarlo como invitado",
+    "emptyFieldsError": "Introduce un correo electrónico y una contraseña."
+  },
+  "fr": {
+    "welcomeBackTitle": "Content de vous revoir",
+    "subtitle": "Connectez-vous pour rester au courant de votre cercle.",
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Mot de passe",
+    "loginButton": "Connexion",
+    "noAccountText": "Vous n'avez pas de compte ?",
+    "registerLink": "S'inscrire",
+    "guestButton": "Essayer en tant qu'invité",
+    "emptyFieldsError": "Saisissez un e-mail et un mot de passe."
+  },
+  "pt": {
+    "welcomeBackTitle": "Bem-vindo de volta",
+    "subtitle": "Entre para acompanhar o seu círculo.",
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Senha",
+    "loginButton": "Entrar",
+    "noAccountText": "Não tem uma conta?",
+    "registerLink": "Registrar",
+    "guestButton": "Experimentar como convidado",
+    "emptyFieldsError": "Informe um e-mail e uma senha."
+  },
+  "it": {
+    "welcomeBackTitle": "Bentornato",
+    "subtitle": "Accedi per restare aggiornato con la tua cerchia.",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "loginButton": "Accedi",
+    "noAccountText": "Non hai un account?",
+    "registerLink": "Registrati",
+    "guestButton": "Provalo come ospite",
+    "emptyFieldsError": "Inserisci un'email e una password."
+  },
+  "tr": {
+    "welcomeBackTitle": "Tekrar Hoş Geldiniz",
+    "subtitle": "Çevrenizle bağlantıda kalmak için giriş yapın.",
+    "emailPlaceholder": "E-posta",
+    "passwordPlaceholder": "Şifre",
+    "loginButton": "Giriş Yap",
+    "noAccountText": "Hesabınız yok mu?",
+    "registerLink": "Kayıt Ol",
+    "guestButton": "Misafir olarak deneyin",
+    "emptyFieldsError": "Bir e-posta ve şifre girin."
+  },
+  "pl": {
+    "welcomeBackTitle": "Witaj ponownie",
+    "subtitle": "Zaloguj się, aby być na bieżąco ze swoim kręgiem.",
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Hasło",
+    "loginButton": "Zaloguj się",
+    "noAccountText": "Nie masz konta?",
+    "registerLink": "Zarejestruj się",
+    "guestButton": "Wypróbuj jako gość",
+    "emptyFieldsError": "Wprowadź adres e-mail i hasło."
+  },
+  "ar": {
+    "welcomeBackTitle": "مرحبًا بعودتك",
+    "subtitle": "سجّل الدخول لمتابعة دائرتك.",
+    "emailPlaceholder": "البريد الإلكتروني",
+    "passwordPlaceholder": "كلمة المرور",
+    "loginButton": "تسجيل الدخول",
+    "noAccountText": "ليس لديك حساب؟",
+    "registerLink": "إنشاء حساب",
+    "guestButton": "جرّبه كضيف",
+    "emptyFieldsError": "أدخل بريدًا إلكترونيًا وكلمة مرور."
+  },
+  "id": {
+    "welcomeBackTitle": "Selamat Datang Kembali",
+    "subtitle": "Masuk untuk tetap terhubung dengan circle-mu.",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Kata sandi",
+    "loginButton": "Masuk",
+    "noAccountText": "Belum punya akun?",
+    "registerLink": "Daftar",
+    "guestButton": "Coba sebagai tamu",
+    "emptyFieldsError": "Masukkan email dan kata sandi."
+  },
+  "ru": {
+    "welcomeBackTitle": "С возвращением",
+    "subtitle": "Войдите, чтобы быть в курсе своего круга.",
+    "emailPlaceholder": "Электронная почта",
+    "passwordPlaceholder": "Пароль",
+    "loginButton": "Войти",
+    "noAccountText": "Нет аккаунта?",
+    "registerLink": "Зарегистрироваться",
+    "guestButton": "Попробовать как гость",
+    "emptyFieldsError": "Введите email и пароль."
+  },
+  "uk": {
+    "welcomeBackTitle": "З поверненням",
+    "subtitle": "Увійдіть, щоб бути в курсі свого кола.",
+    "emailPlaceholder": "Електронна пошта",
+    "passwordPlaceholder": "Пароль",
+    "loginButton": "Увійти",
+    "noAccountText": "Немає акаунта?",
+    "registerLink": "Зареєструватися",
+    "guestButton": "Спробувати як гість",
+    "emptyFieldsError": "Введіть електронну пошту та пароль."
+  }
+}

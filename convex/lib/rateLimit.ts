@@ -24,6 +24,7 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
   // ---- Content creation ----
   createPost: { kind: 'token bucket', rate: 10, period: HOUR, capacity: 4 },
   createStory: { kind: 'token bucket', rate: 15, period: HOUR, capacity: 5 },
+  createHighlight: { kind: 'fixed window', rate: 15, period: DAY },
   createRemix: { kind: 'token bucket', rate: 15, period: HOUR, capacity: 5 },
   createAd: { kind: 'fixed window', rate: 10, period: DAY },
   addComment: { kind: 'token bucket', rate: 30, period: 10 * MINUTE, capacity: 8 },

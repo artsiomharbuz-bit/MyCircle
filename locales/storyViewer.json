@@ -1,0 +1,14 @@
+{
+  "en": { "someoneFallback": "Someone" },
+  "de": { "someoneFallback": "Jemand" },
+  "es": { "someoneFallback": "Alguien" },
+  "fr": { "someoneFallback": "Quelqu'un" },
+  "pt": { "someoneFallback": "Alguém" },
+  "it": { "someoneFallback": "Qualcuno" },
+  "tr": { "someoneFallback": "Birisi" },
+  "pl": { "someoneFallback": "Ktoś" },
+  "ar": { "someoneFallback": "شخص ما" },
+  "id": { "someoneFallback": "Seseorang" },
+  "ru": { "someoneFallback": "Кто-то" },
+  "uk": { "someoneFallback": "Хтось" }
+}

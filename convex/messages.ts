@@ -5,6 +5,7 @@ import { bumpMeaningfulInteraction } from './users';
 import { rateLimiter } from './lib/rateLimit';
 import { isBlockedEitherWay } from './blocks';
 import { requireUser } from './lib/session';
+import { displayName, pushPreview, sendPush } from './lib/notify';
 
 // Exported so convex/affinity.ts can look up DM volume between two users
 // through the same stable conversation id, without a second definition.
@@ -60,18 +61,26 @@ export const sendMessage = mutation({
       throw new ConvexError("You can't message this person.");
     }
 
+    const messageText =
+      trimmed ||
+      (mediaStorageId ? (mediaType === 'video' ? 'Sent a video' : 'Sent a photo') : undefined) ||
+      (stickerId ? 'Sent a sticker' : 'Shared a post');
+
     await ctx.db.insert('messages', {
       conversationId: conversationId(senderId, recipientId),
       senderId,
       recipientId,
-      text:
-        trimmed ||
-        (mediaStorageId ? (mediaType === 'video' ? 'Sent a video' : 'Sent a photo') : undefined) ||
-        (stickerId ? 'Sent a sticker' : 'Shared a post'),
+      text: messageText,
       sharedPostId,
       stickerId,
       mediaStorageId,
       mediaType,
+    });
+
+    const sender = await ctx.db.get(senderId);
+    await sendPush(ctx, recipientId, displayName(sender), pushPreview(messageText), {
+      type: 'dm',
+      userId: senderId,
     });
 
     if (sharedPostId) {
@@ -79,6 +88,17 @@ export const sendMessage = mutation({
       // Sharing something is a stronger signal of interest than most other
       // interactions — counts toward the cold-start ramp same as a like.
       await bumpMeaningfulInteraction(ctx, senderId);
+
+      const sharedPost = await ctx.db.get(sharedPostId);
+      if (sharedPost && sharedPost.authorId !== senderId) {
+        await sendPush(
+          ctx,
+          sharedPost.authorId,
+          'Your post was shared',
+          `${displayName(sender)} shared your ${sharedPost.kind === 'clip' ? 'clip' : 'post'}`,
+          { type: 'post_share', postId: sharedPostId }
+        );
+      }
     }
   },
 });

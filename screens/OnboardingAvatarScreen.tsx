@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Animated, Image, Pressable, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuthedMutation as useMutation } from '../SessionContext';
@@ -35,6 +36,7 @@ export default function OnboardingAvatarScreen({
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const entrance = useEntranceAnimation();
+  const { t } = useTranslation(['onboardingAvatar', 'common']);
   const [gradient, setGradient] = useState(randomGradient);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -49,7 +51,7 @@ export default function OnboardingAvatarScreen({
   const pickPhoto = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      setError('Photo access was denied.');
+      setError(t('photoAccessDeniedError'));
       return;
     }
 
@@ -108,10 +110,10 @@ export default function OnboardingAvatarScreen({
 
       <Animated.View style={[styles.titleWrap, entrance]}>
         <Text variant="display" style={styles.title}>
-          Add a photo
+          {t('title')}
         </Text>
         <Text variant="body" style={styles.subtitle}>
-          Optional — you can always add one later.
+          {t('subtitle')}
         </Text>
 
         <Pressable
@@ -129,7 +131,7 @@ export default function OnboardingAvatarScreen({
 
         {!photoUri && (
           <Text variant="footnote" style={styles.hint}>
-            Tap to try a new color
+            {t('hint')}
           </Text>
         )}
 
@@ -142,14 +144,14 @@ export default function OnboardingAvatarScreen({
 
       <Animated.View style={[styles.actions, entrance]}>
         <PrimaryButton
-          label={photoUri ? 'Choose a different photo' : 'Upload Photo'}
+          label={photoUri ? t('choosePhotoButton') : t('uploadPhotoButton')}
           tone="ghost"
           disabled={finishing}
           onPress={pickPhoto}
         />
 
         <PrimaryButton
-          label={photoUri ? 'Continue' : 'Skip for now'}
+          label={photoUri ? t('continueButton') : t('skipButton')}
           tone="primary"
           loading={finishing}
           disabled={finishing}

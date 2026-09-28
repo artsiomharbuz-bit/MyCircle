@@ -1,0 +1,74 @@
+{
+  "en": {
+    "titleText": "Who's this for?",
+    "subtitleText": "Your story disappears in 24 hours. Choose one or more circles.",
+    "friendsLabel": "Friends",
+    "shareStoryButton": "Share Story"
+  },
+  "de": {
+    "titleText": "Für wen ist das?",
+    "subtitleText": "Deine Story verschwindet nach 24 Stunden. Wähle einen oder mehrere Kreise.",
+    "friendsLabel": "Freunde",
+    "shareStoryButton": "Story teilen"
+  },
+  "es": {
+    "titleText": "¿Para quién es esto?",
+    "subtitleText": "Tu historia desaparece en 24 horas. Elige uno o más círculos.",
+    "friendsLabel": "Amigos",
+    "shareStoryButton": "Compartir historia"
+  },
+  "fr": {
+    "titleText": "Pour qui est-ce ?",
+    "subtitleText": "Votre story disparaît après 24 heures. Choisissez un ou plusieurs cercles.",
+    "friendsLabel": "Amis",
+    "shareStoryButton": "Partager la story"
+  },
+  "pt": {
+    "titleText": "Para quem é isso?",
+    "subtitleText": "Seu story desaparece em 24 horas. Escolha um ou mais círculos.",
+    "friendsLabel": "Amigos",
+    "shareStoryButton": "Compartilhar Story"
+  },
+  "it": {
+    "titleText": "Per chi è questo?",
+    "subtitleText": "La tua storia scompare dopo 24 ore. Scegli una o più cerchie.",
+    "friendsLabel": "Amici",
+    "shareStoryButton": "Condividi storia"
+  },
+  "tr": {
+    "titleText": "Bu kimin için?",
+    "subtitleText": "Hikayen 24 saat içinde kaybolur. Bir veya daha fazla çevre seç.",
+    "friendsLabel": "Arkadaşlar",
+    "shareStoryButton": "Hikayeyi Paylaş"
+  },
+  "pl": {
+    "titleText": "Dla kogo jest ta relacja?",
+    "subtitleText": "Twoja relacja zniknie po 24 godzinach. Wybierz jeden lub więcej kręgów.",
+    "friendsLabel": "Znajomi",
+    "shareStoryButton": "Udostępnij relację"
+  },
+  "ar": {
+    "titleText": "لمن هذا؟",
+    "subtitleText": "تختفي قصتك خلال 24 ساعة. اختر دائرة واحدة أو أكثر.",
+    "friendsLabel": "الأصدقاء",
+    "shareStoryButton": "مشاركة القصة"
+  },
+  "id": {
+    "titleText": "Ini untuk siapa?",
+    "subtitleText": "Storymu akan hilang dalam 24 jam. Pilih satu atau lebih circle.",
+    "friendsLabel": "Teman",
+    "shareStoryButton": "Bagikan Story"
+  },
+  "ru": {
+    "titleText": "Для кого это?",
+    "subtitleText": "Ваша история исчезнет через 24 часа. Выберите один или несколько кругов.",
+    "friendsLabel": "Друзья",
+    "shareStoryButton": "Поделиться историей"
+  },
+  "uk": {
+    "titleText": "Для кого це?",
+    "subtitleText": "Ваша історія зникне через 24 години. Виберіть одне або кілька кіл.",
+    "friendsLabel": "Друзі",
+    "shareStoryButton": "Поділитися історією"
+  }
+}

@@ -12,6 +12,7 @@ import { smoothedRate } from './lib/quality';
 import { ADS } from './lib/rankingConfig';
 import { rateLimiter } from './lib/rateLimit';
 import { requireUser } from './lib/session';
+import { sendPush } from './lib/notify';
 
 const adKindValidator = v.union(v.literal('post'), v.literal('clip'));
 const billingPlanValidator = v.union(v.literal('daily'), v.literal('monthly'));
@@ -419,6 +420,10 @@ export const approveAd = mutation({
       adId,
       status: 'approved',
     });
+    await sendPush(ctx, ad.creatorId, 'Ad approved', 'Your ad was approved and is ready to run.', {
+      type: 'ad_status',
+      adId,
+    });
   },
 });
 
@@ -446,6 +451,7 @@ export const rejectAd = mutation({
       status: 'rejected',
       message: trimmed,
     });
+    await sendPush(ctx, ad.creatorId, 'Ad rejected', trimmed, { type: 'ad_status', adId });
   },
 });
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Image, LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
+import { useTranslation } from 'react-i18next';
 import { StatusBar } from 'expo-status-bar';
 import { useAuthedMutation as useMutation } from '../SessionContext';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -83,6 +84,7 @@ export default function EditMediaScreen({
     sound: PersistedSound
   ) => void;
 }) {
+  const { t } = useTranslation(['editMedia', 'common']);
   const player = useVideoPlayer(media.type === 'video' ? { uri: media.uri } : null, (p) => {
     if (media.type === 'video') {
       p.loop = true;
@@ -356,7 +358,7 @@ export default function EditMediaScreen({
         >
           <HugeiconsIcon icon={MusicNote02Icon} size={16} color={colors.white} />
           <Text style={styles.addSoundText} numberOfLines={1}>
-            {pickedSound ? pickedSound.name : 'Add sound'}
+            {pickedSound ? pickedSound.name : t('addSoundButton')}
           </Text>
         </Pressable>
       )}
@@ -386,7 +388,7 @@ export default function EditMediaScreen({
             style={[styles.storyButton, addingToStory && styles.storyButtonDisabled]}
             onPress={handleAddToStory}
             disabled={addingToStory}
-            accessibilityLabel="Add to story"
+            accessibilityLabel={t('addToStoryLabel')}
           >
             {addingToStory ? (
               <ActivityIndicator color={colors.white} />
@@ -401,7 +403,7 @@ export default function EditMediaScreen({
           onPress={handleNext}
           disabled={isSaving}
         >
-          <Text style={styles.nextButtonText}>{isSaving ? 'Saving…' : 'Next'}</Text>
+          <Text style={styles.nextButtonText}>{isSaving ? t('savingButton') : t('common:next')}</Text>
         </Pressable>
       </View>
 
@@ -447,18 +449,18 @@ export default function EditMediaScreen({
 
       <NativePopup
         visible={addedToStoryVisible}
-        title="Added to Story"
-        message="It'll be visible to your friends for 24 hours. Keep going to post it here too."
-        confirmLabel="Nice"
+        title={t('addedToStoryTitle')}
+        message={t('addedToStoryMessage')}
+        confirmLabel={t('addedToStoryConfirm')}
         showCancel={false}
         onClose={() => setAddedToStoryVisible(false)}
         onConfirm={() => {}}
       />
       <NativePopup
         visible={addToStoryError !== null}
-        title="Couldn't add to story"
+        title={t('addToStoryErrorTitle')}
         message={addToStoryError ?? ''}
-        confirmLabel="Okay"
+        confirmLabel={t('addToStoryErrorConfirm')}
         showCancel={false}
         onClose={() => setAddToStoryError(null)}
         onConfirm={() => {}}

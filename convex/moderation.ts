@@ -19,6 +19,7 @@ import {
 } from '../moderationOptions';
 import { rateLimiter } from './lib/rateLimit';
 import { requireUser } from './lib/session';
+import { sendPush } from './lib/notify';
 
 const durationValidator = v.union(
   v.literal('1d'),
@@ -577,14 +578,23 @@ async function closeReportsForPost(
   await Promise.all(
     related
       .filter((row) => row.status !== 'resolved')
-      .map((row) =>
-        ctx.db.patch(row._id, {
+      .map(async (row) => {
+        await ctx.db.patch(row._id, {
           status: 'resolved' as const,
           resolution,
           resolvedByModId: modId,
           resolvedAt: Date.now(),
-        })
-      )
+        });
+        await sendPush(
+          ctx,
+          row.reporterId,
+          'Report reviewed',
+          resolution === 'deleted'
+            ? 'Thanks for the report — we removed the content you flagged.'
+            : 'Thanks for the report — our team reviewed it and took no action.',
+          { type: 'report_resolved', reportId: row._id }
+        );
+      })
   );
 }
 
@@ -602,14 +612,23 @@ async function closeReportsForSound(
   await Promise.all(
     related
       .filter((row) => row.status !== 'resolved')
-      .map((row) =>
-        ctx.db.patch(row._id, {
+      .map(async (row) => {
+        await ctx.db.patch(row._id, {
           status: 'resolved' as const,
           resolution,
           resolvedByModId: modId,
           resolvedAt: Date.now(),
-        })
-      )
+        });
+        await sendPush(
+          ctx,
+          row.reporterId,
+          'Report reviewed',
+          resolution === 'deleted'
+            ? 'Thanks for the report — we removed the content you flagged.'
+            : 'Thanks for the report — our team reviewed it and took no action.',
+          { type: 'report_resolved', reportId: row._id }
+        );
+      })
   );
 }
 
@@ -697,6 +716,13 @@ export const dismissReport = mutation({
         resolvedByModId: modId,
         resolvedAt: Date.now(),
       });
+      await sendPush(
+        ctx,
+        report.reporterId,
+        'Report reviewed',
+        'Thanks for the report — our team reviewed it and took no action.',
+        { type: 'report_resolved', reportId: report._id }
+      );
     }
 
     await writeLog(ctx, {
@@ -733,6 +759,13 @@ export const restrictUser = mutation({
       durationLabel: durationLabel(duration),
       detail: 'Restricted from posting and commenting',
     });
+    await sendPush(
+      ctx,
+      targetUserId,
+      'Account restricted',
+      `You've been restricted from posting and commenting (${durationLabel(duration)}).`,
+      { type: 'moderation' }
+    );
   },
 });
 
@@ -755,6 +788,13 @@ export const banUser = mutation({
       durationLabel: durationLabel(duration),
       detail: 'Banned from the app',
     });
+    await sendPush(
+      ctx,
+      targetUserId,
+      'Account banned',
+      `You've been banned from MyCircle (${durationLabel(duration)}).`,
+      { type: 'moderation' }
+    );
   },
 });
 
@@ -815,6 +855,7 @@ export const warnUser = mutation({
       action: 'warn',
       detail: trimmed,
     });
+    await sendPush(ctx, targetUserId, 'Account warning', trimmed, { type: 'moderation' });
   },
 });
 
@@ -890,6 +931,16 @@ export const giveStrike = mutation({
         detail: `Automatic ban after ${MAX_STRIKES} strikes`,
       });
     }
+
+    await sendPush(
+      ctx,
+      targetUserId,
+      isFinal ? 'Account banned' : 'Strike received',
+      isFinal
+        ? `This was your third strike — your account has been permanently banned.`
+        : `You received strike ${nextCount} of ${MAX_STRIKES}: ${trimmed}`,
+      { type: 'moderation' }
+    );
 
     return { strikeCount: nextCount, banned: isFinal };
   },

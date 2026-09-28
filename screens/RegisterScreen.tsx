@@ -4,6 +4,7 @@ import Text from '../components/AppText';
 import LegalDocModal from '../components/LegalDocModal';
 import { LegalDocKey } from '../legalText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAction } from 'convex/react';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { CheckmarkSquare02Icon, SquareIcon, ViewIcon, ViewOffSlashIcon } from '@hugeicons/core-free-icons';
@@ -23,14 +24,19 @@ export default function RegisterScreen({
   onBack,
   onSwitchToLogin,
   onRegistered,
+  onGuest,
 }: {
   onBack: () => void;
   onSwitchToLogin: () => void;
   onRegistered: (userId: Id<'users'>, sessionToken: string) => void;
+  // Not shown while switching into an already-logged-in account (see
+  // App.tsx's isAddingAccount).
+  onGuest?: () => void;
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const entrance = useEntranceAnimation();
+  const { t } = useTranslation(['register', 'common']);
   const register = useAction(api.auth.register);
 
   const [email, setEmail] = useState('');
@@ -45,15 +51,15 @@ export default function RegisterScreen({
     setError(null);
 
     if (!email.trim() || !password) {
-      setError('Enter an email and password.');
+      setError(t('emptyFieldsError'));
       return;
     }
     if (password.length < 6) {
-      setError('Password should be at least 6 characters.');
+      setError(t('shortPasswordError'));
       return;
     }
     if (!agreedToTerms) {
-      setError('Please agree to the Privacy Policy and Terms and Conditions.');
+      setError(t('termsNotAgreedError'));
       return;
     }
 
@@ -78,16 +84,16 @@ export default function RegisterScreen({
 
       <Animated.View style={[styles.titleWrap, entrance]}>
         <Text variant="display" style={styles.title}>
-          Join MyCircle
+          {t('joinTitle')}
         </Text>
         <Text variant="body" style={styles.subtitle}>
-          Create an account to get started.
+          {t('subtitle')}
         </Text>
       </Animated.View>
 
       <Animated.View style={[styles.actions, entrance]}>
         <TextField
-          placeholder="Email"
+          placeholder={t('emailPlaceholder')}
           autoCapitalize="none"
           keyboardType="email-address"
           value={email}
@@ -97,7 +103,7 @@ export default function RegisterScreen({
         <View style={styles.passwordWrap}>
           <TextField
             style={styles.passwordInput}
-            placeholder="Password"
+            placeholder={t('passwordPlaceholder')}
             secureTextEntry={!showPassword}
             value={password}
             onChangeText={setPassword}
@@ -123,21 +129,21 @@ export default function RegisterScreen({
             fill={agreedToTerms ? colors.white : 'none'}
           />
           <Text variant="footnote" style={styles.terms}>
-            I agree to the{' '}
+            {t('agreeToText')}{' '}
             <Text
               variant="footnote"
               style={styles.link}
               onPress={() => setLegalDoc('privacy')}
             >
-              Privacy Policy
+              {t('privacyPolicy')}
             </Text>{' '}
-            and{' '}
+            {t('andConnector')}{' '}
             <Text
               variant="footnote"
               style={styles.link}
               onPress={() => setLegalDoc('terms')}
             >
-              Terms and Conditions
+              {t('termsAndConditions')}
             </Text>
           </Text>
         </Pressable>
@@ -150,7 +156,7 @@ export default function RegisterScreen({
 
         <View style={styles.buttonWrap}>
           <PrimaryButton
-            label="Register"
+            label={t('registerButton')}
             tone="primary"
             loading={submitting}
             disabled={submitting || !agreedToTerms}
@@ -159,11 +165,19 @@ export default function RegisterScreen({
         </View>
 
         <Text variant="callout" style={styles.switchText}>
-          Already have an account?{' '}
+          {t('haveAccountText')}{' '}
           <Text variant="calloutBold" style={styles.link} onPress={onSwitchToLogin}>
-            Login
+            {t('loginLink')}
           </Text>
         </Text>
+
+        {onGuest && (
+          <Pressable style={styles.guestButton} onPress={onGuest}>
+            <Text variant="callout" style={styles.guestButtonText}>
+              {t('guestButton')}
+            </Text>
+          </Pressable>
+        )}
       </Animated.View>
 
       <LegalDocModal docKey={legalDoc} onClose={() => setLegalDoc(null)} />
@@ -238,5 +252,14 @@ const createStyles = (colors: Colors) =>
     terms: {
       flex: 1,
       color: colors.textMuted,
+    },
+    guestButton: {
+      marginTop: space.md,
+      alignItems: 'center',
+      paddingVertical: space.xs,
+    },
+    guestButtonText: {
+      color: colors.textMuted,
+      textDecorationLine: 'underline',
     },
   });

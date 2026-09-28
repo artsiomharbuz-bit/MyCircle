@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
@@ -41,6 +42,7 @@ export default function ManageSoundsScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation('manageSounds');
 
   const mySounds = useQuery(api.sounds.listMySounds, { userId });
   const generateUploadUrl = useMutation(api.sounds.generateUploadUrl);
@@ -67,7 +69,7 @@ export default function ManageSoundsScreen({
   const pickVideo = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      setError('Photo/video library access was denied.');
+      setError(t('videoAccessDeniedError'));
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -75,8 +77,9 @@ export default function ManageSoundsScreen({
       quality: 0.8,
     });
     if (result.canceled || !result.assets[0]) return;
-    setPendingSource({ kind: 'video', name: 'My sound', uri: result.assets[0].uri });
-    setName('My sound');
+    const defaultVideoSoundName = t('defaultVideoSoundName');
+    setPendingSource({ kind: 'video', name: defaultVideoSoundName, uri: result.assets[0].uri });
+    setName(defaultVideoSoundName);
   };
 
   const closeForm = () => {
@@ -113,23 +116,23 @@ export default function ManageSoundsScreen({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel="Go back">
+        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel={t('goBackLabel')}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text variant="h3" style={styles.title}>Sounds</Text>
+        <Text variant="h3" style={styles.title}>{t('headerTitle')}</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text variant="footnote" style={styles.sectionTitle}>Add a sound</Text>
+        <Text variant="footnote" style={styles.sectionTitle}>{t('addSoundSectionTitle')}</Text>
         <View style={styles.addOptions}>
           <Pressable style={styles.addOption} onPress={pickFile}>
             <View style={styles.addIcon}>
               <HugeiconsIcon icon={Upload01Icon} size={19} color={colors.white} />
             </View>
             <View style={styles.addText}>
-              <Text variant="bodyBold" style={styles.addLabel}>Upload an audio file</Text>
+              <Text variant="bodyBold" style={styles.addLabel}>{t('uploadAudioLabel')}</Text>
               <Text variant="caption" style={styles.addDescription}>
-                An mp3 or other audio file from your device
+                {t('uploadAudioDescription')}
               </Text>
             </View>
             <HugeiconsIcon icon={ArrowRight01Icon} size={20} color={colors.textMuted} />
@@ -140,16 +143,16 @@ export default function ManageSoundsScreen({
               <HugeiconsIcon icon={Video01Icon} size={19} color={colors.white} />
             </View>
             <View style={styles.addText}>
-              <Text variant="bodyBold" style={styles.addLabel}>Use a video's sound</Text>
+              <Text variant="bodyBold" style={styles.addLabel}>{t('useVideoSoundLabel')}</Text>
               <Text variant="caption" style={styles.addDescription}>
-                Pick a video — its own audio becomes a usable sound
+                {t('useVideoSoundDescription')}
               </Text>
             </View>
             <HugeiconsIcon icon={ArrowRight01Icon} size={20} color={colors.textMuted} />
           </Pressable>
         </View>
 
-        <Text variant="footnote" style={styles.sectionTitle}>Your sounds</Text>
+        <Text variant="footnote" style={styles.sectionTitle}>{t('yourSoundsSectionTitle')}</Text>
         {mySounds === undefined && (
           <View style={styles.loading}>
             <Skeleton style={styles.soundRowSkeleton} />
@@ -160,7 +163,7 @@ export default function ManageSoundsScreen({
         {mySounds && mySounds.length === 0 && (
           <EmptyState
             icon={MusicNote02Icon}
-            message="No sounds yet. Sounds you make — either from a post/clip going global, or added here — will show up in this list."
+            message={t('noSoundsMessage')}
             style={styles.emptyState}
           />
         )}
@@ -182,8 +185,10 @@ export default function ManageSoundsScreen({
                 {sound.name}
               </Text>
               <Text variant="caption" style={styles.addDescription}>
-                {sound.isGlobal ? 'Public' : 'Private'} · {sound.useCount}{' '}
-                {sound.useCount === 1 ? 'use' : 'uses'}
+                {sound.isGlobal ? t('visibilityPublic') : t('visibilityPrivate')} ·{' '}
+                {sound.useCount === 1
+                  ? t('useCountSingular', { count: sound.useCount })
+                  : t('useCountPlural', { count: sound.useCount })}
               </Text>
             </View>
             <HugeiconsIcon icon={ArrowRight01Icon} size={20} color={colors.textMuted} />
@@ -193,13 +198,13 @@ export default function ManageSoundsScreen({
 
       <FormModal
         visible={pendingSource !== null}
-        title="Name this sound"
-        subtitle="This is what everyone will see and search for."
+        title={t('nameSoundModalTitle')}
+        subtitle={t('nameSoundModalSubtitle')}
         icon={MusicNote02Icon}
         onClose={closeForm}
         footer={
           <PrimaryButton
-            label="Add sound"
+            label={t('addSoundButton')}
             loading={submitting}
             disabled={name.trim().length === 0}
             onPress={submit}
@@ -208,7 +213,7 @@ export default function ManageSoundsScreen({
       >
         <AppTextInput
           style={styles.nameInput}
-          placeholder="Sound name"
+          placeholder={t('soundNamePlaceholder')}
           placeholderTextColor={colors.placeholder}
           value={name}
           onChangeText={(value) => {

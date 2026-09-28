@@ -1,0 +1,74 @@
+{
+  "en": {
+    "nothingHereMessage": "Nothing here yet.",
+    "createPostButton": "Create a Post",
+    "notFollowingMessage": "You're not following anyone yet.",
+    "findFriendsButton": "Find Friends"
+  },
+  "de": {
+    "nothingHereMessage": "Hier gibt es noch nichts.",
+    "createPostButton": "Beitrag erstellen",
+    "notFollowingMessage": "Du folgst noch niemandem.",
+    "findFriendsButton": "Freunde finden"
+  },
+  "es": {
+    "nothingHereMessage": "Todavía no hay nada aquí.",
+    "createPostButton": "Crear una publicación",
+    "notFollowingMessage": "Aún no sigues a nadie.",
+    "findFriendsButton": "Buscar amigos"
+  },
+  "fr": {
+    "nothingHereMessage": "Il n'y a encore rien ici.",
+    "createPostButton": "Créer une publication",
+    "notFollowingMessage": "Vous ne suivez encore personne.",
+    "findFriendsButton": "Trouver des amis"
+  },
+  "pt": {
+    "nothingHereMessage": "Ainda não há nada aqui.",
+    "createPostButton": "Criar uma publicação",
+    "notFollowingMessage": "Você ainda não segue ninguém.",
+    "findFriendsButton": "Encontrar amigos"
+  },
+  "it": {
+    "nothingHereMessage": "Non c'è ancora niente qui.",
+    "createPostButton": "Crea un post",
+    "notFollowingMessage": "Non segui ancora nessuno.",
+    "findFriendsButton": "Trova amici"
+  },
+  "tr": {
+    "nothingHereMessage": "Burada henüz bir şey yok.",
+    "createPostButton": "Gönderi Oluştur",
+    "notFollowingMessage": "Henüz kimseyi takip etmiyorsun.",
+    "findFriendsButton": "Arkadaş Bul"
+  },
+  "pl": {
+    "nothingHereMessage": "Nic tu jeszcze nie ma.",
+    "createPostButton": "Utwórz post",
+    "notFollowingMessage": "Nikogo jeszcze nie obserwujesz.",
+    "findFriendsButton": "Znajdź znajomych"
+  },
+  "ar": {
+    "nothingHereMessage": "لا يوجد شيء هنا بعد.",
+    "createPostButton": "إنشاء منشور",
+    "notFollowingMessage": "أنت لا تتابع أحدًا بعد.",
+    "findFriendsButton": "ابحث عن أصدقاء"
+  },
+  "id": {
+    "nothingHereMessage": "Belum ada apa-apa di sini.",
+    "createPostButton": "Buat Postingan",
+    "notFollowingMessage": "Kamu belum mengikuti siapa pun.",
+    "findFriendsButton": "Cari Teman"
+  },
+  "ru": {
+    "nothingHereMessage": "Здесь пока ничего нет.",
+    "createPostButton": "Создать публикацию",
+    "notFollowingMessage": "Вы пока ни на кого не подписаны.",
+    "findFriendsButton": "Найти друзей"
+  },
+  "uk": {
+    "nothingHereMessage": "Тут поки що нічого немає.",
+    "createPostButton": "Створити публікацію",
+    "notFollowingMessage": "Ви поки що ні на кого не підписані.",
+    "findFriendsButton": "Знайти друзів"
+  }
+}

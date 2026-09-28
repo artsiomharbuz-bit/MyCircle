@@ -1,5 +1,6 @@
 import AppTextInput from '../components/AppTextInput';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, Keyboard, LayoutChangeEvent, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
@@ -46,6 +47,7 @@ export default function ChatScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['chat', 'common']);
   const [text, setText] = useState('');
   const [stickersOpen, setStickersOpen] = useState(false);
   const [stickerToSave, setStickerToSave] = useState<{ _id: Id<'stickers'>; name: string } | null>(null);
@@ -179,7 +181,7 @@ export default function ChatScreen({
     setMediaError(null);
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      setMediaError('Photo access was denied.');
+      setMediaError(t('photoAccessDenied'));
       return;
     }
 
@@ -209,7 +211,7 @@ export default function ChatScreen({
         mediaType,
       });
     } catch {
-      setMediaError("Couldn't send that — try again.");
+      setMediaError(t('sendFailedError'));
     } finally {
       setSendingMedia(false);
     }
@@ -219,11 +221,11 @@ export default function ChatScreen({
   let lastMessageStatus: string | null = null;
   if (lastMessage?.isMine) {
     if (isSending) {
-      lastMessageStatus = 'Sending…';
+      lastMessageStatus = t('sendingEllipsis');
     } else if (otherLastRead != null && otherLastRead >= lastMessage._creationTime) {
-      lastMessageStatus = 'Seen';
+      lastMessageStatus = t('seenStatus');
     } else {
-      lastMessageStatus = 'Sent';
+      lastMessageStatus = t('sentStatus');
     }
   }
 
@@ -255,7 +257,7 @@ export default function ChatScreen({
       >
         {messages?.length === 0 && !otherIsTyping && (
           <Text variant="callout" style={styles.emptyText}>
-            Say hi to {otherUser?.name ?? 'them'} — this is the start of your conversation.
+            {t('startConversation', { name: otherUser?.name ?? t('themFallback') })}
           </Text>
         )}
 
@@ -373,7 +375,7 @@ export default function ChatScreen({
         <AnimatedPressable
           style={styles.backgroundButton}
           onPress={onOpenInfo}
-          accessibilityLabel="Chat options"
+          accessibilityLabel={t('chatOptionsLabel')}
         >
           <HugeiconsIcon icon={MoreVerticalIcon} size={19} color={colors.white} />
         </AnimatedPressable>
@@ -415,7 +417,7 @@ export default function ChatScreen({
         </Pressable>
         <AppTextInput
           style={styles.input}
-          placeholder={sendingMedia ? 'Sending…' : 'Message...'}
+          placeholder={sendingMedia ? t('sendingEllipsis') : t('messagePlaceholder')}
           placeholderTextColor={colors.placeholder}
           value={text}
           onChangeText={handleChangeText}
@@ -432,8 +434,8 @@ export default function ChatScreen({
         </AnimatedPressable>
       </View>
       <StickerSheet visible={stickersOpen} userId={currentUserId} onClose={() => setStickersOpen(false)} onSelect={(sticker) => sendMessage({ senderId: currentUserId, recipientId: otherUserId, text: '', stickerId: sticker._id })} />
-      <NativePopup visible={stickerToSave !== null} title="Save this sticker?" message={stickerToSave ? `Add “${stickerToSave.name}” to your saved stickers.` : ''} onClose={() => setStickerToSave(null)} onConfirm={async () => { if (!stickerToSave) return; const result = await saveSticker({ userId: currentUserId, stickerId: stickerToSave._id }); if (result.alreadySaved) setAlreadySaved(true); }} />
-      <NativePopup visible={alreadySaved} title="Already saved" message="This sticker is already in your Saved collection." confirmLabel="Got it" showCancel={false} onClose={() => setAlreadySaved(false)} onConfirm={() => {}} />
+      <NativePopup visible={stickerToSave !== null} title={t('saveStickerTitle')} message={stickerToSave ? t('saveStickerMessage', { name: stickerToSave.name }) : ''} onClose={() => setStickerToSave(null)} onConfirm={async () => { if (!stickerToSave) return; const result = await saveSticker({ userId: currentUserId, stickerId: stickerToSave._id }); if (result.alreadySaved) setAlreadySaved(true); }} />
+      <NativePopup visible={alreadySaved} title={t('alreadySavedTitle')} message={t('alreadySavedMessage')} confirmLabel={t('gotItButton')} showCancel={false} onClose={() => setAlreadySaved(false)} onConfirm={() => {}} />
 
       <MediaViewerModal media={viewerMedia} onClose={() => setViewerMedia(null)} />
 

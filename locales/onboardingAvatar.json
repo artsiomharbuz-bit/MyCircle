@@ -1,0 +1,122 @@
+{
+  "en": {
+    "title": "Add a photo",
+    "subtitle": "Optional — you can always add one later.",
+    "hint": "Tap to try a new color",
+    "photoAccessDeniedError": "Photo access was denied.",
+    "choosePhotoButton": "Choose a different photo",
+    "uploadPhotoButton": "Upload Photo",
+    "continueButton": "Continue",
+    "skipButton": "Skip for now"
+  },
+  "de": {
+    "title": "Foto hinzufügen",
+    "subtitle": "Optional — du kannst später jederzeit eines hinzufügen.",
+    "hint": "Tippen für eine neue Farbe",
+    "photoAccessDeniedError": "Der Fotozugriff wurde verweigert.",
+    "choosePhotoButton": "Anderes Foto wählen",
+    "uploadPhotoButton": "Foto hochladen",
+    "continueButton": "Weiter",
+    "skipButton": "Vorerst überspringen"
+  },
+  "es": {
+    "title": "Añade una foto",
+    "subtitle": "Opcional — siempre puedes añadir una más tarde.",
+    "hint": "Toca para probar un nuevo color",
+    "photoAccessDeniedError": "Se denegó el acceso a las fotos.",
+    "choosePhotoButton": "Elegir otra foto",
+    "uploadPhotoButton": "Subir foto",
+    "continueButton": "Continuar",
+    "skipButton": "Omitir por ahora"
+  },
+  "fr": {
+    "title": "Ajoutez une photo",
+    "subtitle": "Facultatif — vous pourrez toujours en ajouter une plus tard.",
+    "hint": "Appuyez pour essayer une nouvelle couleur",
+    "photoAccessDeniedError": "L'accès aux photos a été refusé.",
+    "choosePhotoButton": "Choisir une autre photo",
+    "uploadPhotoButton": "Télécharger une photo",
+    "continueButton": "Continuer",
+    "skipButton": "Ignorer pour l'instant"
+  },
+  "pt": {
+    "title": "Adicione uma foto",
+    "subtitle": "Opcional — você sempre pode adicionar uma depois.",
+    "hint": "Toque para tentar uma nova cor",
+    "photoAccessDeniedError": "O acesso às fotos foi negado.",
+    "choosePhotoButton": "Escolher outra foto",
+    "uploadPhotoButton": "Enviar foto",
+    "continueButton": "Continuar",
+    "skipButton": "Pular por enquanto"
+  },
+  "it": {
+    "title": "Aggiungi una foto",
+    "subtitle": "Facoltativo — potrai sempre aggiungerne una più tardi.",
+    "hint": "Tocca per provare un nuovo colore",
+    "photoAccessDeniedError": "L'accesso alle foto è stato negato.",
+    "choosePhotoButton": "Scegli un'altra foto",
+    "uploadPhotoButton": "Carica foto",
+    "continueButton": "Continua",
+    "skipButton": "Salta per ora"
+  },
+  "tr": {
+    "title": "Bir fotoğraf ekleyin",
+    "subtitle": "İsteğe bağlı — daha sonra her zaman ekleyebilirsiniz.",
+    "hint": "Yeni bir renk denemek için dokunun",
+    "photoAccessDeniedError": "Fotoğraf erişimi reddedildi.",
+    "choosePhotoButton": "Farklı bir fotoğraf seç",
+    "uploadPhotoButton": "Fotoğraf Yükle",
+    "continueButton": "Devam Et",
+    "skipButton": "Şimdilik geç"
+  },
+  "pl": {
+    "title": "Dodaj zdjęcie",
+    "subtitle": "Opcjonalnie — zawsze możesz dodać je później.",
+    "hint": "Dotknij, aby wypróbować nowy kolor",
+    "photoAccessDeniedError": "Odmówiono dostępu do zdjęć.",
+    "choosePhotoButton": "Wybierz inne zdjęcie",
+    "uploadPhotoButton": "Prześlij zdjęcie",
+    "continueButton": "Dalej",
+    "skipButton": "Pomiń na razie"
+  },
+  "ar": {
+    "title": "أضف صورة",
+    "subtitle": "اختياري — يمكنك دائمًا إضافة واحدة لاحقًا.",
+    "hint": "اضغط لتجربة لون جديد",
+    "photoAccessDeniedError": "تم رفض الوصول إلى الصور.",
+    "choosePhotoButton": "اختيار صورة مختلفة",
+    "uploadPhotoButton": "رفع صورة",
+    "continueButton": "متابعة",
+    "skipButton": "تخطي الآن"
+  },
+  "id": {
+    "title": "Tambahkan foto",
+    "subtitle": "Opsional — kamu selalu bisa menambahkannya nanti.",
+    "hint": "Ketuk untuk mencoba warna baru",
+    "photoAccessDeniedError": "Akses foto ditolak.",
+    "choosePhotoButton": "Pilih foto lain",
+    "uploadPhotoButton": "Unggah Foto",
+    "continueButton": "Lanjutkan",
+    "skipButton": "Lewati untuk sekarang"
+  },
+  "ru": {
+    "title": "Добавьте фото",
+    "subtitle": "Необязательно — вы всегда сможете добавить его позже.",
+    "hint": "Нажмите, чтобы попробовать новый цвет",
+    "photoAccessDeniedError": "Доступ к фото был отклонён.",
+    "choosePhotoButton": "Выбрать другое фото",
+    "uploadPhotoButton": "Загрузить фото",
+    "continueButton": "Продолжить",
+    "skipButton": "Пропустить пока"
+  },
+  "uk": {
+    "title": "Додайте фото",
+    "subtitle": "Необов'язково — ви завжди можете додати його пізніше.",
+    "hint": "Торкніться, щоб спробувати новий колір",
+    "photoAccessDeniedError": "Доступ до фото було відхилено.",
+    "choosePhotoButton": "Вибрати інше фото",
+    "uploadPhotoButton": "Завантажити фото",
+    "continueButton": "Продовжити",
+    "skipButton": "Пропустити поки що"
+  }
+}

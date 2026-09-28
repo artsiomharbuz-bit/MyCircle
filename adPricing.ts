@@ -4,9 +4,12 @@
 
 export type AdKind = 'post' | 'clip';
 
+// Intro pricing — deliberately cheap while the app has no real traffic to
+// back a "reach" promise (see AGENTS.md-style note: raise this once there's
+// real DAU/impression data to price against, rather than a flat guess).
 export const AD_DAILY_PRICE: Record<AdKind, number> = {
-  post: 7,
-  clip: 10,
+  post: 3,
+  clip: 5,
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, View, ViewToken } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowRight01Icon, Image02Icon, Search01Icon, UserAdd01Icon } from '@hugeicons/core-free-icons';
@@ -50,6 +51,7 @@ export default function ExploreScreen({
   onOpenSound: (soundId: Id<'sounds'>) => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['explore', 'common']);
   const styles = createStyles(colors);
   const posts = useQuery(api.posts.listExploreFeed, { viewerId: userId });
   const clips = useQuery(api.posts.listClips, { viewerId: userId });
@@ -168,7 +170,7 @@ export default function ExploreScreen({
         ListHeaderComponent={
           clips === undefined ? (
             <FadeInView style={styles.clipsSection}>
-              <Text variant="h3" style={styles.clipsHeading}>Clips</Text>
+              <Text variant="h3" style={styles.clipsHeading}>{t('common:tabClips')}</Text>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -185,9 +187,9 @@ export default function ExploreScreen({
                 style={styles.clipsHeadingRow}
                 onPress={() => onOpenClip(clips[0]._id as Id<'posts'>)}
                 accessibilityRole="button"
-                accessibilityLabel="Open clips"
+                accessibilityLabel={t('openClipsLabel')}
               >
-                <Text variant="h3" style={styles.clipsHeadingText}>Clips</Text>
+                <Text variant="h3" style={styles.clipsHeadingText}>{t('common:tabClips')}</Text>
                 <HugeiconsIcon icon={ArrowRight01Icon} size={18} color={colors.white} />
               </Pressable>
               <ScrollView
@@ -219,14 +221,14 @@ export default function ExploreScreen({
           ) : feedFilter === 'friends' ? (
             <EmptyState
               icon={Image02Icon}
-              message="No posts from people you follow yet."
+              message={t('friendsEmptyMessage')}
               style={styles.emptyState}
             />
           ) : !clips || clips.length === 0 ? (
             <EmptyState
               icon={Image02Icon}
-              message="Nothing here yet."
-              buttonLabel="Create a Post"
+              message={t('nothingHereMessage')}
+              buttonLabel={t('createPostButton')}
               onPressButton={onOpenCamera}
               style={styles.emptyState}
             />
@@ -252,9 +254,9 @@ export default function ExploreScreen({
       />
 
       <CollapsibleHeader
-        title="Explore"
+        title={t('common:tabExplore')}
         brand
-        altTitle={feedFilter === 'for-you' ? 'For You' : 'Friends'}
+        altTitle={feedFilter === 'for-you' ? t('forYouLabel') : t('friendsLabel')}
         altSwitchAt={34}
         onPressAlt={() => setDropdownOpen(true)}
         scrollY={scrollY}
@@ -266,8 +268,8 @@ export default function ExploreScreen({
       <HeaderDropdown
         visible={dropdownOpen}
         options={[
-          { id: 'for-you', label: 'For You' },
-          { id: 'friends', label: 'Friends' },
+          { id: 'for-you', label: t('forYouLabel') },
+          { id: 'friends', label: t('friendsLabel') },
         ]}
         selectedId={feedFilter}
         onSelect={pickFilter}

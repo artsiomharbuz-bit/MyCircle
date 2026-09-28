@@ -1,0 +1,98 @@
+{
+  "en": {
+    "permissionText": "MyCircle needs access to your camera and microphone.",
+    "grantAccessButton": "Grant Access",
+    "clipHint": "Hold to record, or import a video from your gallery.",
+    "postLabel": "Post",
+    "storyLabel": "Story",
+    "clipLabel": "Clip"
+  },
+  "de": {
+    "permissionText": "MyCircle benötigt Zugriff auf deine Kamera und dein Mikrofon.",
+    "grantAccessButton": "Zugriff erlauben",
+    "clipHint": "Halten zum Aufnehmen oder ein Video aus deiner Galerie importieren.",
+    "postLabel": "Beitrag",
+    "storyLabel": "Story",
+    "clipLabel": "Clip"
+  },
+  "es": {
+    "permissionText": "MyCircle necesita acceso a tu cámara y micrófono.",
+    "grantAccessButton": "Conceder acceso",
+    "clipHint": "Mantén presionado para grabar, o importa un video de tu galería.",
+    "postLabel": "Publicación",
+    "storyLabel": "Historia",
+    "clipLabel": "Clip"
+  },
+  "fr": {
+    "permissionText": "MyCircle a besoin d'accéder à votre appareil photo et à votre microphone.",
+    "grantAccessButton": "Autoriser l'accès",
+    "clipHint": "Maintenez pour enregistrer, ou importez une vidéo depuis votre galerie.",
+    "postLabel": "Publication",
+    "storyLabel": "Story",
+    "clipLabel": "Clip"
+  },
+  "pt": {
+    "permissionText": "O MyCircle precisa de acesso à sua câmera e microfone.",
+    "grantAccessButton": "Conceder acesso",
+    "clipHint": "Mantenha pressionado para gravar, ou importe um vídeo da sua galeria.",
+    "postLabel": "Publicação",
+    "storyLabel": "Story",
+    "clipLabel": "Clipe"
+  },
+  "it": {
+    "permissionText": "MyCircle ha bisogno di accedere a fotocamera e microfono.",
+    "grantAccessButton": "Consenti accesso",
+    "clipHint": "Tieni premuto per registrare, oppure importa un video dalla galleria.",
+    "postLabel": "Post",
+    "storyLabel": "Storia",
+    "clipLabel": "Clip"
+  },
+  "tr": {
+    "permissionText": "MyCircle'ın kamera ve mikrofonuna erişmesi gerekiyor.",
+    "grantAccessButton": "Erişime İzin Ver",
+    "clipHint": "Kaydetmek için basılı tutun veya galerinizden bir video içe aktarın.",
+    "postLabel": "Gönderi",
+    "storyLabel": "Hikaye",
+    "clipLabel": "Klip"
+  },
+  "pl": {
+    "permissionText": "MyCircle potrzebuje dostępu do Twojego aparatu i mikrofonu.",
+    "grantAccessButton": "Zezwól na dostęp",
+    "clipHint": "Przytrzymaj, aby nagrywać, lub zaimportuj wideo z galerii.",
+    "postLabel": "Post",
+    "storyLabel": "Relacja",
+    "clipLabel": "Klip"
+  },
+  "ar": {
+    "permissionText": "يحتاج MyCircle إلى الوصول إلى الكاميرا والميكروفون الخاصين بك.",
+    "grantAccessButton": "منح الوصول",
+    "clipHint": "اضغط مطولاً للتسجيل، أو استورد فيديو من معرض الصور.",
+    "postLabel": "منشور",
+    "storyLabel": "قصة",
+    "clipLabel": "مقطع"
+  },
+  "id": {
+    "permissionText": "MyCircle memerlukan akses ke kamera dan mikrofon Anda.",
+    "grantAccessButton": "Berikan Akses",
+    "clipHint": "Tahan untuk merekam, atau impor video dari galeri Anda.",
+    "postLabel": "Postingan",
+    "storyLabel": "Story",
+    "clipLabel": "Klip"
+  },
+  "ru": {
+    "permissionText": "MyCircle нужен доступ к камере и микрофону.",
+    "grantAccessButton": "Предоставить доступ",
+    "clipHint": "Удерживайте для записи или импортируйте видео из галереи.",
+    "postLabel": "Пост",
+    "storyLabel": "История",
+    "clipLabel": "Клип"
+  },
+  "uk": {
+    "permissionText": "MyCircle потрібен доступ до камери та мікрофона.",
+    "grantAccessButton": "Надати доступ",
+    "clipHint": "Утримуйте, щоб записати, або імпортуйте відео з галереї.",
+    "postLabel": "Допис",
+    "storyLabel": "Історія",
+    "clipLabel": "Кліп"
+  }
+}

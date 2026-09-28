@@ -1,5 +1,6 @@
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
+import { useTranslation } from 'react-i18next';
 import { StatusBar } from 'expo-status-bar';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,6 +23,7 @@ export default function BlockedAccountsScreen({
   onBack: () => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['blockedAccounts', 'common']);
   const styles = createStyles(colors);
   const blocked = useQuery(api.blocks.listBlockedUsers, { userId });
   const unblockUser = useMutation(api.blocks.unblockUser);
@@ -53,7 +55,7 @@ export default function BlockedAccountsScreen({
                   style={styles.unblockButton}
                   onPress={() => unblockUser({ blockerId: userId, blockedId: user._id as Id<'users'> })}
                 >
-                  <Text style={styles.unblockButtonText}>Unblock</Text>
+                  <Text style={styles.unblockButtonText}>{t('common:unblock')}</Text>
                 </Pressable>
               </View>
             </FadeInView>
@@ -63,7 +65,7 @@ export default function BlockedAccountsScreen({
         {blocked && blocked.length === 0 && (
           <EmptyState
             icon={UserBlock01Icon}
-            message="You haven't blocked anyone."
+            message={t('noBlockedEmpty')}
             style={styles.emptyState}
           />
         )}
@@ -73,7 +75,7 @@ export default function BlockedAccountsScreen({
         <Pressable style={styles.backButton} onPress={onBack}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>Blocked accounts</Text>
+        <Text style={styles.title}>{t('screenTitle')}</Text>
       </View>
 
       <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />

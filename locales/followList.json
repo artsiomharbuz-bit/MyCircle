@@ -1,0 +1,74 @@
+{
+  "en": {
+    "noFollowersMessage": "No followers yet.",
+    "noFollowingMessage": "Not following anyone yet.",
+    "followersTitle": "Followers",
+    "followingTitle": "Following"
+  },
+  "de": {
+    "noFollowersMessage": "Noch keine Follower.",
+    "noFollowingMessage": "Du folgst noch niemandem.",
+    "followersTitle": "Follower",
+    "followingTitle": "Gefolgt"
+  },
+  "es": {
+    "noFollowersMessage": "Aún no hay seguidores.",
+    "noFollowingMessage": "Aún no sigues a nadie.",
+    "followersTitle": "Seguidores",
+    "followingTitle": "Siguiendo"
+  },
+  "fr": {
+    "noFollowersMessage": "Pas encore d'abonnés.",
+    "noFollowingMessage": "Vous ne suivez personne pour le moment.",
+    "followersTitle": "Abonnés",
+    "followingTitle": "Abonnements"
+  },
+  "pt": {
+    "noFollowersMessage": "Ainda sem seguidores.",
+    "noFollowingMessage": "Você ainda não segue ninguém.",
+    "followersTitle": "Seguidores",
+    "followingTitle": "Seguindo"
+  },
+  "it": {
+    "noFollowersMessage": "Ancora nessun follower.",
+    "noFollowingMessage": "Non segui ancora nessuno.",
+    "followersTitle": "Follower",
+    "followingTitle": "Seguiti"
+  },
+  "tr": {
+    "noFollowersMessage": "Henüz takipçi yok.",
+    "noFollowingMessage": "Henüz kimseyi takip etmiyorsun.",
+    "followersTitle": "Takipçiler",
+    "followingTitle": "Takip Edilenler"
+  },
+  "pl": {
+    "noFollowersMessage": "Brak obserwujących.",
+    "noFollowingMessage": "Nikogo jeszcze nie obserwujesz.",
+    "followersTitle": "Obserwujący",
+    "followingTitle": "Obserwowani"
+  },
+  "ar": {
+    "noFollowersMessage": "لا يوجد متابعون بعد.",
+    "noFollowingMessage": "أنت لا تتابع أحدًا بعد.",
+    "followersTitle": "المتابعون",
+    "followingTitle": "يتابع"
+  },
+  "id": {
+    "noFollowersMessage": "Belum ada pengikut.",
+    "noFollowingMessage": "Belum mengikuti siapa pun.",
+    "followersTitle": "Pengikut",
+    "followingTitle": "Mengikuti"
+  },
+  "ru": {
+    "noFollowersMessage": "Пока нет подписчиков.",
+    "noFollowingMessage": "Вы пока ни на кого не подписаны.",
+    "followersTitle": "Подписчики",
+    "followingTitle": "Подписки"
+  },
+  "uk": {
+    "noFollowersMessage": "Поки що немає підписників.",
+    "noFollowingMessage": "Ви ще ні на кого не підписані.",
+    "followersTitle": "Підписники",
+    "followingTitle": "Підписки"
+  }
+}

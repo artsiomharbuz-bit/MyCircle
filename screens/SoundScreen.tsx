@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -61,6 +62,7 @@ export default function SoundScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['sound', 'common']);
 
   const sound = useQuery(api.sounds.getSound, { soundId, viewerId });
   const toggleSave = useMutation(api.sounds.toggleSaveSound);
@@ -105,7 +107,7 @@ export default function SoundScreen({
       <View style={styles.container}>
         <Header onBack={onBack} colors={colors} />
         <View style={styles.loading}>
-          <Text variant="callout" style={styles.emptyText}>This sound no longer exists.</Text>
+          <Text variant="callout" style={styles.emptyText}>{t('soundNotFoundText')}</Text>
         </View>
         <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />
       </View>
@@ -145,25 +147,29 @@ export default function SoundScreen({
 
           {sound.owner && (
             <Pressable onPress={() => onOpenUser(sound.owner!._id as Id<'users'>)}>
-              <Text variant="callout" style={styles.owner}>by @{sound.owner.username ?? 'unknown'}</Text>
+              <Text variant="callout" style={styles.owner}>
+                {t('ownerLabel', { username: sound.owner.username ?? t('unknownUsername') })}
+              </Text>
             </Pressable>
           )}
 
           <Text variant="footnote" style={styles.useCount}>
-            {sound.useCount} {sound.useCount === 1 ? 'post' : 'posts'} using this sound
+            {sound.useCount === 1
+              ? t('useCountSingular', { count: sound.useCount })
+              : t('useCountPlural', { count: sound.useCount })}
           </Text>
 
           {sound.isDeleted ? (
             <View style={styles.deletedBanner}>
               <Text variant="footnote" style={styles.deletedText}>
-                This sound was removed by a moderator. Posts that used it now play muted.
+                {t('deletedBannerText')}
               </Text>
             </View>
           ) : (
             <View style={styles.actionsRow}>
               {sound.isOwner ? (
                 <PrimaryButton
-                  label="Edit sound"
+                  label={t('editSoundButton')}
                   tone="ghost"
                   onPress={() => setEditVisible(true)}
                 />
@@ -183,13 +189,13 @@ export default function SoundScreen({
                       variant="calloutBold"
                       style={[styles.pillButtonText, sound.isSaved && styles.pillButtonTextActive]}
                     >
-                      {sound.isSaved ? 'Saved' : 'Save'}
+                      {sound.isSaved ? t('savedLabel') : t('common:save')}
                     </Text>
                   </Pressable>
 
                   <Pressable style={styles.pillButton} onPress={() => setReportVisible(true)}>
                     <HugeiconsIcon icon={Flag02Icon} size={16} color={colors.white} />
-                    <Text variant="calloutBold" style={styles.pillButtonText}>Report</Text>
+                    <Text variant="calloutBold" style={styles.pillButtonText}>{t('common:report')}</Text>
                   </Pressable>
                 </>
               )}
@@ -213,7 +219,7 @@ export default function SoundScreen({
               <EmptyState
                 icon={MusicNote02Icon}
                 message={
-                  tab === 'clips' ? 'No clips use this sound yet.' : 'No posts use this sound yet.'
+                  tab === 'clips' ? t('noClipsUseSound') : t('noPostsUseSound')
                 }
                 style={styles.emptyState}
               />
@@ -261,12 +267,13 @@ export default function SoundScreen({
 
 function Header({ onBack, colors }: { onBack: () => void; colors: Colors }) {
   const styles = createStyles(colors);
+  const { t } = useTranslation('sound');
   return (
     <View style={styles.header}>
-      <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel="Go back">
+      <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel={t('goBackLabel')}>
         <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
       </Pressable>
-      <Text variant="h3" style={styles.headerTitle}>Sound</Text>
+      <Text variant="h3" style={styles.headerTitle}>{t('headerTitle')}</Text>
     </View>
   );
 }
@@ -339,6 +346,7 @@ function EditSoundModal({
 }) {
   const { colors } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['sound', 'common']);
   const updateSound = useMutation(api.sounds.updateSound);
   const generateUploadUrl = useMutation(api.sounds.generateUploadUrl);
 
@@ -357,7 +365,7 @@ function EditSoundModal({
   const pickPicture = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      setError('Photo access was denied.');
+      setError(t('photoAccessDeniedError'));
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -397,13 +405,13 @@ function EditSoundModal({
   return (
     <FormModal
       visible={visible}
-      title="Edit sound"
-      subtitle="Change its name or picture — this updates everywhere the sound appears."
+      title={t('editSoundModalTitle')}
+      subtitle={t('editSoundModalSubtitle')}
       icon={PencilEdit01Icon}
       onClose={close}
       footer={
         <PrimaryButton
-          label="Save changes"
+          label={t('saveChangesButton')}
           loading={submitting}
           disabled={name.trim().length === 0}
           onPress={save}
@@ -425,7 +433,7 @@ function EditSoundModal({
 
       <AppTextInput
         style={styles.nameInput}
-        placeholder="Sound name"
+        placeholder={t('soundNamePlaceholder')}
         placeholderTextColor={colors.placeholder}
         value={name}
         onChangeText={(value) => {

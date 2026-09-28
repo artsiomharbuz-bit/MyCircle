@@ -1,0 +1,62 @@
+{
+  "en": {
+    "loginButton": "Login",
+    "registerButton": "Register",
+    "guestButton": "Try it out as a guest"
+  },
+  "de": {
+    "loginButton": "Anmelden",
+    "registerButton": "Registrieren",
+    "guestButton": "Als Gast ausprobieren"
+  },
+  "es": {
+    "loginButton": "Iniciar sesión",
+    "registerButton": "Registrarse",
+    "guestButton": "Probarlo como invitado"
+  },
+  "fr": {
+    "loginButton": "Connexion",
+    "registerButton": "S'inscrire",
+    "guestButton": "Essayer en tant qu'invité"
+  },
+  "pt": {
+    "loginButton": "Entrar",
+    "registerButton": "Registrar",
+    "guestButton": "Experimentar como convidado"
+  },
+  "it": {
+    "loginButton": "Accedi",
+    "registerButton": "Registrati",
+    "guestButton": "Provalo come ospite"
+  },
+  "tr": {
+    "loginButton": "Giriş Yap",
+    "registerButton": "Kayıt Ol",
+    "guestButton": "Misafir olarak deneyin"
+  },
+  "pl": {
+    "loginButton": "Zaloguj się",
+    "registerButton": "Zarejestruj się",
+    "guestButton": "Wypróbuj jako gość"
+  },
+  "ar": {
+    "loginButton": "تسجيل الدخول",
+    "registerButton": "إنشاء حساب",
+    "guestButton": "جرّبه كضيف"
+  },
+  "id": {
+    "loginButton": "Masuk",
+    "registerButton": "Daftar",
+    "guestButton": "Coba sebagai tamu"
+  },
+  "ru": {
+    "loginButton": "Войти",
+    "registerButton": "Зарегистрироваться",
+    "guestButton": "Попробовать как гость"
+  },
+  "uk": {
+    "loginButton": "Увійти",
+    "registerButton": "Зареєструватися",
+    "guestButton": "Спробувати як гість"
+  }
+}

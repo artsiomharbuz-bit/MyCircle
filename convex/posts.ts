@@ -1142,59 +1142,101 @@ export const getPost = query({
   },
 });
 
+// Shared by getPublicPost and the guest list queries below — a post shaped
+// for a signed-out viewer: no per-viewer engagement state (isLiked/
+// isBookmarked), since there's no viewer to have liked or bookmarked
+// anything, just the counts and enough to render a card.
+async function formatPublicPost(ctx: QueryCtx, post: Doc<'posts'>) {
+  const author = await ctx.db.get(post.authorId);
+  const mediaUrl = await ctx.storage.getUrl(post.mediaStorageId);
+  const authorAvatarUrl = author?.avatarStorageId
+    ? await ctx.storage.getUrl(author.avatarStorageId)
+    : null;
+  const likeCount = (
+    await ctx.db
+      .query('likes')
+      .withIndex('by_post', (q) => q.eq('postId', post._id))
+      .collect()
+  ).length;
+  const commentCount = (
+    await ctx.db
+      .query('comments')
+      .withIndex('by_post', (q) => q.eq('postId', post._id))
+      .collect()
+  ).length;
+
+  return {
+    _id: post._id,
+    _creationTime: post._creationTime,
+    title: post.title,
+    caption: post.caption,
+    mediaType: post.mediaType,
+    mediaUrl,
+    kind: post.kind ?? 'post',
+    textOverlay: post.textOverlay,
+    hashtags: post.hashtags ?? [],
+    likeCount,
+    commentCount,
+    author: author
+      ? {
+          _id: author._id,
+          name: author.name,
+          username: author.username,
+          avatarUrl: authorAvatarUrl,
+          avatarGradient: author.avatarGradient,
+          isVerified: author.isVerified ?? false,
+        }
+      : null,
+  };
+}
+
 // Unauthenticated single-post lookup for shared links opened by a signed-out
 // visitor (web landing page / mobile "install the app" preview). Only ever
 // exposes globally-shared, non-clip posts — never circle-scoped content,
-// since there's no viewer identity to check audience access against — and
-// never per-viewer engagement state (like/bookmark), since there's no
-// viewer to have liked or bookmarked anything.
+// since there's no viewer identity to check audience access against.
 export const getPublicPost = query({
   args: { postId: v.id('posts'), sessionToken: v.optional(v.string()) },
   handler: async (ctx, { postId }) => {
     const post = await ctx.db.get(postId);
     if (!post || isExpired(post) || post.isAd) return null;
     if (post.audience !== 'global') return null;
+    return await formatPublicPost(ctx, post);
+  },
+});
 
-    const author = await ctx.db.get(post.authorId);
-    const mediaUrl = await ctx.storage.getUrl(post.mediaStorageId);
-    const authorAvatarUrl = author?.avatarStorageId
-      ? await ctx.storage.getUrl(author.avatarStorageId)
-      : null;
-    const likeCount = (
-      await ctx.db
-        .query('likes')
-        .withIndex('by_post', (q) => q.eq('postId', postId))
-        .collect()
-    ).length;
-    const commentCount = (
-      await ctx.db
-        .query('comments')
-        .withIndex('by_post', (q) => q.eq('postId', postId))
-        .collect()
-    ).length;
+const GUEST_FEED_CANDIDATE_LIMIT = 150;
+const GUEST_FEED_RESULT_LIMIT = 40;
 
-    return {
-      _id: post._id,
-      _creationTime: post._creationTime,
-      title: post.title,
-      caption: post.caption,
-      mediaType: post.mediaType,
-      mediaUrl,
-      kind: post.kind ?? 'post',
-      textOverlay: post.textOverlay,
-      hashtags: post.hashtags ?? [],
-      likeCount,
-      commentCount,
-      author: author
-        ? {
-            _id: author._id,
-            name: author.name,
-            username: author.username,
-            avatarUrl: authorAvatarUrl,
-            avatarGradient: author.avatarGradient,
-            isVerified: author.isVerified ?? false,
-          }
-        : null,
-    };
+// Unauthenticated explore feed for the "Try as guest" entry point (see
+// WelcomeScreen) — no personalized ranking, since there's no account to
+// personalize for, just the most recent globally-shared posts. Same
+// audience/expiry/ad exclusions as listExploreFeed, minus anything that
+// needs a viewer identity (blocks, hidden-AI-content, friend circles).
+export const listExplorePublic = query({
+  args: {},
+  handler: async (ctx) => {
+    const candidates = await ctx.db.query('posts').order('desc').take(GUEST_FEED_CANDIDATE_LIMIT);
+    const visible = candidates
+      .filter(
+        (post) =>
+          !post.isAd &&
+          !isExpired(post) &&
+          post.audience === 'global' &&
+          (post.kind ?? 'post') !== 'clip'
+      )
+      .slice(0, GUEST_FEED_RESULT_LIMIT);
+    return await Promise.all(visible.map((post) => formatPublicPost(ctx, post)));
+  },
+});
+
+// Unauthenticated clips feed, same reasoning as listExplorePublic.
+export const listClipsPublic = query({
+  args: {},
+  handler: async (ctx) => {
+    const candidates = await ctx.db.query('posts').order('desc').take(GUEST_FEED_CANDIDATE_LIMIT);
+    const visible = candidates
+      .filter((post) => !post.isAd && !isExpired(post) && post.audience === 'global' && post.kind === 'clip')
+      .slice(0, GUEST_FEED_RESULT_LIMIT);
+    return await Promise.all(visible.map((post) => formatPublicPost(ctx, post)));
   },
 });

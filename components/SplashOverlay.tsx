@@ -65,7 +65,7 @@ export default function SplashOverlay() {
       ]}>
       <Animated.View style={[styles.group, { transform: [{ translateY: lift }] }]}>
         <Animated.Image
-          source={require('../assets/logo-symbol-gradient.png')}
+          source={require('../assets/mycirclelogo.png')}
           resizeMode="contain"
           style={styles.mark}
         />

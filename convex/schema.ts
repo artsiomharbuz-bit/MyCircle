@@ -98,7 +98,8 @@ export default defineSchema({
     .index('by_status', ['status'])
     .index('by_target', ['targetUserId'])
     .index('by_post', ['postId'])
-    .index('by_sound', ['soundId']),
+    .index('by_sound', ['soundId'])
+    .index('by_reporter', ['reporterId']),
 
   // Append-only audit trail of every moderator action taken against an
   // account or its media — what the "Logs" page on a profile reads.
@@ -344,7 +345,9 @@ export default defineSchema({
     parentCommentId: v.optional(v.id('comments')),
     // Who this reply is addressed to — rendered as "YourName -> RepliedToName".
     replyToUserId: v.optional(v.id('users')),
-  }).index('by_post', ['postId']),
+  })
+    .index('by_post', ['postId'])
+    .index('by_reply_to_user', ['replyToUserId']),
 
   commentLikes: defineTable({
     commentId: v.id('comments'),
@@ -586,6 +589,41 @@ export default defineSchema({
     remixColor: v.optional(v.string()),
   }).index('by_author', ['authorId']),
 
+  // A named, permanent shelf of story-style media on a profile — Instagram's
+  // "Highlights". Built once at creation time from a mix of the owner's own
+  // recent stories (copied by value, so the highlight survives long after
+  // the source story expires out of the 24h feed) and media uploaded fresh.
+  highlights: defineTable({
+    ownerId: v.id('users'),
+    name: v.string(),
+    coverStorageId: v.id('_storage'),
+    sortOrder: v.optional(v.number()),
+  }).index('by_owner', ['ownerId']),
+
+  highlightItems: defineTable({
+    highlightId: v.id('highlights'),
+    mediaStorageId: v.id('_storage'),
+    mediaType: v.union(v.literal('photo'), v.literal('video')),
+    textOverlay: v.optional(
+      v.object({
+        text: v.string(),
+        color: v.string(),
+        fontFamily: v.optional(v.string()),
+        translateX: v.number(),
+        translateY: v.number(),
+        scale: v.number(),
+        rotation: v.number(),
+      })
+    ),
+    // Set when this item was copied in from an existing story — its
+    // mediaStorageId is only a reference in that case (owned by the story,
+    // not this item), so deleting the highlight must not delete storage for
+    // it. Unset for media uploaded directly into the highlight, whose
+    // storage this item does own.
+    sourceStoryId: v.optional(v.id('stories')),
+    sortOrder: v.number(),
+  }).index('by_highlight', ['highlightId']),
+
   // The business/review/billing side of an ad. Its actual content (media,
   // title, caption) lives on the `posts` row pointed to by postId — see
   // posts.isAd — so ads get likes/comments/bookmarks for free.
@@ -717,4 +755,17 @@ export default defineSchema({
     status: v.union(v.literal('approved'), v.literal('rejected')),
     message: v.optional(v.string()),
   }).index('by_user', ['userId']),
+
+  // One row per (user, device) — an Expo push token registered from that
+  // device (see convex/push.ts registerPushToken). A token is globally
+  // unique to a device/app install, so `by_token` re-homes it to whichever
+  // account most recently logged in there instead of ever duplicating rows.
+  pushTokens: defineTable({
+    userId: v.id('users'),
+    token: v.string(),
+    platform: v.optional(v.union(v.literal('ios'), v.literal('android'), v.literal('web'))),
+    updatedAt: v.number(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_token', ['token']),
 });

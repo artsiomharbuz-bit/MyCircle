@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useEvent } from 'expo';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { useVideoPlayer, VideoPlayer, VideoView } from 'expo-video';
@@ -88,6 +89,7 @@ export default function ClipsScreen({
   // than toggling play/pause like a normal clip's tap does.
   onOpenOriginal: (postId: Id<'posts'>) => void;
 }) {
+  const { t } = useTranslation(['clips', 'common']);
   const sessionId = useMemo(() => getAppSessionId(), []);
   // Each clip is exactly as tall as the space this screen really has (measured),
   // not the window height — on phones where the two differ (system bars), using
@@ -102,13 +104,13 @@ export default function ClipsScreen({
   const [filter, setFilter] = useState('for-you');
   const [filterOpen, setFilterOpen] = useState(false);
   const filterOptions = [
-    { id: 'for-you', label: 'For You' },
-    { id: 'following', label: 'Following' },
-    { id: 'all-circles', label: 'All Circles' },
-    { id: 'best-friends', label: 'Best Friends', color: '#f5c542' },
+    { id: 'for-you', label: t('forYouLabel') },
+    { id: 'following', label: t('common:following') },
+    { id: 'all-circles', label: t('allCirclesLabel') },
+    { id: 'best-friends', label: t('bestFriendsLabel'), color: '#f5c542' },
     ...(myCircles ?? []).map((c) => ({ id: c._id as string, label: c.name, color: c.color })),
   ];
-  const filterLabel = filterOptions.find((o) => o.id === filter)?.label ?? 'For You';
+  const filterLabel = filterOptions.find((o) => o.id === filter)?.label ?? t('forYouLabel');
   const filteredClips = useMemo(() => {
     if (!clips) return clips;
     if (filter === 'for-you') return clips;
@@ -192,7 +194,7 @@ export default function ClipsScreen({
         </Pressable>
         <View style={styles.stateWrap}>
           <Text variant="body" style={styles.stateText}>
-            No clips to show right now.
+            {t('noClipsForYou')}
           </Text>
         </View>
         <StatusBar style="light" />
@@ -254,7 +256,7 @@ export default function ClipsScreen({
       {items.length === 0 && (
         <View style={styles.stateWrap} pointerEvents="none">
           <Text variant="body" style={styles.stateText}>
-            {filter === 'for-you' ? 'No clips to show right now.' : 'No clips here yet.'}
+            {filter === 'for-you' ? t('noClipsForYou') : t('noClipsHere')}
           </Text>
         </View>
       )}
@@ -267,7 +269,7 @@ export default function ClipsScreen({
         style={styles.filterButton}
         onPress={() => setFilterOpen(true)}
         accessibilityRole="button"
-        accessibilityLabel="Choose which clips to show"
+        accessibilityLabel={t('filterButtonLabel')}
       >
         <Text variant="h3" style={styles.filterText}>{filterLabel}</Text>
         <ChevronIcon icon={ArrowDown01Icon} size={16} color="#ffffff" />
@@ -376,6 +378,7 @@ function ClipPage({
   onOpenSound: (soundId: Id<'sounds'>) => void;
   onOpenOriginal: (postId: Id<'posts'>) => void;
 }) {
+  const { t } = useTranslation('clips');
   const player = useVideoPlayer(item.mediaUrl ? { uri: item.mediaUrl } : null, (p) => {
     p.loop = true;
     p.muted = false;
@@ -536,7 +539,7 @@ function ClipPage({
     outputRange: [1, 0, 0],
   });
 
-  const displayName = item.author?.name ?? item.author?.username ?? 'Someone';
+  const displayName = item.author?.name ?? item.author?.username ?? t('someoneFallback');
   const letter = (item.author?.username ?? displayName).charAt(0).toUpperCase();
   const gradient = (item.author?.avatarGradient as [string, string]) ?? [colors.red, colors.coral];
 
@@ -703,7 +706,7 @@ function ClipPage({
 
           <AnimatedPressable
             style={styles.actionSpacing}
-            accessibilityLabel="More options"
+            accessibilityLabel={t('moreOptionsLabel')}
             onPress={() => setOptionsVisible(true)}
           >
             <HugeiconsIcon icon={MoreVerticalIcon} size={30} color={colors.white} />
@@ -766,6 +769,7 @@ function AdClipPage({
   pageHeight: number;
   userId: Id<'users'>;
 }) {
+  const { t } = useTranslation('clips');
   const player = useVideoPlayer(item.mediaUrl ? { uri: item.mediaUrl } : null, (p) => {
     p.loop = true;
     p.muted = false;
@@ -834,7 +838,7 @@ function AdClipPage({
               )}
             </View>
             <Text variant="bodyBold" style={styles.author}>{item.displayName}</Text>
-            <Text variant="caption" style={styles.sponsoredTag}>Sponsored</Text>
+            <Text variant="caption" style={styles.sponsoredTag}>{t('sponsoredLabel')}</Text>
           </View>
 
           {item.title && (
@@ -883,7 +887,7 @@ function AdClipPage({
 
           <AnimatedPressable
             style={styles.actionSpacing}
-            accessibilityLabel="More options"
+            accessibilityLabel={t('moreOptionsLabel')}
             onPress={() => setOptionsVisible(true)}
           >
             <HugeiconsIcon icon={MoreVerticalIcon} size={30} color={colors.white} />

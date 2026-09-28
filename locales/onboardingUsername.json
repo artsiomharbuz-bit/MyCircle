@@ -1,0 +1,122 @@
+{
+  "en": {
+    "title": "Pick a username",
+    "subtitle": "Letters, numbers and underscores only.",
+    "usernamePlaceholder": "username",
+    "continueButton": "Continue",
+    "minLengthHint": "At least 3 characters.",
+    "checkingAvailability": "Checking availability…",
+    "usernameTaken": "That username is taken.",
+    "usernameAvailable": "Available!"
+  },
+  "de": {
+    "title": "Wähle einen Benutzernamen",
+    "subtitle": "Nur Buchstaben, Zahlen und Unterstriche.",
+    "usernamePlaceholder": "benutzername",
+    "continueButton": "Weiter",
+    "minLengthHint": "Mindestens 3 Zeichen.",
+    "checkingAvailability": "Verfügbarkeit wird geprüft…",
+    "usernameTaken": "Dieser Benutzername ist vergeben.",
+    "usernameAvailable": "Verfügbar!"
+  },
+  "es": {
+    "title": "Elige un nombre de usuario",
+    "subtitle": "Solo letras, números y guiones bajos.",
+    "usernamePlaceholder": "usuario",
+    "continueButton": "Continuar",
+    "minLengthHint": "Al menos 3 caracteres.",
+    "checkingAvailability": "Comprobando disponibilidad…",
+    "usernameTaken": "Ese nombre de usuario ya está en uso.",
+    "usernameAvailable": "¡Disponible!"
+  },
+  "fr": {
+    "title": "Choisissez un nom d'utilisateur",
+    "subtitle": "Lettres, chiffres et tirets bas uniquement.",
+    "usernamePlaceholder": "nom d'utilisateur",
+    "continueButton": "Continuer",
+    "minLengthHint": "Au moins 3 caractères.",
+    "checkingAvailability": "Vérification de la disponibilité…",
+    "usernameTaken": "Ce nom d'utilisateur est déjà pris.",
+    "usernameAvailable": "Disponible !"
+  },
+  "pt": {
+    "title": "Escolha um nome de usuário",
+    "subtitle": "Apenas letras, números e sublinhados.",
+    "usernamePlaceholder": "usuário",
+    "continueButton": "Continuar",
+    "minLengthHint": "Pelo menos 3 caracteres.",
+    "checkingAvailability": "Verificando disponibilidade…",
+    "usernameTaken": "Esse nome de usuário já está em uso.",
+    "usernameAvailable": "Disponível!"
+  },
+  "it": {
+    "title": "Scegli un nome utente",
+    "subtitle": "Solo lettere, numeri e trattini bassi.",
+    "usernamePlaceholder": "nomeutente",
+    "continueButton": "Continua",
+    "minLengthHint": "Almeno 3 caratteri.",
+    "checkingAvailability": "Verifica disponibilità…",
+    "usernameTaken": "Questo nome utente è già in uso.",
+    "usernameAvailable": "Disponibile!"
+  },
+  "tr": {
+    "title": "Bir kullanıcı adı seçin",
+    "subtitle": "Yalnızca harf, rakam ve alt çizgi.",
+    "usernamePlaceholder": "kullaniciadi",
+    "continueButton": "Devam Et",
+    "minLengthHint": "En az 3 karakter.",
+    "checkingAvailability": "Uygunluk kontrol ediliyor…",
+    "usernameTaken": "Bu kullanıcı adı alınmış.",
+    "usernameAvailable": "Uygun!"
+  },
+  "pl": {
+    "title": "Wybierz nazwę użytkownika",
+    "subtitle": "Tylko litery, cyfry i podkreślenia.",
+    "usernamePlaceholder": "nazwauzytkownika",
+    "continueButton": "Dalej",
+    "minLengthHint": "Co najmniej 3 znaki.",
+    "checkingAvailability": "Sprawdzanie dostępności…",
+    "usernameTaken": "Ta nazwa użytkownika jest zajęta.",
+    "usernameAvailable": "Dostępna!"
+  },
+  "ar": {
+    "title": "اختر اسم مستخدم",
+    "subtitle": "أحرف وأرقام وشرطات سفلية فقط.",
+    "usernamePlaceholder": "اسم المستخدم",
+    "continueButton": "متابعة",
+    "minLengthHint": "3 أحرف على الأقل.",
+    "checkingAvailability": "جارٍ التحقق من التوفر…",
+    "usernameTaken": "اسم المستخدم هذا مُستخدم بالفعل.",
+    "usernameAvailable": "متاح!"
+  },
+  "id": {
+    "title": "Pilih nama pengguna",
+    "subtitle": "Hanya huruf, angka, dan garis bawah.",
+    "usernamePlaceholder": "namapengguna",
+    "continueButton": "Lanjutkan",
+    "minLengthHint": "Minimal 3 karakter.",
+    "checkingAvailability": "Memeriksa ketersediaan…",
+    "usernameTaken": "Nama pengguna itu sudah digunakan.",
+    "usernameAvailable": "Tersedia!"
+  },
+  "ru": {
+    "title": "Выберите имя пользователя",
+    "subtitle": "Только буквы, цифры и знаки подчёркивания.",
+    "usernamePlaceholder": "имяпользователя",
+    "continueButton": "Продолжить",
+    "minLengthHint": "Минимум 3 символа.",
+    "checkingAvailability": "Проверка доступности…",
+    "usernameTaken": "Это имя пользователя уже занято.",
+    "usernameAvailable": "Доступно!"
+  },
+  "uk": {
+    "title": "Оберіть ім'я користувача",
+    "subtitle": "Лише літери, цифри та підкреслення.",
+    "usernamePlaceholder": "ім'якористувача",
+    "continueButton": "Продовжити",
+    "minLengthHint": "Щонайменше 3 символи.",
+    "checkingAvailability": "Перевірка доступності…",
+    "usernameTaken": "Це ім'я користувача вже зайняте.",
+    "usernameAvailable": "Доступно!"
+  }
+}

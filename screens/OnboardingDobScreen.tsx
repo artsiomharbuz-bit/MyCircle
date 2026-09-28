@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import BackButton from '../components/BackButton';
 import WheelPicker from '../components/WheelPicker';
 import PrimaryButton from '../components/PrimaryButton';
@@ -9,19 +10,19 @@ import useEntranceAnimation from '../useEntranceAnimation';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, space } from '../theme';
 
-const MONTH_NAMES = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
+const MONTH_KEYS = [
+  'monthJanuary',
+  'monthFebruary',
+  'monthMarch',
+  'monthApril',
+  'monthMay',
+  'monthJune',
+  'monthJuly',
+  'monthAugust',
+  'monthSeptember',
+  'monthOctober',
+  'monthNovember',
+  'monthDecember',
 ];
 
 const today = new Date();
@@ -45,6 +46,8 @@ export default function OnboardingDobScreen({
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const entrance = useEntranceAnimation();
+  const { t } = useTranslation(['onboardingDob', 'common']);
+  const monthNames = useMemo(() => MONTH_KEYS.map((key) => t(key)), [t]);
 
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
   const [yearIndex, setYearIndex] = useState(YEARS.indexOf(defaultYear));
@@ -75,15 +78,15 @@ export default function OnboardingDobScreen({
 
       <Animated.View style={[styles.titleWrap, entrance]}>
         <Text variant="display" style={styles.title}>
-          When's your birthday?
+          {t('title')}
         </Text>
         <Text variant="body" style={styles.subtitle}>
-          Scroll to set the date.
+          {t('subtitle')}
         </Text>
 
         <View style={styles.pickerRow}>
           <WheelPicker
-            data={MONTH_NAMES}
+            data={monthNames}
             selectedIndex={monthIndex}
             onChange={setMonthIndex}
             style={styles.monthColumn}
@@ -98,7 +101,7 @@ export default function OnboardingDobScreen({
       </Animated.View>
 
       <Animated.View style={[styles.actions, entrance]}>
-        <PrimaryButton label="Continue" tone="primary" onPress={handleContinue} />
+        <PrimaryButton label={t('continueButton')} tone="primary" onPress={handleContinue} />
       </Animated.View>
 
       <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />

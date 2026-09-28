@@ -1,0 +1,50 @@
+{
+  "en": {
+    "screenTitle": "Blocked accounts",
+    "noBlockedEmpty": "You haven't blocked anyone."
+  },
+  "de": {
+    "screenTitle": "Blockierte Konten",
+    "noBlockedEmpty": "Du hast niemanden blockiert."
+  },
+  "es": {
+    "screenTitle": "Cuentas bloqueadas",
+    "noBlockedEmpty": "No has bloqueado a nadie."
+  },
+  "fr": {
+    "screenTitle": "Comptes bloqués",
+    "noBlockedEmpty": "Vous n'avez bloqué personne."
+  },
+  "pt": {
+    "screenTitle": "Contas bloqueadas",
+    "noBlockedEmpty": "Você não bloqueou ninguém."
+  },
+  "it": {
+    "screenTitle": "Account bloccati",
+    "noBlockedEmpty": "Non hai bloccato nessuno."
+  },
+  "tr": {
+    "screenTitle": "Engellenen hesaplar",
+    "noBlockedEmpty": "Kimseyi engellemedin."
+  },
+  "pl": {
+    "screenTitle": "Zablokowane konta",
+    "noBlockedEmpty": "Nikogo nie zablokowałeś."
+  },
+  "ar": {
+    "screenTitle": "الحسابات المحظورة",
+    "noBlockedEmpty": "لم تحظر أي شخص."
+  },
+  "id": {
+    "screenTitle": "Akun yang diblokir",
+    "noBlockedEmpty": "Kamu belum memblokir siapa pun."
+  },
+  "ru": {
+    "screenTitle": "Заблокированные аккаунты",
+    "noBlockedEmpty": "Вы никого не заблокировали."
+  },
+  "uk": {
+    "screenTitle": "Заблоковані акаунти",
+    "noBlockedEmpty": "Ви нікого не заблокували."
+  }
+}

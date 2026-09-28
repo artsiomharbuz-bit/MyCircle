@@ -6,6 +6,7 @@ import { getHiddenUserIds } from './blocks';
 import { bumpMeaningfulInteraction } from './users';
 import { rateLimiter } from './lib/rateLimit';
 import { requireUser } from './lib/session';
+import { displayName, pushPreview, sendPush } from './lib/notify';
 
 async function userSummary(ctx: QueryCtx, userId: Id<'users'>) {
   const user = await ctx.db.get(userId);
@@ -50,6 +51,35 @@ export const addComment = mutation({
       replyToUserId,
     });
     await bumpMeaningfulInteraction(ctx, authorId);
+
+    const commenter = await ctx.db.get(authorId);
+    const preview = pushPreview(trimmed || 'Sent a sticker');
+
+    // A reply notifies whoever it's addressed to (falling back to the
+    // parent comment's author when replyToUserId wasn't set); a top-level
+    // comment notifies the post's author. Never both, and never yourself.
+    const replyTarget =
+      replyToUserId ??
+      (parentCommentId ? (await ctx.db.get(parentCommentId))?.authorId : undefined);
+
+    if (replyTarget && replyTarget !== authorId) {
+      await sendPush(ctx, replyTarget, 'New reply', `${displayName(commenter)} replied: "${preview}"`, {
+        type: 'reply',
+        postId,
+        commentId: parentCommentId,
+      });
+    } else {
+      const post = await ctx.db.get(postId);
+      if (post && post.authorId !== authorId) {
+        await sendPush(
+          ctx,
+          post.authorId,
+          'New comment',
+          `${displayName(commenter)} commented: "${preview}"`,
+          { type: 'comment', postId }
+        );
+      }
+    }
   },
 });
 

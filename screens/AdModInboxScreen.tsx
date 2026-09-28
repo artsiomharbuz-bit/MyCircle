@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { HugeiconsIcon } from '@hugeicons/react-native';
@@ -35,6 +36,7 @@ export default function AdModInboxScreen({
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const { run, gate } = useModGate(userId);
+  const { t } = useTranslation(['adModInbox', 'common']);
 
   const ads = useQuery(api.ads.listPendingAds, { modId: userId });
   const [openAdId, setOpenAdId] = useState<Id<'ads'> | null>(null);
@@ -54,7 +56,7 @@ export default function AdModInboxScreen({
           ))}
 
         {ads && ads.length === 0 && (
-          <EmptyState icon={CheckmarkCircle02Icon} message="No ads waiting for review." style={styles.emptyState} />
+          <EmptyState icon={CheckmarkCircle02Icon} message={t('emptyStateMessage')} style={styles.emptyState} />
         )}
 
         {ads?.map((ad) => (
@@ -94,7 +96,7 @@ export default function AdModInboxScreen({
                       />
                     )}
                     <Text style={styles.rowTarget} numberOfLines={1}>
-                      @{ad.creator?.username ?? 'unknown'}
+                      @{ad.creator?.username ?? t('unknownUsername')}
                     </Text>
                   </View>
                 </View>
@@ -105,10 +107,10 @@ export default function AdModInboxScreen({
       </ScrollView>
 
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel="Go back">
+        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel={t('common:back')}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>Ad review</Text>
+        <Text style={styles.title}>{t('headerTitle')}</Text>
         {ads && ads.length > 0 && <Text style={styles.count}>{ads.length}</Text>}
       </View>
 

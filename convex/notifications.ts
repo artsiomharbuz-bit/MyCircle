@@ -154,12 +154,114 @@ async function gatherNotifications(ctx: QueryCtx, userId: Id<'users'>) {
       fromUser: null,
     }));
 
+  // Replies addressed to the viewer, wherever the underlying post lives —
+  // distinct from commentNotifs above, which only covers comments on posts
+  // the viewer themselves authored.
+  const replyRows = await ctx.db
+    .query('comments')
+    .withIndex('by_reply_to_user', (q) => q.eq('replyToUserId', userId))
+    .collect();
+
+  const replyNotifs = await Promise.all(
+    replyRows
+      .filter((row) => row.authorId !== userId && row._creationTime > clearedAt)
+      .map(async (row) => {
+        const fromUser = await userSummary(ctx, row.authorId);
+        const post = await ctx.db.get(row.postId);
+        if (!fromUser || !post) return null;
+        return {
+          _id: row._id,
+          type: 'reply' as const,
+          createdAt: row._creationTime,
+          postId: post._id,
+          postMediaUrl: await ctx.storage.getUrl(post.mediaStorageId),
+          commentText: row.text,
+          fromUser,
+        };
+      })
+  );
+
+  // Someone sharing one of the viewer's own posts into a DM.
+  const postShareNotifs = (
+    await Promise.all(
+      myPosts.map((post) =>
+        ctx.db
+          .query('postShares')
+          .withIndex('by_post', (q) => q.eq('postId', post._id))
+          .collect()
+      )
+    )
+  )
+    .flat()
+    .filter((row) => row.sharerId !== userId && row.sharedAt > clearedAt);
+
+  const postShareNotifsResolved = await Promise.all(
+    postShareNotifs.map(async (row) => {
+      const fromUser = await userSummary(ctx, row.sharerId);
+      const post = postById.get(row.postId);
+      if (!fromUser || !post) return null;
+      return {
+        _id: row._id,
+        type: 'post_share' as const,
+        createdAt: row.sharedAt,
+        postId: post._id,
+        postMediaUrl: await ctx.storage.getUrl(post.mediaStorageId),
+        fromUser,
+      };
+    })
+  );
+
+  // Added to a group chat — skip the creator's own auto-join row.
+  const membershipRows = await ctx.db
+    .query('groupMemberships')
+    .withIndex('by_user', (q) => q.eq('userId', userId))
+    .collect();
+
+  const addedToGroupNotifs = await Promise.all(
+    membershipRows
+      .filter((row) => row._creationTime > clearedAt)
+      .map(async (row) => {
+        const group = await ctx.db.get(row.groupId);
+        if (!group || group.creatorId === userId) return null;
+        const fromUser = await userSummary(ctx, group.creatorId);
+        if (!fromUser) return null;
+        return {
+          _id: row._id,
+          type: 'added_to_group' as const,
+          createdAt: row._creationTime,
+          groupId: group._id,
+          groupName: group.name,
+          fromUser,
+        };
+      })
+  );
+
+  // Reports the viewer filed that a moderator has since resolved.
+  const reportRows = await ctx.db
+    .query('reports')
+    .withIndex('by_reporter', (q) => q.eq('reporterId', userId))
+    .collect();
+
+  const reportResolvedNotifs = reportRows
+    .filter((row) => row.status === 'resolved' && (row.resolvedAt ?? 0) > clearedAt)
+    .map((row) => ({
+      _id: row._id,
+      type: 'report_resolved' as const,
+      createdAt: row.resolvedAt ?? row._creationTime,
+      resolution: row.resolution ?? null,
+      fromUser: null,
+    }));
+
   const all = [
     ...followNotifs,
     ...likeNotifs,
     ...commentNotifs,
     ...alertNotifs,
     ...adStatusNotifs,
+    ...replyNotifs,
+    ...postShareNotifsResolved,
+    ...addedToGroupNotifs,
+    ...reportResolvedNotifs,
   ].filter((n): n is NonNullable<typeof n> => n !== null);
   all.sort((a, b) => b.createdAt - a.createdAt);
   return all;

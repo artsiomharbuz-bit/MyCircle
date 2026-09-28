@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Animated, Image, StyleSheet, TextInput, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Search01Icon } from '@hugeicons/core-free-icons';
@@ -35,6 +36,7 @@ export default function SearchScreen({
   onOpenUser: (userId: Id<'users'>) => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['search', 'common']);
   const styles = createStyles(colors);
   const [query, setQuery] = useState('');
   const [debounced, setDebounced] = useState('');
@@ -77,7 +79,7 @@ export default function SearchScreen({
     <View style={styles.container}>
       <AppTextInput
         style={styles.input}
-        placeholder="Search users and posts"
+        placeholder={t('searchPlaceholder')}
         placeholderTextColor={colors.placeholder}
         autoCapitalize="none"
         autoCorrect={false}
@@ -100,7 +102,7 @@ export default function SearchScreen({
           <FadeInView style={styles.section}>
             {recentSearches && recentSearches.length > 0 && (
               <>
-                <Text style={styles.sectionTitle}>Recent searches</Text>
+                <Text style={styles.sectionTitle}>{t('recentSearchesTitle')}</Text>
                 <View style={styles.chipWrap}>
                   {recentSearches.map((term) => (
                     <AnimatedPressable key={term} onPress={() => setQuery(term)}>
@@ -114,7 +116,7 @@ export default function SearchScreen({
             )}
             {trendingSearches && trendingSearches.length > 0 && (
               <>
-                <Text style={[styles.sectionTitle, styles.trendingTitle]}>Trending</Text>
+                <Text style={[styles.sectionTitle, styles.trendingTitle]}>{t('trendingTitle')}</Text>
                 <View style={styles.chipWrap}>
                   {trendingSearches.map((term) => (
                     <AnimatedPressable key={term} onPress={() => setQuery(term)}>
@@ -136,7 +138,7 @@ export default function SearchScreen({
           trendingSearches.length === 0 && (
             <EmptyState
               icon={Search01Icon}
-              message="Search for people, posts, sounds, and more."
+              message={t('emptyPromptMessage')}
               style={styles.emptyState}
             />
           )}
@@ -157,7 +159,7 @@ export default function SearchScreen({
 
         {results && results.users.length > 0 && (
           <FadeInView style={styles.section}>
-            <Text style={styles.sectionTitle}>People</Text>
+            <Text style={styles.sectionTitle}>{t('peopleSectionTitle')}</Text>
             {results.users.map((user) => {
               const letter = (user.username ?? '?').charAt(0).toUpperCase();
               const gradient = (user.avatarGradient as [string, string]) ?? [
@@ -210,7 +212,7 @@ export default function SearchScreen({
 
         {results && results.posts.length > 0 && (
           <FadeInView style={styles.section}>
-            <Text style={styles.sectionTitle}>Posts</Text>
+            <Text style={styles.sectionTitle}>{t('postsSectionTitle')}</Text>
             {results.posts.map((post) => (
               <AnimatedPressable key={post._id}>
                 <View style={styles.postRow}>
@@ -236,7 +238,7 @@ export default function SearchScreen({
 
         {results && results.clips.length > 0 && (
           <FadeInView style={styles.section}>
-            <Text style={styles.sectionTitle}>Clips</Text>
+            <Text style={styles.sectionTitle}>{t('common:tabClips')}</Text>
             {results.clips.map((clip) => (
               <AnimatedPressable key={clip._id}>
                 <View style={styles.postRow}>
@@ -258,7 +260,7 @@ export default function SearchScreen({
 
         {results && results.sounds.length > 0 && (
           <FadeInView style={styles.section}>
-            <Text style={styles.sectionTitle}>Sounds</Text>
+            <Text style={styles.sectionTitle}>{t('soundsSectionTitle')}</Text>
             {results.sounds.map((sound) => (
               <View key={sound._id} style={styles.soundRow}>
                 <View style={styles.soundThumb}>
@@ -268,7 +270,7 @@ export default function SearchScreen({
                   <Text style={styles.postTitle} numberOfLines={1}>
                     {sound.name}
                   </Text>
-                  <Text style={styles.postAuthor}>{sound.useCount} uses</Text>
+                  <Text style={styles.postAuthor}>{t('soundUses', { count: sound.useCount })}</Text>
                 </View>
               </View>
             ))}
@@ -277,7 +279,7 @@ export default function SearchScreen({
 
         {results && results.hashtags.length > 0 && (
           <FadeInView style={styles.section}>
-            <Text style={styles.sectionTitle}>Hashtags</Text>
+            <Text style={styles.sectionTitle}>{t('hashtagsSectionTitle')}</Text>
             <View style={styles.chipWrap}>
               {results.hashtags.map((tag) => (
                 <AnimatedPressable key={tag} onPress={() => setQuery(`#${tag}`)}>
@@ -299,7 +301,7 @@ export default function SearchScreen({
           results.hashtags.length === 0 && (
             <EmptyState
               icon={Search01Icon}
-              message={`No results for "${debounced}"`}
+              message={t('noResultsMessage', { query: debounced })}
               style={styles.emptyState}
             />
           )}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
@@ -39,6 +40,7 @@ export default function ChatInfoScreen({
 }) {
   const { colors } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['chatInfo', 'common']);
 
   const otherUser = useQuery(api.users.getUser, { userId: otherUserId, viewerId: currentUserId });
   const media = useQuery(api.messages.listChatMedia, { userId: currentUserId, otherUserId });
@@ -109,7 +111,7 @@ export default function ChatInfoScreen({
           <View style={styles.optionIcon}>
             <HugeiconsIcon icon={NotificationOff01Icon} size={19} color={colors.white} />
           </View>
-          <Text variant="body" style={styles.optionLabel}>Mute notifications</Text>
+          <Text variant="body" style={styles.optionLabel}>{t('muteNotifications')}</Text>
           <View style={[styles.toggle, muted && styles.toggleOn]}>
             <View style={[styles.toggleKnob, muted && styles.toggleKnobOn]} />
           </View>
@@ -121,7 +123,7 @@ export default function ChatInfoScreen({
           <View style={styles.optionIcon}>
             <HugeiconsIcon icon={PaletteIcon} size={19} color={colors.white} />
           </View>
-          <Text variant="body" style={styles.optionLabel}>Customize chat</Text>
+          <Text variant="body" style={styles.optionLabel}>{t('customizeChat')}</Text>
         </Pressable>
 
         <View style={styles.optionDivider} />
@@ -130,16 +132,16 @@ export default function ChatInfoScreen({
           <View style={[styles.optionIcon, styles.optionIconDanger]}>
             <HugeiconsIcon icon={Delete02Icon} size={19} color={colors.errorText} />
           </View>
-          <Text variant="body" style={[styles.optionLabel, styles.optionLabelDanger]}>Clear chat</Text>
+          <Text variant="body" style={[styles.optionLabel, styles.optionLabelDanger]}>{t('clearChat')}</Text>
         </Pressable>
       </View>
 
-      <Text variant="calloutBold" style={styles.sectionTitle}>Media in this chat</Text>
+      <Text variant="calloutBold" style={styles.sectionTitle}>{t('mediaSectionTitle')}</Text>
 
       {media?.length === 0 && (
         <View style={styles.emptyMedia}>
           <HugeiconsIcon icon={Image02Icon} size={26} color={colors.textMuted} />
-          <Text variant="footnote" style={styles.emptyMediaText}>No photos or videos yet</Text>
+          <Text variant="footnote" style={styles.emptyMediaText}>{t('noMediaYet')}</Text>
         </View>
       )}
 
@@ -177,9 +179,9 @@ export default function ChatInfoScreen({
 
       <NativePopup
         visible={clearConfirmVisible}
-        title="Clear this chat?"
-        message="This removes the messages from your view. It won't delete them for the other person."
-        confirmLabel="Clear chat"
+        title={t('clearChatConfirmTitle')}
+        message={t('clearChatConfirmMessage')}
+        confirmLabel={t('clearChat')}
         onClose={() => setClearConfirmVisible(false)}
         onConfirm={async () => {
           await clearConversation({ userId: currentUserId, otherUserId });

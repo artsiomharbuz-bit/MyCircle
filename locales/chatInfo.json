@@ -1,0 +1,110 @@
+{
+  "en": {
+    "muteNotifications": "Mute notifications",
+    "customizeChat": "Customize chat",
+    "clearChat": "Clear chat",
+    "mediaSectionTitle": "Media in this chat",
+    "noMediaYet": "No photos or videos yet",
+    "clearChatConfirmTitle": "Clear this chat?",
+    "clearChatConfirmMessage": "This removes the messages from your view. It won't delete them for the other person."
+  },
+  "de": {
+    "muteNotifications": "Benachrichtigungen stummschalten",
+    "customizeChat": "Chat anpassen",
+    "clearChat": "Chat löschen",
+    "mediaSectionTitle": "Medien in diesem Chat",
+    "noMediaYet": "Noch keine Fotos oder Videos",
+    "clearChatConfirmTitle": "Diesen Chat löschen?",
+    "clearChatConfirmMessage": "Dadurch werden die Nachrichten aus deiner Ansicht entfernt. Sie werden nicht bei der anderen Person gelöscht."
+  },
+  "es": {
+    "muteNotifications": "Silenciar notificaciones",
+    "customizeChat": "Personalizar chat",
+    "clearChat": "Borrar chat",
+    "mediaSectionTitle": "Contenido multimedia en este chat",
+    "noMediaYet": "Aún no hay fotos ni videos",
+    "clearChatConfirmTitle": "¿Borrar este chat?",
+    "clearChatConfirmMessage": "Esto elimina los mensajes de tu vista. No se eliminarán para la otra persona."
+  },
+  "fr": {
+    "muteNotifications": "Désactiver les notifications",
+    "customizeChat": "Personnaliser la discussion",
+    "clearChat": "Effacer la discussion",
+    "mediaSectionTitle": "Médias dans cette discussion",
+    "noMediaYet": "Aucune photo ni vidéo pour le moment",
+    "clearChatConfirmTitle": "Effacer cette discussion ?",
+    "clearChatConfirmMessage": "Cela supprime les messages de votre vue. Ils ne seront pas supprimés pour l'autre personne."
+  },
+  "pt": {
+    "muteNotifications": "Silenciar notificações",
+    "customizeChat": "Personalizar conversa",
+    "clearChat": "Limpar conversa",
+    "mediaSectionTitle": "Mídia nesta conversa",
+    "noMediaYet": "Ainda não há fotos ou vídeos",
+    "clearChatConfirmTitle": "Limpar esta conversa?",
+    "clearChatConfirmMessage": "Isso remove as mensagens da sua visualização. Elas não serão excluídas para a outra pessoa."
+  },
+  "it": {
+    "muteNotifications": "Disattiva notifiche",
+    "customizeChat": "Personalizza chat",
+    "clearChat": "Cancella chat",
+    "mediaSectionTitle": "Media in questa chat",
+    "noMediaYet": "Ancora nessuna foto o video",
+    "clearChatConfirmTitle": "Cancellare questa chat?",
+    "clearChatConfirmMessage": "Questo rimuove i messaggi dalla tua visualizzazione. Non verranno eliminati per l'altra persona."
+  },
+  "tr": {
+    "muteNotifications": "Bildirimleri sessize al",
+    "customizeChat": "Sohbeti özelleştir",
+    "clearChat": "Sohbeti temizle",
+    "mediaSectionTitle": "Bu sohbetteki medya",
+    "noMediaYet": "Henüz fotoğraf veya video yok",
+    "clearChatConfirmTitle": "Bu sohbet temizlensin mi?",
+    "clearChatConfirmMessage": "Bu, mesajları senin görünümünden kaldırır. Diğer kişi için silinmez."
+  },
+  "pl": {
+    "muteNotifications": "Wycisz powiadomienia",
+    "customizeChat": "Dostosuj czat",
+    "clearChat": "Wyczyść czat",
+    "mediaSectionTitle": "Multimedia w tym czacie",
+    "noMediaYet": "Brak zdjęć lub filmów",
+    "clearChatConfirmTitle": "Wyczyścić ten czat?",
+    "clearChatConfirmMessage": "To usunie wiadomości z Twojego widoku. Nie zostaną usunięte u drugiej osoby."
+  },
+  "ar": {
+    "muteNotifications": "كتم الإشعارات",
+    "customizeChat": "تخصيص المحادثة",
+    "clearChat": "مسح المحادثة",
+    "mediaSectionTitle": "الوسائط في هذه المحادثة",
+    "noMediaYet": "لا توجد صور أو مقاطع فيديو بعد",
+    "clearChatConfirmTitle": "هل تريد مسح هذه المحادثة؟",
+    "clearChatConfirmMessage": "سيؤدي هذا إلى إزالة الرسائل من عرضك. لن يتم حذفها للشخص الآخر."
+  },
+  "id": {
+    "muteNotifications": "Bisukan notifikasi",
+    "customizeChat": "Sesuaikan obrolan",
+    "clearChat": "Hapus obrolan",
+    "mediaSectionTitle": "Media dalam obrolan ini",
+    "noMediaYet": "Belum ada foto atau video",
+    "clearChatConfirmTitle": "Hapus obrolan ini?",
+    "clearChatConfirmMessage": "Ini menghapus pesan dari tampilan Anda. Pesan tidak akan dihapus untuk orang lain."
+  },
+  "ru": {
+    "muteNotifications": "Отключить уведомления",
+    "customizeChat": "Настроить чат",
+    "clearChat": "Очистить чат",
+    "mediaSectionTitle": "Медиафайлы в этом чате",
+    "noMediaYet": "Пока нет фото или видео",
+    "clearChatConfirmTitle": "Очистить этот чат?",
+    "clearChatConfirmMessage": "Это удалит сообщения из вашего вида. У собеседника они не удалятся."
+  },
+  "uk": {
+    "muteNotifications": "Вимкнути сповіщення",
+    "customizeChat": "Налаштувати чат",
+    "clearChat": "Очистити чат",
+    "mediaSectionTitle": "Медіафайли в цьому чаті",
+    "noMediaYet": "Поки немає фото чи відео",
+    "clearChatConfirmTitle": "Очистити цей чат?",
+    "clearChatConfirmMessage": "Це видалить повідомлення з вашого перегляду. Для іншої людини вони не видаляться."
+  }
+}

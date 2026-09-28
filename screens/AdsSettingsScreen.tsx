@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
+import { useTranslation } from 'react-i18next';
 import { StatusBar } from 'expo-status-bar';
 import { useAuthedQuery as useQuery } from '../SessionContext';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -36,6 +37,7 @@ export default function AdsSettingsScreen({
   onEditAd: (ad: MyAd) => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['adsSettings', 'common']);
   const styles = createStyles(colors);
   const ads = useQuery(api.ads.listMyAds, { creatorId: userId });
   const [payingAd, setPayingAd] = useState<{ _id: Id<'ads'>; kind: 'post' | 'clip' } | null>(null);
@@ -45,13 +47,13 @@ export default function AdsSettingsScreen({
       <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
         <Pressable style={styles.createButton} onPress={onCreateAd}>
           <HugeiconsIcon icon={PlusSignIcon} size={18} color={colors.accentText} />
-          <Text style={styles.createButtonText}>Create an ad</Text>
+          <Text style={styles.createButtonText}>{t('createAdButton')}</Text>
         </Pressable>
 
         {ads && ads.length === 0 && (
           <EmptyState
             icon={Megaphone01Icon}
-            message="You haven't created any ads yet."
+            message={t('noAdsEmpty')}
             style={styles.emptyState}
           />
         )}
@@ -70,7 +72,7 @@ export default function AdsSettingsScreen({
         <Pressable style={styles.backButton} onPress={onBack}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>Ads</Text>
+        <Text style={styles.title}>{t('screenTitle')}</Text>
       </View>
 
       <AdPaymentSheet
@@ -89,18 +91,18 @@ export default function AdsSettingsScreen({
 
 type AdStatus = 'pending_review' | 'rejected' | 'approved' | 'active' | 'expired';
 
-function statusMeta(colors: Colors, status: AdStatus) {
+function statusMeta(colors: Colors, status: AdStatus, t: (key: string) => string) {
   switch (status) {
     case 'pending_review':
-      return { label: 'Pending review', color: colors.yellow, textColor: '#111111' };
+      return { label: t('statusPendingReview'), color: colors.yellow, textColor: '#111111' };
     case 'rejected':
-      return { label: 'Rejected', color: colors.red, textColor: colors.accentText };
+      return { label: t('statusRejected'), color: colors.red, textColor: colors.accentText };
     case 'approved':
-      return { label: 'Approved — needs payment', color: colors.coral, textColor: colors.accentText };
+      return { label: t('statusApprovedNeedsPayment'), color: colors.coral, textColor: colors.accentText };
     case 'active':
-      return { label: 'Active', color: '#22c55e', textColor: '#0b1a10' };
+      return { label: t('statusActive'), color: '#22c55e', textColor: '#0b1a10' };
     case 'expired':
-      return { label: 'Expired', color: colors.buttonSecondary, textColor: colors.white };
+      return { label: t('statusExpired'), color: colors.buttonSecondary, textColor: colors.white };
   }
 }
 
@@ -126,8 +128,9 @@ function AdRow({
   onPay: () => void;
 }) {
   const { colors } = useAppTheme();
+  const { t } = useTranslation(['adsSettings', 'common']);
   const styles = createStyles(colors);
-  const meta = statusMeta(colors, ad.status);
+  const meta = statusMeta(colors, ad.status, t);
   const player = useVideoPlayer(
     ad.mediaType === 'video' && ad.mediaUrl ? { uri: ad.mediaUrl } : null,
     (p) => {
@@ -169,32 +172,39 @@ function AdRow({
         <View style={styles.statsRow}>
           <View style={styles.statItem}>
             <HugeiconsIcon icon={EyeIcon} size={13} color={colors.textMuted} />
-            <Text style={styles.statText}>{ad.views.toLocaleString()} views</Text>
+            <Text style={styles.statText}>{t('viewsCount', { count: ad.views.toLocaleString() })}</Text>
           </View>
           <View style={styles.statItem}>
             <HugeiconsIcon icon={MouseLeftClick01Icon} size={13} color={colors.textMuted} />
-            <Text style={styles.statText}>{ad.clicks.toLocaleString()} clicks</Text>
+            <Text style={styles.statText}>{t('clicksCount', { count: ad.clicks.toLocaleString() })}</Text>
           </View>
+          {ad.views > 0 && (
+            <View style={styles.statItem}>
+              <Text style={styles.statText}>
+                {t('ctrLabel', { percent: ((ad.clicks / ad.views) * 100).toFixed(1) })}
+              </Text>
+            </View>
+          )}
         </View>
 
         {ad.status === 'rejected' && ad.rejectionReason && (
-          <Text style={styles.rejectionReason}>"{ad.rejectionReason}"</Text>
+          <Text style={styles.rejectionReason}>{t('rejectionReasonQuoted', { reason: ad.rejectionReason })}</Text>
         )}
 
         {ad.status === 'active' && ad.activeUntil && (
-          <Text style={styles.expiryText}>Runs {formatTimeLeft(ad.activeUntil)}</Text>
+          <Text style={styles.expiryText}>{t('runsUntil', { time: formatTimeLeft(ad.activeUntil) })}</Text>
         )}
 
         {ad.status === 'rejected' && (
           <Pressable style={styles.actionButton} onPress={onEdit}>
-            <Text style={styles.actionButtonText}>Edit & resubmit</Text>
+            <Text style={styles.actionButtonText}>{t('editResubmitButton')}</Text>
           </Pressable>
         )}
 
         {(ad.status === 'approved' || ad.status === 'expired') && (
           <Pressable style={styles.actionButton} onPress={onPay}>
             <Text style={styles.actionButtonText}>
-              {ad.status === 'expired' ? 'Renew' : 'Pay to launch'}
+              {ad.status === 'expired' ? t('renewButton') : t('payToLaunchButton')}
             </Text>
           </Pressable>
         )}

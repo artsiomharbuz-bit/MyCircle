@@ -7,11 +7,15 @@ import PrimaryButton from '../components/PrimaryButton';
 import { FOREVER } from '../moderationOptions';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space } from '../theme';
+import { useTranslation } from 'react-i18next';
 
-function describeBan(bannedUntil: number | undefined): string {
+function describeBan(
+  bannedUntil: number | undefined,
+  t: (key: string, options?: Record<string, unknown>) => string
+): string {
   if (bannedUntil === undefined) return '';
   if (bannedUntil === FOREVER) {
-    return 'This ban is permanent. This account cannot be used again.';
+    return t('permanentBanMessage');
   }
   const date = new Date(bannedUntil).toLocaleString(undefined, {
     day: 'numeric',
@@ -20,7 +24,7 @@ function describeBan(bannedUntil: number | undefined): string {
     hour: '2-digit',
     minute: '2-digit',
   });
-  return `This ban lifts on ${date}. You can sign back in after that.`;
+  return t('temporaryBanMessage', { date });
 }
 
 // What a banned account sees instead of the app. The server enforces the ban
@@ -37,6 +41,7 @@ export default function BannedScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['banned', 'common']);
 
   return (
     <View style={styles.container}>
@@ -46,28 +51,27 @@ export default function BannedScreen({
         </View>
 
         <Text variant="display" style={styles.title}>
-          This account is banned
+          {t('accountBannedTitle')}
         </Text>
         <Text variant="body" style={styles.body}>
-          {describeBan(bannedUntil)}
+          {describeBan(bannedUntil, t)}
         </Text>
 
         {strikeCount >= 3 && (
           <Text variant="callout" style={styles.reason}>
-            The account reached three strikes for breaking the community guidelines.
+            {t('strikesMessage')}
           </Text>
         )}
 
         <View style={styles.card}>
           <Text variant="footnote" style={styles.cardText}>
-            If you believe this is a mistake, contact support through the MyCircle website.
-            Creating another account to get around a ban is also against the guidelines.
+            {t('supportMessage')}
           </Text>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <PrimaryButton label="Log out" tone="ghost" onPress={onLogout} />
+        <PrimaryButton label={t('logoutButton')} tone="ghost" onPress={onLogout} />
       </View>
 
       <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />

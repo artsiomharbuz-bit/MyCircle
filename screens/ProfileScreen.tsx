@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Animated, Dimensions, Image, Pressable, Share, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
+import { useTranslation } from 'react-i18next';
 import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
@@ -36,6 +37,7 @@ import Skeleton from '../components/Skeleton';
 import StoryRing from '../components/StoryRing';
 import TextField from '../components/TextField';
 import EmptyState from '../components/EmptyState';
+import HighlightsRow from '../components/HighlightsRow';
 import { api } from '../convex/_generated/api';
 import { Id } from '../convex/_generated/dataModel';
 import { readableError } from '../errorMessage';
@@ -69,6 +71,8 @@ export default function ProfileScreen({
   onOpenLiked,
   onOpenSaved,
   onOpenChat,
+  onCreateHighlight,
+  onOpenHighlight,
 }: {
   viewedUserId: Id<'users'>;
   currentUserId: Id<'users'>;
@@ -92,8 +96,12 @@ export default function ProfileScreen({
   onOpenSaved: () => void;
   // Only ever called for someone else's profile (see the Message button).
   onOpenChat: (otherUserId: Id<'users'>) => void;
+  // Only ever wired up for the signed-in user's own profile — see isSelf.
+  onCreateHighlight: () => void;
+  onOpenHighlight: (highlightId: Id<'highlights'>) => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['profile', 'common']);
   const styles = createStyles(colors);
   const isSelf = viewedUserId === currentUserId;
   const [audienceFilter, setAudienceFilter] = useState<PostAudienceFilter>('global');
@@ -173,19 +181,19 @@ export default function ProfileScreen({
               <HugeiconsIcon icon={UserBlock01Icon} size={34} color={colors.textMuted} />
             </View>
             <Text style={[styles.name, styles.blockedTitle]}>
-              {user.blockedByMe ? 'You blocked this account' : "You can't view this profile"}
+              {user.blockedByMe ? t('blockedByMeTitle') : t('blockedOtherTitle')}
             </Text>
             <Text style={styles.blockedBody}>
               {user.blockedByMe
-                ? "You won't see posts, clips or stories from @" + (user.username ?? 'this account') + ', and they can\'t see yours.'
-                : "This account isn't available."}
+                ? t('blockedByMeBody', { username: user.username ?? t('thisAccountFallback') })
+                : t('blockedOtherBody')}
             </Text>
             {user.blockedByMe && (
               <Pressable
                 style={styles.unblockButton}
                 onPress={() => unblockUser({ blockerId: currentUserId, blockedId: viewedUserId })}
               >
-                <Text style={styles.unblockButtonText}>Unblock</Text>
+                <Text style={styles.unblockButtonText}>{t('common:unblock')}</Text>
               </Pressable>
             )}
           </FadeInView>
@@ -241,19 +249,19 @@ export default function ProfileScreen({
               {isSelf ? (
                 <View style={styles.actionButtonsRow}>
                   <Pressable style={styles.actionButton} onPress={() => setEditVisible(true)}>
-                    <Text style={styles.actionButtonText}>Edit profile</Text>
+                    <Text style={styles.actionButtonText}>{t('editProfileButton')}</Text>
                   </Pressable>
                   <Pressable
                     style={styles.actionButton}
                     onPress={() =>
                       Share.share({
                         message: user.username
-                          ? `Check out @${user.username} on MyCircle!`
-                          : `Check out ${user.name ?? 'this profile'} on MyCircle!`,
+                          ? t('shareMessageWithUsername', { username: user.username })
+                          : t('shareMessageWithName', { name: user.name ?? t('thisProfileFallback') }),
                       })
                     }
                   >
-                    <Text style={styles.actionButtonText}>Share profile</Text>
+                    <Text style={styles.actionButtonText}>{t('shareProfileButton')}</Text>
                   </Pressable>
                 </View>
               ) : (
@@ -265,11 +273,18 @@ export default function ProfileScreen({
                     style={styles.actionButtonFlex}
                   />
                   <Pressable style={styles.actionButton} onPress={() => onOpenChat(viewedUserId)}>
-                    <Text style={styles.actionButtonText}>Message</Text>
+                    <Text style={styles.actionButtonText}>{t('messageButton')}</Text>
                   </Pressable>
                 </View>
               )}
             </FadeInView>
+
+            <HighlightsRow
+              userId={viewedUserId}
+              isSelf={isSelf}
+              onCreate={onCreateHighlight}
+              onOpenHighlight={onOpenHighlight}
+            />
 
             <PostAudienceSwitch value={audienceFilter} onChange={setAudienceFilter} />
 
@@ -277,10 +292,10 @@ export default function ProfileScreen({
               <ProfileContentSwitch value={contentTab} onChange={setContentTab} />
               {isSelf && (
                 <View style={styles.activityRow}>
-                  <Pressable style={styles.activityButton} onPress={onOpenLiked} accessibilityLabel="Liked posts">
+                  <Pressable style={styles.activityButton} onPress={onOpenLiked} accessibilityLabel={t('likedPostsLabel')}>
                     <HugeiconsIcon icon={FavouriteIcon} size={20} color={colors.textMuted} />
                   </Pressable>
-                  <Pressable style={styles.activityButton} onPress={onOpenSaved} accessibilityLabel="Saved posts">
+                  <Pressable style={styles.activityButton} onPress={onOpenSaved} accessibilityLabel={t('savedPostsLabel')}>
                     <HugeiconsIcon icon={BookmarkIcon} size={20} color={colors.textMuted} />
                   </Pressable>
                 </View>
@@ -318,7 +333,7 @@ export default function ProfileScreen({
                 ))
               ) : (
                 <EmptyState
-                  message={isSelf ? "You haven't posted anything yet." : 'No posts yet.'}
+                  message={isSelf ? t('noPostsSelf') : t('noPostsOther')}
                   style={styles.emptyState}
                 />
               )
@@ -334,7 +349,7 @@ export default function ProfileScreen({
               </View>
             ) : (
               <EmptyState
-                message={isSelf ? "You haven't posted any clips yet." : 'No clips yet.'}
+                message={isSelf ? t('noClipsSelf') : t('noClipsOther')}
                 style={styles.emptyState}
               />
             )}
@@ -426,6 +441,7 @@ function EditProfileModal({
   onClose: () => void;
 }) {
   const { colors } = useAppTheme();
+  const { t } = useTranslation(['profile', 'common']);
   const styles = createStyles(colors);
   const updateProfile = useMutation(api.users.updateProfile);
   const generateUploadUrl = useMutation(api.users.generateUploadUrl);
@@ -471,15 +487,15 @@ function EditProfileModal({
 
   let usernameHint = '';
   if (username.length > 0 && debouncedUsername.length < 3) {
-    usernameHint = 'At least 3 characters.';
+    usernameHint = t('usernameMinLengthHint');
   } else if (usernameChanged && usernameAvailable === false) {
-    usernameHint = 'That username is taken.';
+    usernameHint = t('usernameTakenHint');
   }
 
   const pickAvatar = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      setError('Photo access was denied.');
+      setError(t('photoAccessDeniedError'));
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -527,11 +543,11 @@ function EditProfileModal({
   return (
     <FormModal
       visible={visible}
-      title="Edit profile"
-      subtitle="Update your photo, name, username, bio and more."
+      title={t('editProfileTitle')}
+      subtitle={t('editProfileSubtitle')}
       icon={PencilEdit01Icon}
       onClose={onClose}
-      footer={<PrimaryButton label="Save changes" loading={submitting} disabled={!canSave} onPress={save} />}
+      footer={<PrimaryButton label={t('saveChangesButton')} loading={submitting} disabled={!canSave} onPress={save} />}
     >
       <Pressable style={styles.editAvatarButton} onPress={pickAvatar}>
         {displayAvatar ? (
@@ -547,9 +563,9 @@ function EditProfileModal({
       </Pressable>
 
       <View style={styles.editFieldGroup}>
-        <TextField placeholder="Your name" value={name} onChangeText={setName} maxLength={40} />
+        <TextField placeholder={t('namePlaceholder')} value={name} onChangeText={setName} maxLength={40} />
         <TextField
-          placeholder="Username"
+          placeholder={t('usernamePlaceholder')}
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
@@ -557,7 +573,7 @@ function EditProfileModal({
           error={usernameHint || undefined}
         />
         <TextField
-          placeholder="Bio"
+          placeholder={t('bioPlaceholder')}
           value={bio}
           onChangeText={setBio}
           maxLength={150}
@@ -565,14 +581,14 @@ function EditProfileModal({
           style={styles.bioInput}
         />
         <TextField
-          placeholder="Pronouns (e.g. they/them)"
+          placeholder={t('pronounsPlaceholder')}
           value={pronouns}
           onChangeText={setPronouns}
           autoCapitalize="none"
           maxLength={30}
         />
         <TextField
-          placeholder="Link"
+          placeholder={t('linkPlaceholder')}
           value={link}
           onChangeText={setLink}
           autoCapitalize="none"

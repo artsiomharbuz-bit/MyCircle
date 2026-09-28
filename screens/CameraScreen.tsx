@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
+import { useTranslation } from 'react-i18next';
 import { StatusBar } from 'expo-status-bar';
 import { CameraView, useCameraPermissions, useMicrophonePermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -44,6 +45,12 @@ export default function CameraScreen({
   // only — a clip or a video is always a single item).
   onCaptured: (media: CapturedMedia, kind: PostKind, extras?: CapturedMedia[]) => void;
 }) {
+  const { t } = useTranslation('camera');
+  const contentTypeLabels: Record<ContentType, string> = {
+    Post: t('postLabel'),
+    Story: t('storyLabel'),
+    Clip: t('clipLabel'),
+  };
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [micPermission, requestMicPermission] = useMicrophonePermissions();
 
@@ -161,7 +168,7 @@ export default function CameraScreen({
         </Pressable>
 
         <Text style={styles.permissionText}>
-          MyCircle needs access to your camera and microphone.
+          {t('permissionText')}
         </Text>
 
         <Pressable
@@ -171,7 +178,7 @@ export default function CameraScreen({
             await requestMicPermission();
           }}
         >
-          <Text style={styles.permissionButtonText}>Grant Access</Text>
+          <Text style={styles.permissionButtonText}>{t('grantAccessButton')}</Text>
         </Pressable>
       </View>
     );
@@ -232,7 +239,7 @@ export default function CameraScreen({
       </View>
 
       {isClip && !isRecording && (
-        <Text style={styles.clipHint}>Hold to record, or import a video from your gallery.</Text>
+        <Text style={styles.clipHint}>{t('clipHint')}</Text>
       )}
 
       <ScrollView
@@ -249,7 +256,7 @@ export default function CameraScreen({
                 type === contentType && styles.contentTypeTextActive,
               ]}
             >
-              {type.toUpperCase()}
+              {contentTypeLabels[type].toUpperCase()}
             </Text>
           </Pressable>
         ))}

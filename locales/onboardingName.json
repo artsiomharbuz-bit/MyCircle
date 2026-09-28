@@ -1,0 +1,74 @@
+{
+  "en": {
+    "title": "What's your name?",
+    "subtitle": "This is how people in your circle will see you.",
+    "namePlaceholder": "Your name",
+    "continueButton": "Continue"
+  },
+  "de": {
+    "title": "Wie heißt du?",
+    "subtitle": "So werden dich Menschen in deinem Kreis sehen.",
+    "namePlaceholder": "Dein Name",
+    "continueButton": "Weiter"
+  },
+  "es": {
+    "title": "¿Cuál es tu nombre?",
+    "subtitle": "Así es como te verán las personas de tu círculo.",
+    "namePlaceholder": "Tu nombre",
+    "continueButton": "Continuar"
+  },
+  "fr": {
+    "title": "Quel est votre nom ?",
+    "subtitle": "C'est ainsi que les gens de votre cercle vous verront.",
+    "namePlaceholder": "Votre nom",
+    "continueButton": "Continuer"
+  },
+  "pt": {
+    "title": "Qual é o seu nome?",
+    "subtitle": "É assim que as pessoas do seu círculo vão te ver.",
+    "namePlaceholder": "Seu nome",
+    "continueButton": "Continuar"
+  },
+  "it": {
+    "title": "Come ti chiami?",
+    "subtitle": "È così che le persone della tua cerchia ti vedranno.",
+    "namePlaceholder": "Il tuo nome",
+    "continueButton": "Continua"
+  },
+  "tr": {
+    "title": "Adınız nedir?",
+    "subtitle": "Çevrenizdeki kişiler sizi böyle görecek.",
+    "namePlaceholder": "Adınız",
+    "continueButton": "Devam Et"
+  },
+  "pl": {
+    "title": "Jak masz na imię?",
+    "subtitle": "Tak zobaczą cię osoby z twojego kręgu.",
+    "namePlaceholder": "Twoje imię",
+    "continueButton": "Dalej"
+  },
+  "ar": {
+    "title": "ما اسمك؟",
+    "subtitle": "هكذا سيراك الأشخاص في دائرتك.",
+    "namePlaceholder": "اسمك",
+    "continueButton": "متابعة"
+  },
+  "id": {
+    "title": "Siapa namamu?",
+    "subtitle": "Begini caranya orang-orang di circle-mu akan melihatmu.",
+    "namePlaceholder": "Namamu",
+    "continueButton": "Lanjutkan"
+  },
+  "ru": {
+    "title": "Как вас зовут?",
+    "subtitle": "Именно так вас увидят люди в вашем круге.",
+    "namePlaceholder": "Ваше имя",
+    "continueButton": "Продолжить"
+  },
+  "uk": {
+    "title": "Як вас звати?",
+    "subtitle": "Саме так вас побачать люди у вашому колі.",
+    "namePlaceholder": "Ваше ім'я",
+    "continueButton": "Продовжити"
+  }
+}

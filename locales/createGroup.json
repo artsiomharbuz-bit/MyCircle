@@ -1,0 +1,122 @@
+{
+  "en": {
+    "goBackLabel": "Go back",
+    "title": "New Group",
+    "groupNamePlaceholder": "Group name",
+    "selectedCount_one": "{{count}} selected",
+    "selectedCount_other": "{{count}} selected",
+    "addPeople": "Add people",
+    "followToAddEmpty": "Follow people to add them to a group.",
+    "createGroupButton": "Create Group"
+  },
+  "de": {
+    "goBackLabel": "Zurück",
+    "title": "Neue Gruppe",
+    "groupNamePlaceholder": "Gruppenname",
+    "selectedCount_one": "{{count}} ausgewählt",
+    "selectedCount_other": "{{count}} ausgewählt",
+    "addPeople": "Personen hinzufügen",
+    "followToAddEmpty": "Folge Personen, um sie zu einer Gruppe hinzuzufügen.",
+    "createGroupButton": "Gruppe erstellen"
+  },
+  "es": {
+    "goBackLabel": "Volver",
+    "title": "Nuevo grupo",
+    "groupNamePlaceholder": "Nombre del grupo",
+    "selectedCount_one": "{{count}} seleccionado",
+    "selectedCount_other": "{{count}} seleccionados",
+    "addPeople": "Añadir personas",
+    "followToAddEmpty": "Sigue a personas para añadirlas a un grupo.",
+    "createGroupButton": "Crear grupo"
+  },
+  "fr": {
+    "goBackLabel": "Retour",
+    "title": "Nouveau groupe",
+    "groupNamePlaceholder": "Nom du groupe",
+    "selectedCount_one": "{{count}} sélectionné",
+    "selectedCount_other": "{{count}} sélectionnés",
+    "addPeople": "Ajouter des personnes",
+    "followToAddEmpty": "Suivez des personnes pour les ajouter à un groupe.",
+    "createGroupButton": "Créer le groupe"
+  },
+  "pt": {
+    "goBackLabel": "Voltar",
+    "title": "Novo grupo",
+    "groupNamePlaceholder": "Nome do grupo",
+    "selectedCount_one": "{{count}} selecionado",
+    "selectedCount_other": "{{count}} selecionados",
+    "addPeople": "Adicionar pessoas",
+    "followToAddEmpty": "Siga pessoas para adicioná-las a um grupo.",
+    "createGroupButton": "Criar grupo"
+  },
+  "it": {
+    "goBackLabel": "Indietro",
+    "title": "Nuovo gruppo",
+    "groupNamePlaceholder": "Nome del gruppo",
+    "selectedCount_one": "{{count}} selezionato",
+    "selectedCount_other": "{{count}} selezionati",
+    "addPeople": "Aggiungi persone",
+    "followToAddEmpty": "Segui delle persone per aggiungerle a un gruppo.",
+    "createGroupButton": "Crea gruppo"
+  },
+  "tr": {
+    "goBackLabel": "Geri git",
+    "title": "Yeni Grup",
+    "groupNamePlaceholder": "Grup adı",
+    "selectedCount_one": "{{count}} seçildi",
+    "selectedCount_other": "{{count}} seçildi",
+    "addPeople": "Kişi ekle",
+    "followToAddEmpty": "Bir gruba eklemek için kişileri takip et.",
+    "createGroupButton": "Grup Oluştur"
+  },
+  "pl": {
+    "goBackLabel": "Wstecz",
+    "title": "Nowa grupa",
+    "groupNamePlaceholder": "Nazwa grupy",
+    "selectedCount_one": "Wybrano {{count}}",
+    "selectedCount_other": "Wybrano {{count}}",
+    "addPeople": "Dodaj osoby",
+    "followToAddEmpty": "Obserwuj osoby, aby dodać je do grupy.",
+    "createGroupButton": "Utwórz grupę"
+  },
+  "ar": {
+    "goBackLabel": "رجوع",
+    "title": "مجموعة جديدة",
+    "groupNamePlaceholder": "اسم المجموعة",
+    "selectedCount_one": "تم اختيار {{count}}",
+    "selectedCount_other": "تم اختيار {{count}}",
+    "addPeople": "إضافة أشخاص",
+    "followToAddEmpty": "تابع أشخاصًا لإضافتهم إلى مجموعة.",
+    "createGroupButton": "إنشاء مجموعة"
+  },
+  "id": {
+    "goBackLabel": "Kembali",
+    "title": "Grup Baru",
+    "groupNamePlaceholder": "Nama grup",
+    "selectedCount_one": "{{count}} dipilih",
+    "selectedCount_other": "{{count}} dipilih",
+    "addPeople": "Tambahkan orang",
+    "followToAddEmpty": "Ikuti orang untuk menambahkan mereka ke grup.",
+    "createGroupButton": "Buat Grup"
+  },
+  "ru": {
+    "goBackLabel": "Назад",
+    "title": "Новая группа",
+    "groupNamePlaceholder": "Название группы",
+    "selectedCount_one": "Выбрано {{count}}",
+    "selectedCount_other": "Выбрано {{count}}",
+    "addPeople": "Добавить людей",
+    "followToAddEmpty": "Подпишитесь на людей, чтобы добавить их в группу.",
+    "createGroupButton": "Создать группу"
+  },
+  "uk": {
+    "goBackLabel": "Назад",
+    "title": "Нова група",
+    "groupNamePlaceholder": "Назва групи",
+    "selectedCount_one": "Вибрано {{count}}",
+    "selectedCount_other": "Вибрано {{count}}",
+    "addPeople": "Додати людей",
+    "followToAddEmpty": "Підпишіться на людей, щоб додати їх до групи.",
+    "createGroupButton": "Створити групу"
+  }
+}

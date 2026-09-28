@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserAdd01Icon, UserGroup02Icon } from '@hugeicons/core-free-icons';
@@ -25,6 +26,7 @@ export default function DiscoverFriendsScreen({
   onOpenUser: (userId: Id<'users'>) => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['discoverFriends', 'common']);
   const styles = createStyles(colors);
   const suggestions = useQuery(api.follows.getFriendSuggestions, { userId });
   const randomUsers = useQuery(api.follows.getRandomUsers, { userId });
@@ -65,12 +67,12 @@ export default function DiscoverFriendsScreen({
     <View style={styles.container}>
       <View style={styles.header}>
         <BackButton onPress={onBack} />
-        <Text style={styles.title}>Discover Friends</Text>
+        <Text style={styles.title}>{t('screenTitle')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.subtitle}>People you may know</Text>
+        <Text style={styles.subtitle}>{t('subtitle')}</Text>
 
         {visibleSuggestions === undefined ? (
           [0, 1, 2, 3].map((item) => (
@@ -85,12 +87,12 @@ export default function DiscoverFriendsScreen({
         ) : visibleSuggestions.length === 0 ? (
           <EmptyState
             icon={UserAdd01Icon}
-            message="No suggestions yet. Keep exploring."
+            message={t('noSuggestionsMessage')}
             style={styles.emptyState}
           />
         ) : (
           visibleSuggestions.map((user) => {
-            const displayName = user.name ?? user.username ?? 'Someone';
+            const displayName = user.name ?? user.username ?? t('someoneFallback');
             const letter = (user.username ?? displayName).charAt(0).toUpperCase();
             const gradient = (user.avatarGradient as [string, string]) ?? [
               colors.red,
@@ -116,12 +118,12 @@ export default function DiscoverFriendsScreen({
                     <Text style={styles.username}>@{user.username}</Text>
                     {user.mutualCount > 0 && (
                       <Text style={styles.reason}>
-                        {user.mutualCount} mutual {user.mutualCount === 1 ? 'friend' : 'friends'}
+                        {t('mutualFriends', { count: user.mutualCount })}
                       </Text>
                     )}
                     {user.sharedCircleNames.map((circleName) => (
                       <Text key={circleName} style={styles.reason}>
-                        Share the circle {circleName}
+                        {t('sharedCircleReason', { circleName })}
                       </Text>
                     ))}
                   </View>
@@ -132,7 +134,7 @@ export default function DiscoverFriendsScreen({
           })
         )}
 
-        <Text style={styles.sectionTitle}>Users</Text>
+        <Text style={styles.sectionTitle}>{t('usersSectionTitle')}</Text>
         {visibleRandomUsers === undefined ? (
           [0, 1, 2].map((item) => (
             <View key={`random-skeleton-${item}`} style={styles.userRow}>
@@ -146,12 +148,12 @@ export default function DiscoverFriendsScreen({
         ) : visibleRandomUsers.length === 0 ? (
           <EmptyState
             icon={UserGroup02Icon}
-            message="No other users to show yet."
+            message={t('noUsersMessage')}
             style={styles.emptyState}
           />
         ) : (
           visibleRandomUsers.map((user) => {
-            const displayName = user.name ?? user.username ?? 'Someone';
+            const displayName = user.name ?? user.username ?? t('someoneFallback');
             const letter = (user.username ?? displayName).charAt(0).toUpperCase();
             const gradient = (user.avatarGradient as [string, string]) ?? [
               colors.red,

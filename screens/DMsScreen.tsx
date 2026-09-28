@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Animated, Image, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
@@ -49,6 +50,7 @@ export default function DMsScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['dms', 'common']);
   const [composeVisible, setComposeVisible] = useState(false);
 
   const conversations = useQuery(api.messages.listConversations, { userId });
@@ -100,11 +102,11 @@ export default function DMsScreen({
           <Badge count={openReportCount} />
         </View>
         <View style={styles.conversationText}>
-          <Text variant="bodyBold" style={styles.conversationName}>Reports</Text>
+          <Text variant="bodyBold" style={styles.conversationName}>{t('reportsTitle')}</Text>
           <Text variant="footnote" style={styles.conversationPreview} numberOfLines={1}>
             {openReportCount && openReportCount > 0
-              ? `${openReportCount} report${openReportCount === 1 ? '' : 's'} waiting for review`
-              : 'Nothing waiting for review'}
+              ? t('reportsWaiting', { count: openReportCount })
+              : t('reportsWaitingEmpty')}
           </Text>
         </View>
         <HugeiconsIcon icon={ArrowRight01Icon} size={20} color={colors.textMuted} />
@@ -149,8 +151,8 @@ export default function DMsScreen({
                       <Text variant="bodyBold" style={styles.conversationName}>{group.name}</Text>
                       <Text variant="footnote" style={styles.conversationPreview} numberOfLines={1}>
                         {group.lastMessage
-                          ? `${group.lastMessageIsMine ? 'You: ' : ''}${group.lastMessage}`
-                          : 'No messages yet.'}
+                          ? `${group.lastMessageIsMine ? t('youPrefix') : ''}${group.lastMessage}`
+                          : t('noMessagesYet')}
                       </Text>
                     </View>
                     <View style={styles.unreadBadge}>
@@ -197,10 +199,10 @@ export default function DMsScreen({
                       <VerifiedBadge verified={conversation.otherUser.isVerified} size={14} />
                     </View>
                     {typingSet.has(conversation.otherUser._id) ? (
-                      <Text variant="calloutBold" style={styles.typingPreview}>Typing…</Text>
+                      <Text variant="calloutBold" style={styles.typingPreview}>{t('typingIndicator')}</Text>
                     ) : (
                       <Text variant="footnote" style={styles.conversationPreview} numberOfLines={1}>
-                        {conversation.lastMessageIsMine ? 'You: ' : ''}
+                        {conversation.lastMessageIsMine ? t('youPrefix') : ''}
                         {conversation.lastMessage}
                       </Text>
                     )}
@@ -219,15 +221,15 @@ export default function DMsScreen({
           {hasFriends ? (
             <EmptyState
               icon={SentIcon}
-              message="No messages yet."
-              buttonLabel="Message Someone"
+              message={t('noMessagesYet')}
+              buttonLabel={t('messageSomeoneButton')}
               onPressButton={() => setComposeVisible(true)}
             />
           ) : (
             <EmptyState
               icon={UserAdd01Icon}
-              message="You're not following anyone yet."
-              buttonLabel="Find Friends"
+              message={t('notFollowingAnyone')}
+              buttonLabel={t('findFriendsButton')}
               onPressButton={onOpenDiscoverFriends}
             />
           )}
@@ -235,12 +237,12 @@ export default function DMsScreen({
       )}
 
       <View style={styles.header}>
-        <Text variant="h3" style={styles.title}>Messages</Text>
+        <Text variant="h3" style={styles.title}>{t('title')}</Text>
 
         <AnimatedPressable
           style={styles.groupButton}
           onPress={onOpenCreateGroup}
-          accessibilityLabel="Create group"
+          accessibilityLabel={t('createGroupLabel')}
         >
           <HugeiconsIcon icon={AddTeamIcon} size={19} color={colors.white} />
         </AnimatedPressable>

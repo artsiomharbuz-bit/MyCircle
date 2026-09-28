@@ -1,5 +1,6 @@
 import AppTextInput from '../components/AppTextInput';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
@@ -46,6 +47,7 @@ export default function ManageAdminsScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['manageAdmins', 'common']);
   const setModRole = useAction(api.moderationAuth.setModRole);
 
   const [search, setSearch] = useState('');
@@ -78,10 +80,10 @@ export default function ManageAdminsScreen({
       });
       closeConfirm();
       setResult({
-        title: outcome.isMod ? 'Moderator added' : 'Moderator removed',
+        title: outcome.isMod ? t('moderatorAddedTitle') : t('moderatorRemovedTitle'),
         message: outcome.isMod
-          ? `@${outcome.username} can now review reports and use the moderation tools.`
-          : `@${outcome.username} no longer has any moderator access, and any unlocked session they had is now closed.`,
+          ? t('moderatorAddedMessage', { username: outcome.username })
+          : t('moderatorRemovedMessage', { username: outcome.username }),
       });
     } catch (err) {
       setError(readableError(err));
@@ -95,17 +97,17 @@ export default function ManageAdminsScreen({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel="Go back">
+        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel={t('goBackLabel')}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>Manage Admins</Text>
+        <Text style={styles.title}>{t('title')}</Text>
       </View>
 
       <View style={styles.searchWrap}>
         <HugeiconsIcon icon={Search01Icon} size={19} color={colors.textMuted} />
         <AppTextInput
           style={styles.searchInput}
-          placeholder="Search a username"
+          placeholder={t('searchPlaceholder')}
           placeholderTextColor={colors.placeholder}
           autoCapitalize="none"
           autoCorrect={false}
@@ -121,7 +123,7 @@ export default function ManageAdminsScreen({
         keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.sectionTitle}>
-          {showingRoster ? 'Current moderators' : 'Search results'}
+          {showingRoster ? t('currentModerators') : t('searchResults')}
         </Text>
 
         {users && users.length === 0 && (
@@ -129,8 +131,8 @@ export default function ManageAdminsScreen({
             icon={ShieldUserIcon}
             message={
               showingRoster
-                ? 'No moderators yet. Search a username to appoint one.'
-                : 'Nobody matches that username.'
+                ? t('noModeratorsEmpty')
+                : t('noMatchEmpty')
             }
             style={styles.emptyState}
           />
@@ -165,7 +167,7 @@ export default function ManageAdminsScreen({
                 </View>
                 <Text style={styles.rowUsername} numberOfLines={1}>
                   @{user.username}
-                  {user.isMod ? ' · Moderator' : ''}
+                  {user.isMod ? t('moderatorSuffix') : ''}
                 </Text>
               </View>
 
@@ -182,7 +184,7 @@ export default function ManageAdminsScreen({
                   <Text
                     style={[styles.roleLabel, user.isMod && styles.roleLabelRevoke]}
                   >
-                    {user.isMod ? 'Revoke' : 'Make mod'}
+                    {user.isMod ? t('revokeButton') : t('makeModButton')}
                   </Text>
                 </View>
               </AnimatedPressable>
@@ -194,19 +196,19 @@ export default function ManageAdminsScreen({
       {/* Every single change is re-authorised with the password. */}
       <FormModal
         visible={pending !== null}
-        title={pending?.makeMod ? 'Confirm new moderator' : 'Confirm revoking access'}
+        title={pending?.makeMod ? t('confirmNewModTitle') : t('confirmRevokeTitle')}
         subtitle={
           pending
             ? pending.makeMod
-              ? `@${pending.username} will be able to review reports, take content down, and restrict, warn, ban, verify and strike accounts.`
-              : `@${pending.username} will immediately lose every moderator tool, and any unlocked session they hold is closed.`
+              ? t('confirmNewModSubtitle', { username: pending.username })
+              : t('confirmRevokeSubtitle', { username: pending.username })
             : ''
         }
         icon={SquareLock01Icon}
         onClose={closeConfirm}
         footer={
           <PrimaryButton
-            label={pending?.makeMod ? 'Make moderator' : 'Revoke access'}
+            label={pending?.makeMod ? t('makeModeratorButton') : t('revokeAccessButton')}
             tone={pending?.makeMod ? 'primary' : 'danger'}
             loading={submitting}
             disabled={password.length === 0}
@@ -214,11 +216,11 @@ export default function ManageAdminsScreen({
           />
         }
       >
-        <Text style={styles.confirmLabel}>Your Main Admin password</Text>
+        <Text style={styles.confirmLabel}>{t('passwordLabel')}</Text>
         <View style={styles.passwordWrap}>
           <AppTextInput
             style={[styles.input, styles.passwordInput]}
-            placeholder="Password"
+            placeholder={t('passwordPlaceholder')}
             placeholderTextColor={colors.placeholder}
             secureTextEntry={!showPassword}
             autoCapitalize="none"
@@ -247,7 +249,7 @@ export default function ManageAdminsScreen({
         visible={result !== null}
         title={result?.title ?? ''}
         message={result?.message ?? ''}
-        confirmLabel="Done"
+        confirmLabel={t('doneButton')}
         showCancel={false}
         onClose={() => setResult(null)}
         onConfirm={() => setResult(null)}

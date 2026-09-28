@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Image, Modal, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import Text from '../components/AppText';
+import { useTranslation } from 'react-i18next';
 import LegalDocModal from '../components/LegalDocModal';
 import { LegalDocKey } from '../legalText';
 import { StatusBar } from 'expo-status-bar';
@@ -29,47 +30,59 @@ import {
   UserBlock01Icon,
 } from '@hugeicons/core-free-icons';
 import { AppearanceMode, useAppTheme } from '../ThemeContext';
+import { useAppLanguage } from '../LanguageContext';
+import { SUPPORTED_LANGUAGES } from '../i18n';
 import { Colors, radius, space, typography } from '../theme';
 import { api } from '../convex/_generated/api';
 import { Id } from '../convex/_generated/dataModel';
 import Badge from '../components/Badge';
 import StickerSheet from '../components/StickerSheet';
 
-const OPTIONS: { mode: AppearanceMode; label: string; icon: typeof Moon02Icon }[] = [
-  { mode: 'dark', label: 'Dark', icon: Moon02Icon },
-  { mode: 'light', label: 'Light', icon: Sun01Icon },
-  { mode: 'system', label: 'Use phone default', icon: PhoneIcon },
-];
+type SettingItem = { key: string; label: string; description: string; icon: IconSvgElement; action?: 'content' | 'stickers' | 'sounds' | 'blocked' | 'ads' | 'language' | 'app-language' };
 
-type SettingItem = { label: string; description: string; icon: IconSvgElement; action?: 'content' | 'stickers' | 'sounds' | 'blocked' | 'ads' | 'language' };
+function getAppearanceOptions(t: (key: string) => string): { mode: AppearanceMode; label: string; icon: typeof Moon02Icon }[] {
+  return [
+    { mode: 'dark', label: t('darkOption'), icon: Moon02Icon },
+    { mode: 'light', label: t('lightOption'), icon: Sun01Icon },
+    { mode: 'system', label: t('systemOption'), icon: PhoneIcon },
+  ];
+}
 
 // Every row uses a real icon at the same size and color — no emoji (which
 // render in full color via the system font regardless of what's set here)
 // and no plain-text glyphs (which come out at wildly different visual
 // weights depending on the character). Appearance/dark mode lives outside
 // this list — it gets its own row with an inline switch instead of a chevron.
-const SETTINGS: SettingItem[] = [
-  { label: 'Content', description: 'Posts, stories, and clips', icon: Album02Icon, action: 'content' },
-  { label: 'Manage best friends', description: 'Choose who sees your close-circle posts', icon: FavouriteIcon },
-  { label: 'Stickers', description: 'Create, save, and share stickers', icon: StickerIcon, action: 'stickers' },
-  { label: 'Ads', description: 'Create and manage ads you run on MyCircle', icon: Megaphone01Icon, action: 'ads' },
-  { label: 'Blocked accounts', description: 'Accounts you no longer see or hear from', icon: UserBlock01Icon, action: 'blocked' },
-  { label: 'Security & privacy', description: 'Control your account and visibility', icon: LockIcon },
-  { label: 'Account', description: 'Profile details and account preferences', icon: User02Icon },
-  { label: 'Wellbeing', description: 'Time and activity controls', icon: Time02Icon },
-  { label: 'Language', description: 'Content language for your feed', icon: TranslateIcon, action: 'language' },
-  { label: 'Sounds', description: 'Add and manage the sounds you\'ve made', icon: MusicNote02Icon, action: 'sounds' },
-  { label: 'Support', description: 'Help, feedback, and reporting', icon: HelpCircleIcon },
-];
+function getSettingsList(t: (key: string) => string): SettingItem[] {
+  return [
+    { key: 'content', label: t('contentLabel'), description: t('contentDescription'), icon: Album02Icon, action: 'content' },
+    { key: 'bestFriends', label: t('manageBestFriendsLabel'), description: t('manageBestFriendsDescription'), icon: FavouriteIcon },
+    { key: 'stickers', label: t('stickersLabel'), description: t('stickersDescription'), icon: StickerIcon, action: 'stickers' },
+    { key: 'ads', label: t('adsLabel'), description: t('adsDescription'), icon: Megaphone01Icon, action: 'ads' },
+    { key: 'blockedAccounts', label: t('blockedAccountsLabel'), description: t('blockedAccountsDescription'), icon: UserBlock01Icon, action: 'blocked' },
+    { key: 'securityPrivacy', label: t('securityPrivacyLabel'), description: t('securityPrivacyDescription'), icon: LockIcon },
+    { key: 'account', label: t('accountLabel'), description: t('accountDescription'), icon: User02Icon },
+    { key: 'wellbeing', label: t('wellbeingLabel'), description: t('wellbeingDescription'), icon: Time02Icon },
+    { key: 'language', label: t('languageLabel'), description: t('languageDescription'), icon: TranslateIcon, action: 'language' },
+    { key: 'appLanguage', label: t('appLanguageLabel'), description: t('appLanguageDescription'), icon: TranslateIcon, action: 'app-language' },
+    { key: 'sounds', label: t('soundsLabel'), description: t('soundsDescription'), icon: MusicNote02Icon, action: 'sounds' },
+    { key: 'support', label: t('supportLabel'), description: t('supportDescription'), icon: HelpCircleIcon },
+  ];
+}
 
 export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageAdmins, onOpenModInbox, onOpenAdModInbox, onOpenSounds, onOpenBlockedAccounts, onOpenAds }: { userId: Id<'users'>; onBack: () => void; onLogout: () => void; onOpenManageAdmins: () => void; onOpenModInbox: () => void; onOpenAdModInbox: () => void; onOpenSounds: () => void; onOpenBlockedAccounts: () => void; onOpenAds: () => void }) {
   const { colors, scheme, mode, setMode } = useAppTheme();
+  const { t } = useTranslation(['settings', 'common']);
   const styles = createStyles(colors);
   const [legalDoc, setLegalDoc] = useState<LegalDocKey | null>(null);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const [contentOpen, setContentOpen] = useState(false);
   const [stickersOpen, setStickersOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [appLanguageOpen, setAppLanguageOpen] = useState(false);
+  const { language: appLanguage, setLanguage: setAppLanguage } = useAppLanguage();
+  const OPTIONS = getAppearanceOptions(t);
+  const SETTINGS = getSettingsList(t);
   const selectedOption = OPTIONS.find((option) => option.mode === mode)!;
   const openItem = (item: SettingItem) => {
     if (item.action === 'content') setContentOpen(true);
@@ -78,6 +91,7 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
     if (item.action === 'blocked') onOpenBlockedAccounts();
     if (item.action === 'ads') onOpenAds();
     if (item.action === 'language') setLanguageOpen(true);
+    if (item.action === 'app-language') setAppLanguageOpen(true);
   };
 
   // Manage Admins belongs to the one Main Admin account; the report queue and
@@ -111,10 +125,10 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel="Go back">
+        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel={t('goBackLabel')}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title}>{t('screenTitle')}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Pressable style={styles.profileCard} onPress={onBack}>
@@ -136,7 +150,7 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
 
         {modStatus?.isMod && (
           <View style={styles.modSection}>
-            <Text style={styles.sectionTitle}>Moderation</Text>
+            <Text style={styles.sectionTitle}>{t('moderationSectionTitle')}</Text>
             <View style={styles.list}>
               {modStatus.isMainAdmin && (
                 <Pressable style={styles.settingRow} onPress={onOpenManageAdmins}>
@@ -144,8 +158,8 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
                     <HugeiconsIcon icon={ShieldUserIcon} size={19} color={colors.accentText} />
                   </View>
                   <View style={styles.rowText}>
-                    <Text style={styles.rowLabel}>Manage Admins</Text>
-                    <Text style={styles.rowDescription} numberOfLines={1}>Appoint or revoke moderators</Text>
+                    <Text style={styles.rowLabel}>{t('manageAdminsLabel')}</Text>
+                    <Text style={styles.rowDescription} numberOfLines={1}>{t('manageAdminsDescription')}</Text>
                   </View>
                   <HugeiconsIcon icon={ArrowRight01Icon} size={20} color={colors.textMuted} />
                 </Pressable>
@@ -156,8 +170,8 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
                   <Badge count={openReportCount} />
                 </View>
                 <View style={styles.rowText}>
-                  <Text style={styles.rowLabel}>Reports</Text>
-                  <Text style={styles.rowDescription} numberOfLines={1}>Review what the community has reported</Text>
+                  <Text style={styles.rowLabel}>{t('reportsLabel')}</Text>
+                  <Text style={styles.rowDescription} numberOfLines={1}>{t('reportsDescription')}</Text>
                 </View>
                 <HugeiconsIcon icon={ArrowRight01Icon} size={20} color={colors.textMuted} />
               </Pressable>
@@ -167,8 +181,8 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
                   <Badge count={pendingAdCount} />
                 </View>
                 <View style={styles.rowText}>
-                  <Text style={styles.rowLabel}>Ad review</Text>
-                  <Text style={styles.rowDescription} numberOfLines={1}>Approve or reject submitted ads</Text>
+                  <Text style={styles.rowLabel}>{t('adReviewLabel')}</Text>
+                  <Text style={styles.rowDescription} numberOfLines={1}>{t('adReviewDescription')}</Text>
                 </View>
                 <HugeiconsIcon icon={ArrowRight01Icon} size={20} color={colors.textMuted} />
               </Pressable>
@@ -176,13 +190,13 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
           </View>
         )}
 
-        <Text style={styles.sectionTitle}>Other settings</Text>
+        <Text style={styles.sectionTitle}>{t('otherSettingsSectionTitle')}</Text>
         <View style={styles.list}>
           <View style={styles.settingRow}>
             <Pressable style={styles.settingRowMain} onPress={() => setAppearanceOpen(true)}>
               <HugeiconsIcon icon={Moon02Icon} size={18} color={colors.textMuted} />
               <View style={styles.rowText}>
-                <Text style={styles.rowLabel}>Dark mode</Text>
+                <Text style={styles.rowLabel}>{t('darkModeLabel')}</Text>
                 <Text style={styles.rowDescription} numberOfLines={1}>{selectedOption.label}</Text>
               </View>
             </Pressable>
@@ -197,9 +211,9 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
             <View style={styles.settingRowMain}>
               <HugeiconsIcon icon={User02Icon} size={18} color={colors.textMuted} />
               <View style={styles.rowText}>
-                <Text style={styles.rowLabel}>Suggest my account to others</Text>
+                <Text style={styles.rowLabel}>{t('suggestAccountLabel')}</Text>
                 <Text style={styles.rowDescription} numberOfLines={2}>
-                  Turn off to stop appearing in Discover Friends suggestions
+                  {t('suggestAccountDescription')}
                 </Text>
               </View>
             </View>
@@ -212,7 +226,7 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
           </View>
           {SETTINGS.map((item, index) => (
             <Pressable
-              key={item.label}
+              key={item.key}
               style={[styles.settingRow, index === SETTINGS.length - 1 && styles.settingRowLast]}
               onPress={() => openItem(item)}
             >
@@ -226,19 +240,19 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
           ))}
         </View>
 
-        <Text style={[styles.sectionTitle, styles.sectionTitleSpaced]}>Account</Text>
+        <Text style={[styles.sectionTitle, styles.sectionTitleSpaced]}>{t('accountSectionTitle')}</Text>
         <View style={styles.list}>
           <Pressable style={[styles.settingRow, styles.settingRowLast]} onPress={onLogout}>
             <HugeiconsIcon icon={LogOutIcon} size={18} color={colors.red} />
             <View style={styles.rowText}>
-              <Text style={styles.logoutRowLabel}>Log out</Text>
+              <Text style={styles.logoutRowLabel}>{t('logOutLabel')}</Text>
             </View>
           </Pressable>
         </View>
         <View style={styles.legal}>
-          <Text style={styles.legalTitle}>Legal</Text>
+          <Text style={styles.legalTitle}>{t('legalTitle')}</Text>
           <View style={styles.legalLinks}>
-            <Text style={styles.legalLink} onPress={() => setLegalDoc('terms')}>Terms of use</Text><Text style={styles.dot}>•</Text><Text style={styles.legalLink} onPress={() => setLegalDoc('privacy')}>Privacy policy</Text><Text style={styles.dot}>•</Text><Text style={styles.legalLink} onPress={() => setLegalDoc('guidelines')}>Community guidelines</Text>
+            <Text style={styles.legalLink} onPress={() => setLegalDoc('terms')}>{t('termsOfUse')}</Text><Text style={styles.dot}>•</Text><Text style={styles.legalLink} onPress={() => setLegalDoc('privacy')}>{t('privacyPolicy')}</Text><Text style={styles.dot}>•</Text><Text style={styles.legalLink} onPress={() => setLegalDoc('guidelines')}>{t('communityGuidelines')}</Text>
           </View>
           <Text style={styles.version}>MyCircle</Text>
         </View>
@@ -247,7 +261,7 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
       <Modal transparent animationType="fade" visible={appearanceOpen} onRequestClose={() => setAppearanceOpen(false)}>
         <Pressable style={styles.backdrop} onPress={() => setAppearanceOpen(false)} />
         <View style={styles.picker}>
-          <Text style={styles.pickerTitle}>Appearance</Text>
+          <Text style={styles.pickerTitle}>{t('appearanceModalTitle')}</Text>
           <View style={styles.optionList}>
             {OPTIONS.map((option) => {
               const isSelected = mode === option.mode;
@@ -262,12 +276,12 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
       <Modal transparent animationType="fade" visible={contentOpen} onRequestClose={() => setContentOpen(false)}>
         <Pressable style={styles.backdrop} onPress={() => setContentOpen(false)} />
         <View style={styles.picker}>
-          <Text style={styles.pickerTitle}>Content</Text>
+          <Text style={styles.pickerTitle}>{t('contentModalTitle')}</Text>
           <View style={styles.switchRow}>
             <View style={styles.switchRowText}>
-              <Text style={styles.switchRowLabel}>Hide AI content</Text>
+              <Text style={styles.switchRowLabel}>{t('hideAiContentLabel')}</Text>
               <Text style={styles.switchRowDescription}>
-                Hide posts and clips labeled Contains AI, except from friends and your own.
+                {t('hideAiContentDescription')}
               </Text>
             </View>
             <Switch
@@ -282,8 +296,8 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
       <Modal transparent animationType="fade" visible={languageOpen} onRequestClose={() => setLanguageOpen(false)}>
         <Pressable style={styles.backdrop} onPress={() => setLanguageOpen(false)} />
         <View style={styles.picker}>
-          <Text style={styles.pickerTitle}>Language</Text>
-          <Text style={styles.languageSectionLabel}>Primary language</Text>
+          <Text style={styles.pickerTitle}>{t('languageModalTitle')}</Text>
+          <Text style={styles.languageSectionLabel}>{t('primaryLanguageLabel')}</Text>
           <View style={styles.languageChipRow}>
             {(commonLanguages ?? []).map((lang) => {
               const isSelected = lang.code === primaryLanguage;
@@ -302,7 +316,7 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
           </View>
 
           <Text style={[styles.languageSectionLabel, styles.languageSectionSpaced]}>
-            Also fluent in (shows subtitled content in these languages more)
+            {t('alsoFluentInLabel')}
           </Text>
           <View style={styles.languageChipRow}>
             {(commonLanguages ?? [])
@@ -322,6 +336,31 @@ export default function SettingsScreen({ userId, onBack, onLogout, onOpenManageA
                   </Pressable>
                 );
               })}
+          </View>
+        </View>
+      </Modal>
+      <Modal transparent animationType="fade" visible={appLanguageOpen} onRequestClose={() => setAppLanguageOpen(false)}>
+        <Pressable style={styles.backdrop} onPress={() => setAppLanguageOpen(false)} />
+        <View style={styles.picker}>
+          <Text style={styles.pickerTitle}>{t('appLanguageModalTitle')}</Text>
+          <View style={styles.languageChipRow}>
+            {SUPPORTED_LANGUAGES.map((lang) => {
+              const isSelected = lang.code === appLanguage;
+              return (
+                <Pressable
+                  key={lang.code}
+                  style={[styles.languageChip, isSelected && styles.languageChipActive]}
+                  onPress={() => {
+                    setAppLanguage(lang.code);
+                    setAppLanguageOpen(false);
+                  }}
+                >
+                  <Text style={[styles.languageChipText, isSelected && styles.languageChipTextActive]}>
+                    {lang.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
         </View>
       </Modal>

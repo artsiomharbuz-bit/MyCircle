@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Animated, Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { HugeiconsIcon } from '@hugeicons/react-native';
@@ -53,6 +54,7 @@ export default function PostDetailsScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['postDetails', 'common']);
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
   const [containsAi, setContainsAi] = useState(false);
@@ -87,7 +89,7 @@ export default function PostDetailsScreen({
       <Animated.View style={[styles.postForm, entrance]}>
         <AppTextInput
           style={styles.input}
-          placeholder="Title (optional)"
+          placeholder={t('titlePlaceholder')}
           placeholderTextColor={colors.placeholder}
           value={title}
           onChangeText={setTitle}
@@ -98,7 +100,7 @@ export default function PostDetailsScreen({
 
         <AppTextInput
           style={[styles.input, styles.captionInput]}
-          placeholder="Caption (optional)"
+          placeholder={t('captionPlaceholder')}
           placeholderTextColor={colors.placeholder}
           value={caption}
           onChangeText={setCaption}
@@ -123,13 +125,13 @@ export default function PostDetailsScreen({
       <Animated.View style={[styles.bottomSection, entrance]}>
         <Pressable style={styles.optionsRow} onPress={() => setOptionsVisible(true)}>
           <HugeiconsIcon icon={MoreHorizontalIcon} size={18} color={colors.textMuted} />
-          <Text variant="bodyBold" style={styles.optionsLabel}>Options</Text>
+          <Text variant="bodyBold" style={styles.optionsLabel}>{t('optionsLabel')}</Text>
           <View style={styles.optionsBadgeRow}>
             {containsAi && (
-              <Text variant="micro" style={styles.optionsBadge}>Contains AI</Text>
+              <Text variant="micro" style={styles.optionsBadge}>{t('containsAiBadge')}</Text>
             )}
             {validPoll(poll) && (
-              <Text variant="micro" style={styles.optionsBadge}>Poll</Text>
+              <Text variant="micro" style={styles.optionsBadge}>{t('pollBadge')}</Text>
             )}
           </View>
         </Pressable>
@@ -147,7 +149,7 @@ export default function PostDetailsScreen({
               })
             }
           >
-            <Text variant="h3" style={styles.nextButtonText}>Next</Text>
+            <Text variant="h3" style={styles.nextButtonText}>{t('common:next')}</Text>
           </Pressable>
         </View>
       </Animated.View>

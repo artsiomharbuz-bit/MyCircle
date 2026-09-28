@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowLeft01Icon, Tick02Icon } from '@hugeicons/core-free-icons';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
@@ -75,6 +76,7 @@ export default function AudienceSelectionScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['audienceSelection', 'common']);
   const entrance = useEntranceAnimation();
   // Clips are TikTok-style public content, so default them to Global instead
   // of Circles — still switchable, just a saner starting point.
@@ -200,8 +202,8 @@ export default function AudienceSelectionScreen({
       </Pressable>
 
       <Animated.View style={[styles.titleWrap, entrance]}>
-        <Text style={styles.title}>Who's this for?</Text>
-        <Text style={styles.subtitle}>Choose who can see this post.</Text>
+        <Text style={styles.title}>{t('titleText')}</Text>
+        <Text style={styles.subtitle}>{t('subtitleText')}</Text>
       </Animated.View>
 
       <Animated.View style={[styles.options, entrance]}>
@@ -209,8 +211,8 @@ export default function AudienceSelectionScreen({
 
         <Text style={styles.audienceDescription}>
           {audience === 'circles'
-            ? 'Only people in your circles can see this.'
-            : 'Anyone on MyCircle can see this.'}
+            ? t('circlesDescription')
+            : t('globalDescription')}
         </Text>
 
         <ScrollView
@@ -225,7 +227,7 @@ export default function AudienceSelectionScreen({
                 onPress={selectAll}
               >
                 <View style={[styles.circleDot, { backgroundColor: allColor }]} />
-                <Text style={styles.circleRowLabel}>All (your friends)</Text>
+                <Text style={styles.circleRowLabel}>{t('allCirclesLabel')}</Text>
                 <View style={[styles.check, isAllSelected && styles.checkSelected]}>
                   {isAllSelected && <HugeiconsIcon icon={Tick02Icon} size={15} color="#ffffff" />}
                 </View>
@@ -254,10 +256,11 @@ export default function AudienceSelectionScreen({
             <View style={styles.expirySection}>
               <View style={styles.expiryHeaderRow}>
                 <View style={styles.expiryHeaderText}>
-                  <Text style={styles.expiryTitle}>Auto-delete</Text>
+                  <Text style={styles.expiryTitle}>{t('autoDeleteTitle')}</Text>
                   <Text style={styles.expirySubtitle}>
-                    Automatically removes this {kind === 'clip' ? 'clip' : 'post'} after the time you
-                    pick.
+                    {t('autoDeleteDescription', {
+                      kind: kind === 'clip' ? t('clipWord') : t('postWord'),
+                    })}
                   </Text>
                 </View>
                 <Switch
@@ -292,7 +295,7 @@ export default function AudienceSelectionScreen({
                   {expiryPreset === 'custom' && (
                     <View style={styles.customPickerWrap}>
                       <View style={styles.customPickerColumn}>
-                        <Text style={styles.customPickerLabel}>Days</Text>
+                        <Text style={styles.customPickerLabel}>{t('daysLabel')}</Text>
                         <WheelPicker
                           data={CUSTOM_DAYS}
                           selectedIndex={customDays}
@@ -300,7 +303,7 @@ export default function AudienceSelectionScreen({
                         />
                       </View>
                       <View style={styles.customPickerColumn}>
-                        <Text style={styles.customPickerLabel}>Hours</Text>
+                        <Text style={styles.customPickerLabel}>{t('hoursLabel')}</Text>
                         <WheelPicker
                           data={CUSTOM_HOURS}
                           selectedIndex={customHours}
@@ -308,7 +311,7 @@ export default function AudienceSelectionScreen({
                         />
                       </View>
                       <View style={styles.customPickerColumn}>
-                        <Text style={styles.customPickerLabel}>Minutes</Text>
+                        <Text style={styles.customPickerLabel}>{t('minutesLabel')}</Text>
                         <WheelPicker
                           data={CUSTOM_MINUTES}
                           selectedIndex={customMinutes}
@@ -327,7 +330,7 @@ export default function AudienceSelectionScreen({
       {error && <Text style={styles.error}>{error}</Text>}
 
       <View style={styles.shareButtonWrap}>
-        <PrimaryButton label="Share" onPress={handleShare} disabled={!canShare} loading={submitting} />
+        <PrimaryButton label={t('common:share')} onPress={handleShare} disabled={!canShare} loading={submitting} />
       </View>
 
       <StatusBar style={scheme === 'light' ? 'dark' : 'light'} />

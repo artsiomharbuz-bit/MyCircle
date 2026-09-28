@@ -4,7 +4,7 @@ import { space } from '../theme';
 export default function Logo() {
   return (
     <View style={styles.logoWrap}>
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
+      <Image source={require('../assets/mycirclelogo.png')} style={styles.logo} />
     </View>
   );
 }

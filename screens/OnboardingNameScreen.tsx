@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import BackButton from '../components/BackButton';
 import TextField from '../components/TextField';
 import PrimaryButton from '../components/PrimaryButton';
@@ -19,6 +20,7 @@ export default function OnboardingNameScreen({
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const entrance = useEntranceAnimation();
+  const { t } = useTranslation(['onboardingName', 'common']);
   const [name, setName] = useState('');
   const canContinue = name.trim().length > 0;
 
@@ -28,23 +30,23 @@ export default function OnboardingNameScreen({
 
       <Animated.View style={[styles.titleWrap, entrance]}>
         <Text variant="display" style={styles.title}>
-          What's your name?
+          {t('title')}
         </Text>
         <Text variant="body" style={styles.subtitle}>
-          This is how people in your circle will see you.
+          {t('subtitle')}
         </Text>
       </Animated.View>
 
       <Animated.View style={[styles.actions, entrance]}>
         <TextField
-          placeholder="Your name"
+          placeholder={t('namePlaceholder')}
           value={name}
           onChangeText={setName}
           autoFocus
         />
 
         <PrimaryButton
-          label="Continue"
+          label={t('continueButton')}
           tone="primary"
           disabled={!canContinue}
           onPress={() => canContinue && onNext(name.trim())}

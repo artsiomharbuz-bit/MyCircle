@@ -1,0 +1,98 @@
+{
+  "en": {
+    "openClipsLabel": "Open clips",
+    "friendsEmptyMessage": "No posts from people you follow yet.",
+    "nothingHereMessage": "Nothing here yet.",
+    "createPostButton": "Create a Post",
+    "forYouLabel": "For You",
+    "friendsLabel": "Friends"
+  },
+  "de": {
+    "openClipsLabel": "Clips öffnen",
+    "friendsEmptyMessage": "Noch keine Beiträge von Personen, denen du folgst.",
+    "nothingHereMessage": "Hier gibt es noch nichts.",
+    "createPostButton": "Beitrag erstellen",
+    "forYouLabel": "Für dich",
+    "friendsLabel": "Freunde"
+  },
+  "es": {
+    "openClipsLabel": "Abrir clips",
+    "friendsEmptyMessage": "Aún no hay publicaciones de personas que sigues.",
+    "nothingHereMessage": "Todavía no hay nada aquí.",
+    "createPostButton": "Crear una publicación",
+    "forYouLabel": "Para ti",
+    "friendsLabel": "Amigos"
+  },
+  "fr": {
+    "openClipsLabel": "Ouvrir les clips",
+    "friendsEmptyMessage": "Aucune publication des personnes que vous suivez pour le moment.",
+    "nothingHereMessage": "Il n'y a encore rien ici.",
+    "createPostButton": "Créer une publication",
+    "forYouLabel": "Pour vous",
+    "friendsLabel": "Amis"
+  },
+  "pt": {
+    "openClipsLabel": "Abrir clips",
+    "friendsEmptyMessage": "Ainda não há publicações de pessoas que você segue.",
+    "nothingHereMessage": "Ainda não há nada aqui.",
+    "createPostButton": "Criar uma publicação",
+    "forYouLabel": "Para você",
+    "friendsLabel": "Amigos"
+  },
+  "it": {
+    "openClipsLabel": "Apri clip",
+    "friendsEmptyMessage": "Ancora nessun post dalle persone che segui.",
+    "nothingHereMessage": "Non c'è ancora niente qui.",
+    "createPostButton": "Crea un post",
+    "forYouLabel": "Per te",
+    "friendsLabel": "Amici"
+  },
+  "tr": {
+    "openClipsLabel": "Klipleri aç",
+    "friendsEmptyMessage": "Takip ettiğin kişilerden henüz gönderi yok.",
+    "nothingHereMessage": "Burada henüz bir şey yok.",
+    "createPostButton": "Gönderi Oluştur",
+    "forYouLabel": "Senin İçin",
+    "friendsLabel": "Arkadaşlar"
+  },
+  "pl": {
+    "openClipsLabel": "Otwórz klipy",
+    "friendsEmptyMessage": "Brak jeszcze postów od obserwowanych osób.",
+    "nothingHereMessage": "Nic tu jeszcze nie ma.",
+    "createPostButton": "Utwórz post",
+    "forYouLabel": "Dla Ciebie",
+    "friendsLabel": "Znajomi"
+  },
+  "ar": {
+    "openClipsLabel": "فتح المقاطع",
+    "friendsEmptyMessage": "لا توجد منشورات بعد من الأشخاص الذين تتابعهم.",
+    "nothingHereMessage": "لا يوجد شيء هنا بعد.",
+    "createPostButton": "إنشاء منشور",
+    "forYouLabel": "لك",
+    "friendsLabel": "الأصدقاء"
+  },
+  "id": {
+    "openClipsLabel": "Buka klip",
+    "friendsEmptyMessage": "Belum ada postingan dari orang yang kamu ikuti.",
+    "nothingHereMessage": "Belum ada apa-apa di sini.",
+    "createPostButton": "Buat Postingan",
+    "forYouLabel": "Untukmu",
+    "friendsLabel": "Teman"
+  },
+  "ru": {
+    "openClipsLabel": "Открыть клипы",
+    "friendsEmptyMessage": "Пока нет публикаций от тех, на кого вы подписаны.",
+    "nothingHereMessage": "Здесь пока ничего нет.",
+    "createPostButton": "Создать публикацию",
+    "forYouLabel": "Для вас",
+    "friendsLabel": "Друзья"
+  },
+  "uk": {
+    "openClipsLabel": "Відкрити кліпи",
+    "friendsEmptyMessage": "Поки що немає публікацій від тих, на кого ви підписані.",
+    "nothingHereMessage": "Тут поки що нічого немає.",
+    "createPostButton": "Створити публікацію",
+    "forYouLabel": "Для вас",
+    "friendsLabel": "Друзі"
+  }
+}

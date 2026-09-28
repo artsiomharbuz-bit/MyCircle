@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlatList, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
@@ -46,6 +47,7 @@ export default function GroupInfoScreen({
 }) {
   const { colors } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['groupInfo', 'common']);
   const localKey = `group-${groupId}`;
 
   const group = useQuery(api.groups.getGroupInviteInfo, { groupId, viewerId: currentUserId });
@@ -96,9 +98,9 @@ export default function GroupInfoScreen({
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.profileBlock}>
           <GroupAvatarStack members={members ?? []} size={96} />
-          <Text variant="h2" style={styles.name}>{group?.name ?? 'Group'}</Text>
+          <Text variant="h2" style={styles.name}>{group?.name ?? t('groupFallbackName')}</Text>
           <Text variant="callout" style={styles.meta}>
-            {members ? `${members.length} member${members.length === 1 ? '' : 's'}` : ''}
+            {members ? t('membersCount', { count: members.length }) : ''}
           </Text>
         </View>
 
@@ -107,7 +109,7 @@ export default function GroupInfoScreen({
             <View style={styles.optionIcon}>
               <HugeiconsIcon icon={NotificationOff01Icon} size={19} color={colors.white} />
             </View>
-            <Text variant="body" style={styles.optionLabel}>Mute notifications</Text>
+            <Text variant="body" style={styles.optionLabel}>{t('muteNotifications')}</Text>
             <View style={[styles.toggle, muted && styles.toggleOn]}>
               <View style={[styles.toggleKnob, muted && styles.toggleKnobOn]} />
             </View>
@@ -119,7 +121,7 @@ export default function GroupInfoScreen({
             <View style={styles.optionIcon}>
               <HugeiconsIcon icon={PaletteIcon} size={19} color={colors.white} />
             </View>
-            <Text variant="body" style={styles.optionLabel}>Customize chat</Text>
+            <Text variant="body" style={styles.optionLabel}>{t('customizeChat')}</Text>
           </Pressable>
 
           <View style={styles.optionDivider} />
@@ -128,7 +130,7 @@ export default function GroupInfoScreen({
             <View style={styles.optionIcon}>
               <HugeiconsIcon icon={Delete02Icon} size={19} color={colors.errorText} />
             </View>
-            <Text variant="body" style={[styles.optionLabel, styles.optionLabelDanger]}>Clear chat</Text>
+            <Text variant="body" style={[styles.optionLabel, styles.optionLabelDanger]}>{t('clearChat')}</Text>
           </Pressable>
 
           <View style={styles.optionDivider} />
@@ -137,11 +139,11 @@ export default function GroupInfoScreen({
             <View style={styles.optionIcon}>
               <HugeiconsIcon icon={Logout01Icon} size={19} color={colors.errorText} />
             </View>
-            <Text variant="body" style={[styles.optionLabel, styles.optionLabelDanger]}>Leave group</Text>
+            <Text variant="body" style={[styles.optionLabel, styles.optionLabelDanger]}>{t('leaveGroup')}</Text>
           </Pressable>
         </View>
 
-        <Text variant="calloutBold" style={styles.sectionTitle}>Members</Text>
+        <Text variant="calloutBold" style={styles.sectionTitle}>{t('membersSectionTitle')}</Text>
         {members?.map((member) => {
           const displayName = member.name ?? member.username ?? 'Someone';
           const letter = (member.username ?? displayName).charAt(0).toUpperCase();
@@ -172,12 +174,12 @@ export default function GroupInfoScreen({
           );
         })}
 
-        <Text variant="calloutBold" style={styles.sectionTitle}>Media in this chat</Text>
+        <Text variant="calloutBold" style={styles.sectionTitle}>{t('mediaSectionTitle')}</Text>
 
         {messages && media.length === 0 && (
           <View style={styles.emptyMedia}>
             <HugeiconsIcon icon={Image02Icon} size={26} color={colors.textMuted} />
-            <Text variant="footnote" style={styles.meta}>No photos or videos yet</Text>
+            <Text variant="footnote" style={styles.meta}>{t('noMediaYet')}</Text>
           </View>
         )}
 
@@ -221,9 +223,9 @@ export default function GroupInfoScreen({
 
       <NativePopup
         visible={clearConfirmVisible}
-        title="Clear this chat?"
-        message="This removes the messages from your view. It won't delete them for anyone else."
-        confirmLabel="Clear chat"
+        title={t('clearChatConfirmTitle')}
+        message={t('clearChatConfirmMessage')}
+        confirmLabel={t('clearChat')}
         onClose={() => setClearConfirmVisible(false)}
         onConfirm={async () => {
           await setGroupClearedAt(currentUserId, groupId, Date.now());
@@ -233,9 +235,9 @@ export default function GroupInfoScreen({
 
       <NativePopup
         visible={leaveConfirmVisible}
-        title="Leave this group?"
-        message="You'll stop seeing this group and its messages. You can only rejoin if someone invites you again."
-        confirmLabel="Leave group"
+        title={t('leaveGroupConfirmTitle')}
+        message={t('leaveGroupConfirmMessage')}
+        confirmLabel={t('leaveGroup')}
         onClose={() => setLeaveConfirmVisible(false)}
         onConfirm={async () => {
           await leaveGroup({ groupId, userId: currentUserId });

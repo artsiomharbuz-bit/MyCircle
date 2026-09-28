@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
+import { useTranslation } from 'react-i18next';
 import { StatusBar } from 'expo-status-bar';
 import { useAuthedQuery as useQuery } from '../SessionContext';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -47,6 +48,7 @@ export default function ProfileActivityScreen({
   onOpenSound: (soundId: Id<'sounds'>) => void;
 }) {
   const { colors, scheme } = useAppTheme();
+  const { t } = useTranslation(['profileActivity', 'common']);
   const styles = createStyles(colors);
   const [subTab, setSubTab] = useState<SubTab>('posts');
 
@@ -65,13 +67,13 @@ export default function ProfileActivityScreen({
   const tabs: { id: SubTab; label: string }[] =
     mode === 'saved'
       ? [
-          { id: 'posts', label: 'Posts' },
-          { id: 'clips', label: 'Clips' },
-          { id: 'sounds', label: 'Sounds' },
+          { id: 'posts', label: t('tabPosts') },
+          { id: 'clips', label: t('tabClips') },
+          { id: 'sounds', label: t('tabSounds') },
         ]
       : [
-          { id: 'posts', label: 'Posts' },
-          { id: 'clips', label: 'Clips' },
+          { id: 'posts', label: t('tabPosts') },
+          { id: 'clips', label: t('tabClips') },
         ];
 
   return (
@@ -80,7 +82,7 @@ export default function ProfileActivityScreen({
         <Pressable style={styles.backButton} onPress={onBack}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={20} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>{mode === 'liked' ? 'Liked' : 'Saved'}</Text>
+        <Text style={styles.title}>{mode === 'liked' ? t('titleLiked') : t('titleSaved')}</Text>
       </View>
 
       <View style={styles.tabRow}>
@@ -132,14 +134,16 @@ export default function ProfileActivityScreen({
                     {sound.name}
                   </Text>
                   <Text style={styles.soundMeta} numberOfLines={1}>
-                    {sound.owner?.username ? `@${sound.owner.username}` : 'Unknown'} ·{' '}
-                    {sound.useCount} {sound.useCount === 1 ? 'use' : 'uses'}
+                    {sound.owner?.username ? `@${sound.owner.username}` : t('unknownOwner')} ·{' '}
+                    {sound.useCount === 1
+                      ? t('useCountOne', { count: sound.useCount })
+                      : t('useCountOther', { count: sound.useCount })}
                   </Text>
                 </View>
               </Pressable>
             ))
           ) : (
-            <EmptyState icon={MusicNote02Icon} message="You haven't saved any sounds yet." style={styles.empty} />
+            <EmptyState icon={MusicNote02Icon} message={t('noSavedSoundsEmpty')} style={styles.empty} />
           )
         ) : posts === undefined ? (
           <>
@@ -163,7 +167,7 @@ export default function ProfileActivityScreen({
           ) : (
             <EmptyState
               icon={mode === 'liked' ? FavouriteIcon : BookmarkIcon}
-              message={mode === 'liked' ? "You haven't liked any posts yet." : "You haven't saved any posts yet."}
+              message={mode === 'liked' ? t('noLikedPostsEmpty') : t('noSavedPostsEmpty')}
               style={styles.empty}
             />
           )
@@ -180,7 +184,7 @@ export default function ProfileActivityScreen({
         ) : (
           <EmptyState
             icon={mode === 'liked' ? FavouriteIcon : BookmarkIcon}
-            message={mode === 'liked' ? "You haven't liked any clips yet." : "You haven't saved any clips yet."}
+            message={mode === 'liked' ? t('noLikedClipsEmpty') : t('noSavedClipsEmpty')}
             style={styles.empty}
           />
         )}

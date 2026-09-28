@@ -1,5 +1,6 @@
 import AppTextInput from '../components/AppTextInput';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
@@ -53,6 +54,7 @@ export default function GroupChatScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['groupChat', 'common']);
   const [text, setText] = useState('');
   const [stickersOpen, setStickersOpen] = useState(false);
   const [stickerToSave, setStickerToSave] = useState<{ _id: Id<'stickers'>; name: string } | null>(null);
@@ -114,7 +116,7 @@ export default function GroupChatScreen({
     setMediaError(null);
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
-      setMediaError('Photo access was denied.');
+      setMediaError(t('photoAccessDenied'));
       return;
     }
 
@@ -144,7 +146,7 @@ export default function GroupChatScreen({
         mediaType,
       });
     } catch {
-      setMediaError("Couldn't send that — try again.");
+      setMediaError(t('sendFailedError'));
     } finally {
       setSendingMedia(false);
     }
@@ -172,7 +174,7 @@ export default function GroupChatScreen({
       >
         {messages?.length === 0 && (
           <Text variant="callout" style={[styles.emptyText, isThemed && styles.themedText]}>
-            This is the start of {group?.name ? `"${group.name}"` : 'the group'}.
+            {t('startOfGroup', { name: group?.name ? `"${group.name}"` : t('theGroupFallback') })}
           </Text>
         )}
 
@@ -261,10 +263,10 @@ export default function GroupChatScreen({
               style={[styles.headerName, isThemed && styles.themedText]}
               numberOfLines={1}
             >
-              {group?.name ?? 'Group'}
+              {group?.name ?? t('groupFallbackName')}
             </Text>
             <Text variant="caption" style={styles.headerMeta} numberOfLines={1}>
-              {members ? `${members.length} member${members.length === 1 ? '' : 's'}` : ''}
+              {members ? t('membersCount', { count: members.length }) : ''}
             </Text>
           </View>
         </Pressable>
@@ -272,7 +274,7 @@ export default function GroupChatScreen({
         <AnimatedPressable
           style={styles.optionsButton}
           onPress={onOpenInfo}
-          accessibilityLabel="Group options"
+          accessibilityLabel={t('groupOptionsLabel')}
         >
           <HugeiconsIcon icon={MoreVerticalIcon} size={19} color={colors.white} />
         </AnimatedPressable>
@@ -293,7 +295,7 @@ export default function GroupChatScreen({
           </Pressable>
           <AppTextInput
             style={styles.input}
-            placeholder={sendingMedia ? 'Sending…' : 'Message...'}
+            placeholder={sendingMedia ? t('sendingEllipsis') : t('messagePlaceholder')}
             placeholderTextColor={colors.placeholder}
             value={text}
             onChangeText={setText}
@@ -318,8 +320,8 @@ export default function GroupChatScreen({
       />
       <NativePopup
         visible={stickerToSave !== null}
-        title="Save this sticker?"
-        message={stickerToSave ? `Add "${stickerToSave.name}" to your saved stickers.` : ''}
+        title={t('saveStickerTitle')}
+        message={stickerToSave ? t('saveStickerMessage', { name: stickerToSave.name }) : ''}
         onClose={() => setStickerToSave(null)}
         onConfirm={async () => {
           if (!stickerToSave) return;
@@ -329,9 +331,9 @@ export default function GroupChatScreen({
       />
       <NativePopup
         visible={alreadySaved}
-        title="Already saved"
-        message="This sticker is already in your Saved collection."
-        confirmLabel="Got it"
+        title={t('alreadySavedTitle')}
+        message={t('alreadySavedMessage')}
+        confirmLabel={t('gotItButton')}
         showCancel={false}
         onClose={() => setAlreadySaved(false)}
         onConfirm={() => {}}

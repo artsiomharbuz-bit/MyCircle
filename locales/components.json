@@ -1,0 +1,74 @@
+{
+  "en": {
+    "authRequired.title": "Create an account",
+    "authRequired.subtitle": "You're browsing as a guest — log in or sign up to do that.",
+    "authRequired.createAccount": "Create Account",
+    "authRequired.logIn": "Log In"
+  },
+  "de": {
+    "authRequired.title": "Konto erstellen",
+    "authRequired.subtitle": "Du surfst als Gast — melde dich an oder registriere dich, um das zu tun.",
+    "authRequired.createAccount": "Konto erstellen",
+    "authRequired.logIn": "Anmelden"
+  },
+  "es": {
+    "authRequired.title": "Crear una cuenta",
+    "authRequired.subtitle": "Estás navegando como invitado. Inicia sesión o regístrate para hacer eso.",
+    "authRequired.createAccount": "Crear cuenta",
+    "authRequired.logIn": "Iniciar sesión"
+  },
+  "fr": {
+    "authRequired.title": "Créer un compte",
+    "authRequired.subtitle": "Vous naviguez en tant qu'invité — connectez-vous ou inscrivez-vous pour faire ça.",
+    "authRequired.createAccount": "Créer un compte",
+    "authRequired.logIn": "Se connecter"
+  },
+  "pt": {
+    "authRequired.title": "Criar uma conta",
+    "authRequired.subtitle": "Você está navegando como visitante — entre ou cadastre-se para fazer isso.",
+    "authRequired.createAccount": "Criar conta",
+    "authRequired.logIn": "Entrar"
+  },
+  "it": {
+    "authRequired.title": "Crea un account",
+    "authRequired.subtitle": "Stai navigando come ospite: accedi o registrati per farlo.",
+    "authRequired.createAccount": "Crea account",
+    "authRequired.logIn": "Accedi"
+  },
+  "tr": {
+    "authRequired.title": "Hesap oluştur",
+    "authRequired.subtitle": "Misafir olarak geziniyorsun — bunu yapmak için giriş yap veya kaydol.",
+    "authRequired.createAccount": "Hesap Oluştur",
+    "authRequired.logIn": "Giriş Yap"
+  },
+  "pl": {
+    "authRequired.title": "Utwórz konto",
+    "authRequired.subtitle": "Przeglądasz jako gość — zaloguj się lub zarejestruj, aby to zrobić.",
+    "authRequired.createAccount": "Utwórz konto",
+    "authRequired.logIn": "Zaloguj się"
+  },
+  "ar": {
+    "authRequired.title": "إنشاء حساب",
+    "authRequired.subtitle": "أنت تتصفح كضيف — سجّل الدخول أو أنشئ حسابًا للقيام بذلك.",
+    "authRequired.createAccount": "إنشاء حساب",
+    "authRequired.logIn": "تسجيل الدخول"
+  },
+  "id": {
+    "authRequired.title": "Buat akun",
+    "authRequired.subtitle": "Kamu sedang menjelajah sebagai tamu — masuk atau daftar untuk melakukannya.",
+    "authRequired.createAccount": "Buat Akun",
+    "authRequired.logIn": "Masuk"
+  },
+  "ru": {
+    "authRequired.title": "Создать аккаунт",
+    "authRequired.subtitle": "Вы просматриваете как гость — войдите или зарегистрируйтесь, чтобы сделать это.",
+    "authRequired.createAccount": "Создать аккаунт",
+    "authRequired.logIn": "Войти"
+  },
+  "uk": {
+    "authRequired.title": "Створити акаунт",
+    "authRequired.subtitle": "Ви переглядаєте як гість — увійдіть або зареєструйтеся, щоб зробити це.",
+    "authRequired.createAccount": "Створити акаунт",
+    "authRequired.logIn": "Увійти"
+  }
+}

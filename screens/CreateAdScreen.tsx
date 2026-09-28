@@ -31,6 +31,7 @@ import { compressMedia, compressPhoto } from '../compressMedia';
 import { readableError } from '../errorMessage';
 import { uploadFileToConvex } from '../uploadMedia';
 import { cityNameForCoordinates, coordinatesForCity, normalizeLocationName } from '../convex/lib/locations';
+import { useTranslation } from 'react-i18next';
 
 const RADIUS_PRESETS_KM = [10, 25, 50, 100];
 
@@ -76,6 +77,7 @@ export default function CreateAdScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['createAd', 'common']);
 
   const steps: Step[] = editingAd
     ? ['media', 'details', 'destination', 'targeting', 'persona', 'review']
@@ -260,7 +262,7 @@ export default function CreateAdScreen({
           targetLanguages,
         });
       } else {
-        if (!mediaStorageId) throw new Error('Add media before submitting.');
+        if (!mediaStorageId) throw new Error(t('addMediaBeforeSubmittingError'));
         await createAd({
           creatorId: userId,
           kind,
@@ -311,19 +313,19 @@ export default function CreateAdScreen({
         keyboardShouldPersistTaps="handled"
       >
         {step === 'type' && (
-          <StepBlock title="What kind of ad?" subtitle="Pricing depends on the format.">
+          <StepBlock title={t('typeStepTitle')} subtitle={t('typeStepSubtitle')}>
             <View style={styles.typeList}>
               <TypeCard
-                label="Post ad"
-                description="Shows in Explore, styled like a normal post."
+                label={t('postAdLabel')}
+                description={t('postAdDescription')}
                 price={formatUsd(adDailyPrice('post'))}
                 selected={kind === 'post'}
                 onPress={() => setKind('post')}
                 icon={Image02Icon}
               />
               <TypeCard
-                label="Clip ad"
-                description="Shows in Clips, full-screen like a normal clip."
+                label={t('clipAdLabel')}
+                description={t('clipAdDescription')}
                 price={formatUsd(adDailyPrice('clip'))}
                 selected={kind === 'clip'}
                 onPress={() => setKind('clip')}
@@ -335,12 +337,8 @@ export default function CreateAdScreen({
 
         {step === 'media' && (
           <StepBlock
-            title="Add your media"
-            subtitle={
-              kind === 'clip'
-                ? 'Clip ads need a video, imported from your library.'
-                : 'A single photo or a video.'
-            }
+            title={t('mediaStepTitle')}
+            subtitle={kind === 'clip' ? t('mediaClipSubtitle') : t('mediaPhotoSubtitle')}
           >
             <Pressable style={styles.mediaPicker} onPress={pickMedia}>
               {previewMediaUri ? (
@@ -358,24 +356,24 @@ export default function CreateAdScreen({
                 <View style={styles.mediaEmpty}>
                   <HugeiconsIcon icon={Image02Icon} size={28} color={colors.textMuted} />
                   <Text style={styles.mediaEmptyText}>
-                    {kind === 'clip' ? 'Import a video' : 'Upload a photo or video'}
+                    {kind === 'clip' ? t('importVideoText') : t('uploadPhotoOrVideoText')}
                   </Text>
                 </View>
               )}
             </Pressable>
             {previewMediaUri && (
               <Pressable onPress={pickMedia}>
-                <Text style={styles.changeLink}>Choose a different file</Text>
+                <Text style={styles.changeLink}>{t('chooseDifferentFileText')}</Text>
               </Pressable>
             )}
           </StepBlock>
         )}
 
         {step === 'details' && (
-          <StepBlock title="Title & caption" subtitle="Both are optional.">
+          <StepBlock title={t('detailsStepTitle')} subtitle={t('detailsStepSubtitle')}>
             <AppTextInput
               style={styles.input}
-              placeholder="Title (optional)"
+              placeholder={t('titlePlaceholder')}
               placeholderTextColor={colors.placeholder}
               value={title}
               onChangeText={setTitle}
@@ -383,7 +381,7 @@ export default function CreateAdScreen({
             />
             <AppTextInput
               style={[styles.input, styles.captionInput]}
-              placeholder="Caption (optional)"
+              placeholder={t('captionPlaceholder')}
               placeholderTextColor={colors.placeholder}
               value={caption}
               onChangeText={setCaption}
@@ -394,11 +392,11 @@ export default function CreateAdScreen({
         )}
 
         {step === 'destination' && (
-          <StepBlock title="Where should it lead?" subtitle="Tapping the button opens this link.">
-            <Text style={styles.label}>Link</Text>
+          <StepBlock title={t('destinationStepTitle')} subtitle={t('destinationStepSubtitle')}>
+            <Text style={styles.label}>{t('linkLabel')}</Text>
             <AppTextInput
               style={styles.input}
-              placeholder="https://…"
+              placeholder={t('linkPlaceholder')}
               placeholderTextColor={colors.placeholder}
               value={link}
               onChangeText={setLink}
@@ -408,10 +406,10 @@ export default function CreateAdScreen({
               cursorColor={colors.coral}
             />
 
-            <Text style={[styles.label, styles.labelSpaced]}>Button text</Text>
+            <Text style={[styles.label, styles.labelSpaced]}>{t('buttonTextLabel')}</Text>
             <AppTextInput
               style={styles.input}
-              placeholder="e.g. Try it now"
+              placeholder={t('buttonTextPlaceholder')}
               placeholderTextColor={colors.placeholder}
               value={buttonText}
               onChangeText={setButtonText}
@@ -419,7 +417,7 @@ export default function CreateAdScreen({
               cursorColor={colors.coral}
             />
 
-            <Text style={[styles.label, styles.labelSpaced]}>Button color</Text>
+            <Text style={[styles.label, styles.labelSpaced]}>{t('buttonColorLabel')}</Text>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -448,14 +446,14 @@ export default function CreateAdScreen({
 
         {step === 'targeting' && (
           <StepBlock
-            title="Who should see it?"
-            subtitle="Leave both empty to show this ad to everyone, subject to normal ranking."
+            title={t('targetingStepTitle')}
+            subtitle={t('targetingStepSubtitle')}
           >
-            <Text style={styles.label}>Cities (optional, add as many as you like)</Text>
+            <Text style={styles.label}>{t('citiesLabel')}</Text>
             <View style={styles.locationInputRow}>
               <AppTextInput
                 style={[styles.input, styles.locationInput]}
-                placeholder="e.g. Warsaw"
+                placeholder={t('cityPlaceholder')}
                 placeholderTextColor={colors.placeholder}
                 value={locationInput}
                 onChangeText={setLocationInput}
@@ -464,7 +462,7 @@ export default function CreateAdScreen({
                 cursorColor={colors.coral}
               />
               <Pressable style={styles.addLocationButton} onPress={addLocation}>
-                <Text style={styles.addLocationButtonText}>Add</Text>
+                <Text style={styles.addLocationButtonText}>{t('addButton')}</Text>
               </Pressable>
             </View>
             {targetLocations.length > 0 && (
@@ -477,7 +475,7 @@ export default function CreateAdScreen({
               </View>
             )}
 
-            <Text style={[styles.label, styles.labelSpaced]}>Languages (optional)</Text>
+            <Text style={[styles.label, styles.labelSpaced]}>{t('languagesLabel')}</Text>
             <View style={styles.chipWrapRow}>
               {(commonLanguages ?? []).map((lang) => {
                 const selected = targetLanguages.includes(lang.code);
@@ -495,15 +493,14 @@ export default function CreateAdScreen({
               })}
             </View>
 
-            <Text style={[styles.label, styles.labelSpaced]}>Radius targeting (optional)</Text>
+            <Text style={[styles.label, styles.labelSpaced]}>{t('radiusTargetingLabel')}</Text>
             <Text style={styles.radiusHint}>
-              Show this ad to anyone within a distance of a city center, instead of (or in addition
-              to) the exact-city list above.
+              {t('radiusHint')}
             </Text>
             <View style={styles.locationInputRow}>
               <AppTextInput
                 style={[styles.input, styles.locationInput]}
-                placeholder="Center city, e.g. Warsaw"
+                placeholder={t('radiusCityPlaceholder')}
                 placeholderTextColor={colors.placeholder}
                 value={radiusCity}
                 onChangeText={setRadiusCity}
@@ -511,14 +508,13 @@ export default function CreateAdScreen({
               />
               {radiusCity.trim().length > 0 && (
                 <Pressable style={styles.addLocationButton} onPress={() => { setRadiusCity(''); setRadiusKm(null); }}>
-                  <Text style={styles.addLocationButtonText}>Clear</Text>
+                  <Text style={styles.addLocationButtonText}>{t('clearButton')}</Text>
                 </Pressable>
               )}
             </View>
             {radiusCity.trim().length > 0 && !radiusCityCoords && (
               <Text style={styles.radiusWarning}>
-                Don't recognize that city yet — radius targeting won't apply until it matches a
-                known location.
+                {t('radiusCityNotRecognizedWarning')}
               </Text>
             )}
             {radiusCityCoords && (
@@ -530,7 +526,7 @@ export default function CreateAdScreen({
                     onPress={() => setRadiusKm(km)}
                   >
                     <Text style={[styles.locationChipText, radiusKm === km && styles.locationChipTextActive]}>
-                      {km} km
+                      {t('radiusKmChip', { km })}
                     </Text>
                   </Pressable>
                 ))}
@@ -541,9 +537,11 @@ export default function CreateAdScreen({
               <Text style={styles.audienceEstimateText}>
                 {audienceEstimate
                   ? targetLocations.length === 0 && targetLanguages.length === 0 && !targetGeo
-                    ? 'No targeting set — everyone on MyCircle is eligible.'
-                    : `Approximately ${audienceEstimate.estimatedUsers.toLocaleString()} users match this targeting${audienceEstimate.isExact ? '' : ' (estimate)'}.`
-                  : 'Estimating audience…'}
+                    ? t('noTargetingText')
+                    : audienceEstimate.isExact
+                      ? t('audienceEstimateExact', { count: audienceEstimate.estimatedUsers.toLocaleString() })
+                      : t('audienceEstimateApprox', { count: audienceEstimate.estimatedUsers.toLocaleString() })
+                  : t('estimatingAudienceText')}
               </Text>
             </View>
           </StepBlock>
@@ -551,8 +549,8 @@ export default function CreateAdScreen({
 
         {step === 'persona' && (
           <StepBlock
-            title="How should it look?"
-            subtitle="Your real account stays visible to anyone through the ad's options menu — this is just what shows on the card."
+            title={t('personaStepTitle')}
+            subtitle={t('personaStepSubtitle')}
           >
             <Pressable
               style={styles.avatarPicker}
@@ -571,12 +569,12 @@ export default function CreateAdScreen({
             <View style={styles.avatarActions}>
               <Pressable onPress={pickAvatar}>
                 <Text style={styles.changeLink}>
-                  {previewAvatarUri ? 'Choose a different photo' : 'Upload a photo'}
+                  {previewAvatarUri ? t('choosePhotoText') : t('uploadPhotoText')}
                 </Text>
               </Pressable>
               {!previewAvatarUri && (
                 <Pressable onPress={() => setDisplayGradient(newGradient(displayGradient))}>
-                  <Text style={styles.changeLink}>Try a new color</Text>
+                  <Text style={styles.changeLink}>{t('tryNewColorText')}</Text>
                 </Pressable>
               )}
               {previewAvatarUri && (
@@ -585,14 +583,14 @@ export default function CreateAdScreen({
                     setDisplayAvatarUri(null);
                   }}
                 >
-                  <Text style={styles.changeLink}>Use a color instead</Text>
+                  <Text style={styles.changeLink}>{t('useColorInsteadText')}</Text>
                 </Pressable>
               )}
             </View>
 
             <AppTextInput
               style={[styles.input, styles.personaInput]}
-              placeholder="Display name"
+              placeholder={t('displayNamePlaceholder')}
               placeholderTextColor={colors.placeholder}
               value={displayName}
               onChangeText={setDisplayName}
@@ -604,8 +602,8 @@ export default function CreateAdScreen({
 
         {step === 'review' && (
           <StepBlock
-            title="Review & submit"
-            subtitle={`${formatUsd(adDailyPrice(kind))}/day once it's approved and paid for.`}
+            title={t('reviewStepTitle')}
+            subtitle={t('reviewStepSubtitle', { price: formatUsd(adDailyPrice(kind)) })}
           >
             <View style={styles.reviewCard}>
               <View style={styles.reviewHeader}>
@@ -621,8 +619,8 @@ export default function CreateAdScreen({
                   )}
                 </View>
                 <View>
-                  <Text style={styles.reviewName}>{displayName || 'Display name'}</Text>
-                  <Text style={styles.reviewSponsored}>Sponsored</Text>
+                  <Text style={styles.reviewName}>{displayName || t('displayNameFallback')}</Text>
+                  <Text style={styles.reviewSponsored}>{t('sponsoredLabel')}</Text>
                 </View>
               </View>
 
@@ -651,7 +649,7 @@ export default function CreateAdScreen({
               {caption && <Text style={styles.reviewCaption}>{caption}</Text>}
 
               <View style={[styles.ctaPreview, { backgroundColor: buttonColor }]}>
-                <Text style={styles.ctaPreviewText}>{buttonText || 'Button text'}</Text>
+                <Text style={styles.ctaPreviewText}>{buttonText || t('buttonTextFallback')}</Text>
               </View>
             </View>
 
@@ -670,7 +668,11 @@ export default function CreateAdScreen({
             <ActivityIndicator color={colors.buttonText} />
           ) : (
             <Text style={styles.continueButtonText}>
-              {step === 'review' ? (editingAd ? 'Resubmit for review' : 'Submit for review') : 'Continue'}
+              {step === 'review'
+                ? editingAd
+                  ? t('resubmitButton')
+                  : t('submitButton')
+                : t('continueButton')}
             </Text>
           )}
         </Pressable>
@@ -730,6 +732,7 @@ function TypeCard({
 }) {
   const { colors } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['createAd', 'common']);
   return (
     <Pressable style={[styles.typeCard, selected && styles.typeCardSelected]} onPress={onPress}>
       <View style={styles.typeIconTile}>
@@ -739,7 +742,7 @@ function TypeCard({
         <Text style={styles.typeLabel}>{label}</Text>
         <Text style={styles.typeDescription}>{description}</Text>
       </View>
-      <Text style={styles.typePrice}>{price}/day</Text>
+      <Text style={styles.typePrice}>{t('perDayPrice', { price })}</Text>
     </Pressable>
   );
 }

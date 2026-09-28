@@ -18,10 +18,13 @@ import { PermanentMarker_400Regular } from '@expo-google-fonts/permanent-marker'
 import { Pacifico_400Regular } from '@expo-google-fonts/pacifico';
 import { Anton_400Regular } from '@expo-google-fonts/anton';
 import { ArchivoBlack_400Regular } from '@expo-google-fonts/archivo-black';
+import { Platform } from 'react-native';
 import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from 'convex/react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 import { api } from './convex/_generated/api';
 import { Id } from './convex/_generated/dataModel';
 import {
@@ -35,6 +38,8 @@ import {
   clearStoredSessionToken,
 } from './session';
 import { SessionTokenProvider } from './SessionContext';
+import './i18n';
+import { LanguageProvider } from './LanguageContext';
 import WelcomeScreen from './screens/WelcomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
@@ -57,6 +62,8 @@ import PostDetailsScreen, { PostDetails } from './screens/PostDetailsScreen';
 import AudienceSelectionScreen from './screens/AudienceSelectionScreen';
 import StoryAudienceScreen from './screens/StoryAudienceScreen';
 import StoryViewerScreen from './screens/StoryViewerScreen';
+import CreateHighlightScreen from './screens/CreateHighlightScreen';
+import HighlightViewerScreen from './screens/HighlightViewerScreen';
 import ClipsScreen from './screens/ClipsScreen';
 import SoundScreen from './screens/SoundScreen';
 import ManageSoundsScreen from './screens/ManageSoundsScreen';
@@ -83,6 +90,8 @@ import SplashOverlay from './components/SplashOverlay';
 import LegalUpdateModal from './components/LegalUpdateModal';
 import AppErrorBoundary from './components/AppErrorBoundary';
 import ErrorToast from './components/ErrorToast';
+import AuthRequiredModal from './components/AuthRequiredModal';
+import GuestExploreScreen from './screens/GuestExploreScreen';
 import { acknowledgeLegal, getLegalUpdate } from './legal';
 
 SplashScreen.preventAutoHideAsync();
@@ -95,6 +104,40 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
+// Requests permission (if not already decided) and returns this device's
+// Expo push token, or null if permission was refused or this is a simulator
+// (see https://docs.expo.dev/versions/v57.0.0/sdk/notifications/ —
+// simulators/emulators have no real push service to register with).
+async function registerForPushNotificationsAsync(): Promise<string | null> {
+  if (!Device.isDevice) return null;
+
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'Default notifications',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+    });
+  }
+
+  const { status: existingStatus } = await Notifications.getPermissionsAsync();
+  let finalStatus = existingStatus;
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync();
+    finalStatus = status;
+  }
+  if (finalStatus !== 'granted') return null;
+
+  const projectId =
+    Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+  if (!projectId) return null;
+
+  try {
+    return (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+  } catch {
+    return null;
+  }
+}
 
 // The client's own logger prints every failed call with console.error, which
 // pops up as a red "Convex error" box in a dev build even when the app already
@@ -112,6 +155,7 @@ type Screen =
   | 'welcome'
   | 'login'
   | 'register'
+  | 'explore-guest'
   | 'onboarding-name'
   | 'onboarding-dob'
   | 'onboarding-username'
@@ -145,7 +189,9 @@ type Screen =
   | 'blocked-accounts'
   | 'ads-settings'
   | 'create-ad'
-  | 'ad-mod-inbox';
+  | 'ad-mod-inbox'
+  | 'create-highlight'
+  | 'highlight-viewer';
 
 type ProfileFrame =
   | { screen: 'profile'; userId: Id<'users'> }
@@ -190,6 +236,8 @@ function AppContent() {
   const [cameraContentType, setCameraContentType] = useState<ContentType>('Post');
   const [storyViewerAuthorId, setStoryViewerAuthorId] = useState<Id<'users'> | null>(null);
   const [storyReturnScreen, setStoryReturnScreen] = useState<Screen>('home');
+  const [highlightViewerId, setHighlightViewerId] = useState<Id<'highlights'> | null>(null);
+  const [highlightReturnScreen, setHighlightReturnScreen] = useState<Screen>('profile');
   const [clipsInitialPostId, setClipsInitialPostId] = useState<Id<'posts'> | null>(null);
   const [clipsReturnScreen, setClipsReturnScreen] = useState<Screen>('explore');
   const [chatWithUserId, setChatWithUserId] = useState<Id<'users'> | null>(null);
@@ -205,6 +253,20 @@ function AppContent() {
   // Every account ever logged into on this device, for the account switcher.
   const [savedAccountIds, setSavedAccountIds] = useState<Id<'users'>[]>([]);
   const [isAddingAccount, setIsAddingAccount] = useState(false);
+
+  // "Try it out as a guest" (Welcome/Login/Register) — browses Explore with
+  // no account at all. Any nav bar destination other than Explore needs a
+  // real account, so those taps show authPromptVisible instead of
+  // navigating (see BottomNavBar's onPress* below).
+  const [isGuest, setIsGuest] = useState(false);
+  const [authPromptVisible, setAuthPromptVisible] = useState(false);
+  // Guest -> Login/Register from the prompt: isGuest stays true (not
+  // cleared until an actual login/register succeeds) so that screen's own
+  // "back" returns to Explore rather than the Welcome screen.
+  const goToAuthFromGuest = (target: 'login' | 'register') => {
+    setAuthPromptVisible(false);
+    setScreen(target);
+  };
 
   const rememberAccount = (id: Id<'users'>) => {
     addSavedAccountId(id).then((ids) => setSavedAccountIds(ids as Id<'users'>[]));
@@ -389,12 +451,51 @@ function AppContent() {
 
   const deleteSession = useMutation(api.users.deleteSession);
 
+  // The current device's Expo push token, once obtained — held so logOut can
+  // unregister it (see below) without asking the OS for it again.
+  const pushTokenRef = useRef<string | null>(null);
+  const registerPushToken = useMutation(api.push.registerPushToken);
+  const unregisterPushToken = useMutation(api.push.unregisterPushToken);
+
+  useEffect(() => {
+    if (!userId || !sessionToken) return;
+    let cancelled = false;
+    registerForPushNotificationsAsync().then((token) => {
+      if (cancelled || !token) return;
+      pushTokenRef.current = token;
+      registerPushToken({
+        userId,
+        sessionToken,
+        token,
+        platform: Platform.OS === 'ios' ? 'ios' : Platform.OS === 'android' ? 'android' : 'web',
+      }).catch(() => {
+        // Best-effort — a device that can't register still gets to use the app.
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [userId, sessionToken]);
+
+  // Tapping a push notification while the app is backgrounded lands here —
+  // the simplest useful destination for every notification type today is
+  // just the Notifications screen itself.
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(() => {
+      setScreen('notifications');
+    });
+    return () => subscription.remove();
+  }, []);
+
   const logOut = () => {
     clearModToken();
     clearStoredUserId();
     if (userId && sessionToken) {
       clearStoredSessionToken(userId);
       deleteSession({ token: sessionToken }).catch(() => {});
+      if (pushTokenRef.current) {
+        unregisterPushToken({ userId, sessionToken, token: pushTokenRef.current }).catch(() => {});
+      }
     }
     setUserId(null);
     setSessionToken(null);
@@ -415,12 +516,19 @@ function AppContent() {
             if (isAddingAccount) {
               setIsAddingAccount(false);
               setScreen('profile');
+            } else if (isGuest) {
+              setScreen('explore-guest');
             } else {
               setScreen('welcome');
             }
           }}
           onSwitchToRegister={() => setScreen('register')}
+          onGuest={isAddingAccount ? undefined : () => {
+            setIsGuest(true);
+            setScreen('explore-guest');
+          }}
           onLoggedIn={(loggedInUserId, loggedInSessionToken, onboardingComplete) => {
+            setIsGuest(false);
             setUserId(loggedInUserId);
             setSessionToken(loggedInSessionToken);
             rememberAccount(loggedInUserId);
@@ -437,14 +545,21 @@ function AppContent() {
             if (isAddingAccount) {
               setIsAddingAccount(false);
               setScreen('profile');
+            } else if (isGuest) {
+              setScreen('explore-guest');
             } else {
               setScreen('welcome');
             }
           }}
           onSwitchToLogin={() => setScreen('login')}
+          onGuest={isAddingAccount ? undefined : () => {
+            setIsGuest(true);
+            setScreen('explore-guest');
+          }}
           onRegistered={(newUserId, newSessionToken) => {
             // They agreed to the current policy/terms while signing up.
             acknowledgeLegal();
+            setIsGuest(false);
             setUserId(newUserId);
             setSessionToken(newSessionToken);
             rememberAccount(newUserId);
@@ -495,7 +610,12 @@ function AppContent() {
           username={username}
           dateOfBirth={dateOfBirth}
           onBack={() => setScreen('onboarding-username')}
-          onDone={() => setScreen('home')}
+          // Land on Explore, not Home — Home's feed is friends/circles-only
+          // (see HomeScreen.tsx), so a brand-new account with zero follows
+          // would finish onboarding straight into an empty state. Explore's
+          // feed has no follow requirement, so this is the first screen
+          // that actually shows content.
+          onDone={() => setScreen('explore')}
         />
       );
 
@@ -728,6 +848,12 @@ function AppContent() {
             setChatWithUserId(otherUserId);
             setScreen('chat');
           }}
+          onCreateHighlight={() => setScreen('create-highlight')}
+          onOpenHighlight={(highlightId) => {
+            setHighlightViewerId(highlightId);
+            setHighlightReturnScreen('profile');
+            setScreen('highlight-viewer');
+          }}
         />
       );
 
@@ -931,6 +1057,35 @@ function AppContent() {
         />
       );
 
+    case 'create-highlight':
+      return (
+        <CreateHighlightScreen
+          userId={userId as Id<'users'>}
+          onBack={() => setScreen('profile')}
+          onCreated={(highlightId) => {
+            setHighlightViewerId(highlightId);
+            setHighlightReturnScreen('profile');
+            setScreen('highlight-viewer');
+          }}
+        />
+      );
+
+    case 'highlight-viewer':
+      return (
+        <HighlightViewerScreen
+          highlightId={highlightViewerId as Id<'highlights'>}
+          viewerId={userId as Id<'users'>}
+          onClose={() => {
+            setHighlightViewerId(null);
+            setScreen(highlightReturnScreen);
+          }}
+          onDeleted={() => {
+            setHighlightViewerId(null);
+            setScreen(highlightReturnScreen);
+          }}
+        />
+      );
+
     case 'post-details':
       return (
         <PostDetailsScreen
@@ -972,11 +1127,18 @@ function AppContent() {
         />
       );
 
+    case 'explore-guest':
+      return <GuestExploreScreen onRequireAuth={() => setAuthPromptVisible(true)} />;
+
     default:
       return (
         <WelcomeScreen
           onLogin={() => setScreen('login')}
           onRegister={() => setScreen('register')}
+          onGuest={() => {
+            setIsGuest(true);
+            setScreen('explore-guest');
+          }}
         />
       );
     }
@@ -995,6 +1157,7 @@ function AppContent() {
   const showNavBar =
     screen === 'home' ||
     screen === 'explore' ||
+    screen === 'explore-guest' ||
     screen === 'search' ||
     screen === 'dms' ||
     isOwnProfileScreen;
@@ -1010,12 +1173,11 @@ function AppContent() {
   if (activeTabKey && userId) mountedTabs.current.add(activeTabKey);
 
   const navActiveTab =
-    screen === 'home' ||
-    screen === 'explore' ||
-    screen === 'search' ||
-    screen === 'dms'
-      ? screen
-      : 'profile';
+    screen === 'explore-guest'
+      ? 'explore'
+      : screen === 'home' || screen === 'explore' || screen === 'search' || screen === 'dms'
+        ? screen
+        : 'profile';
 
   // A banned account gets the explanation screen instead of the app. Every
   // write is refused server-side too, so this isn't the only line of defence.
@@ -1052,14 +1214,27 @@ function AppContent() {
           active={navActiveTab}
           unreadMessageCount={unreadMessageCount}
           scrollY={navScrollY}
-          onPressHome={() => setScreen('home')}
-          onPressExplore={() => setScreen('explore')}
+          onPressHome={() => (isGuest ? setAuthPromptVisible(true) : setScreen('home'))}
+          onPressExplore={() => setScreen(isGuest ? 'explore-guest' : 'explore')}
           onPressCreate={() => {
+            if (isGuest) {
+              setAuthPromptVisible(true);
+              return;
+            }
             setCameraContentType('Post');
             setScreen('camera');
           }}
-          onPressDMs={() => setScreen('dms')}
-          onPressProfile={openOwnProfile}
+          onPressDMs={() => (isGuest ? setAuthPromptVisible(true) : setScreen('dms'))}
+          onPressProfile={() => (isGuest ? setAuthPromptVisible(true) : openOwnProfile())}
+        />
+      )}
+
+      {isGuest && (
+        <AuthRequiredModal
+          visible={authPromptVisible}
+          onClose={() => setAuthPromptVisible(false)}
+          onLogin={() => goToAuthFromGuest('login')}
+          onRegister={() => goToAuthFromGuest('register')}
         />
       )}
 
@@ -1132,22 +1307,24 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <KeyboardProvider>
-          <ConvexProvider client={convex}>
-            <AppErrorBoundary
-              onReset={(sessionExpired) => {
-                if (sessionExpired) clearStoredUserId();
-                setAppInstance((n) => n + 1);
-              }}
-            >
-              <AppContent key={appInstance} />
-            </AppErrorBoundary>
-            <ErrorToast />
-          </ConvexProvider>
-          <SplashOverlay />
-        </KeyboardProvider>
-      </ThemeProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <KeyboardProvider>
+            <ConvexProvider client={convex}>
+              <AppErrorBoundary
+                onReset={(sessionExpired) => {
+                  if (sessionExpired) clearStoredUserId();
+                  setAppInstance((n) => n + 1);
+                }}
+              >
+                <AppContent key={appInstance} />
+              </AppErrorBoundary>
+              <ErrorToast />
+            </ConvexProvider>
+            <SplashOverlay />
+          </KeyboardProvider>
+        </ThemeProvider>
+      </LanguageProvider>
     </GestureHandlerRootView>
   );
 }

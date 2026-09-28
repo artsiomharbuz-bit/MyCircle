@@ -1,0 +1,134 @@
+{
+  "en": {
+    "screenTitle": "Discover Friends",
+    "subtitle": "People you may know",
+    "noSuggestionsMessage": "No suggestions yet. Keep exploring.",
+    "usersSectionTitle": "Users",
+    "noUsersMessage": "No other users to show yet.",
+    "someoneFallback": "Someone",
+    "mutualFriends_one": "{{count}} mutual friend",
+    "mutualFriends_other": "{{count}} mutual friends",
+    "sharedCircleReason": "Share the circle {{circleName}}"
+  },
+  "de": {
+    "screenTitle": "Freunde entdecken",
+    "subtitle": "Personen, die du kennen könntest",
+    "noSuggestionsMessage": "Noch keine Vorschläge. Entdecke weiter.",
+    "usersSectionTitle": "Nutzer",
+    "noUsersMessage": "Noch keine weiteren Nutzer zum Anzeigen.",
+    "someoneFallback": "Jemand",
+    "mutualFriends_one": "{{count}} gemeinsamer Freund",
+    "mutualFriends_other": "{{count}} gemeinsame Freunde",
+    "sharedCircleReason": "Teilt den Kreis {{circleName}}"
+  },
+  "es": {
+    "screenTitle": "Descubrir amigos",
+    "subtitle": "Personas que quizá conozcas",
+    "noSuggestionsMessage": "Aún no hay sugerencias. Sigue explorando.",
+    "usersSectionTitle": "Usuarios",
+    "noUsersMessage": "Todavía no hay otros usuarios para mostrar.",
+    "someoneFallback": "Alguien",
+    "mutualFriends_one": "{{count}} amigo en común",
+    "mutualFriends_other": "{{count}} amigos en común",
+    "sharedCircleReason": "Comparten el círculo {{circleName}}"
+  },
+  "fr": {
+    "screenTitle": "Découvrir des amis",
+    "subtitle": "Personnes que vous pourriez connaître",
+    "noSuggestionsMessage": "Pas encore de suggestions. Continuez à explorer.",
+    "usersSectionTitle": "Utilisateurs",
+    "noUsersMessage": "Aucun autre utilisateur à afficher pour le moment.",
+    "someoneFallback": "Quelqu'un",
+    "mutualFriends_one": "{{count}} ami en commun",
+    "mutualFriends_other": "{{count}} amis en commun",
+    "sharedCircleReason": "Partage le cercle {{circleName}}"
+  },
+  "pt": {
+    "screenTitle": "Descobrir amigos",
+    "subtitle": "Pessoas que você talvez conheça",
+    "noSuggestionsMessage": "Ainda sem sugestões. Continue explorando.",
+    "usersSectionTitle": "Usuários",
+    "noUsersMessage": "Ainda não há outros usuários para mostrar.",
+    "someoneFallback": "Alguém",
+    "mutualFriends_one": "{{count}} amigo em comum",
+    "mutualFriends_other": "{{count}} amigos em comum",
+    "sharedCircleReason": "Compartilha o círculo {{circleName}}"
+  },
+  "it": {
+    "screenTitle": "Scopri amici",
+    "subtitle": "Persone che potresti conoscere",
+    "noSuggestionsMessage": "Ancora nessun suggerimento. Continua a esplorare.",
+    "usersSectionTitle": "Utenti",
+    "noUsersMessage": "Ancora nessun altro utente da mostrare.",
+    "someoneFallback": "Qualcuno",
+    "mutualFriends_one": "{{count}} amico in comune",
+    "mutualFriends_other": "{{count}} amici in comune",
+    "sharedCircleReason": "Condivide la cerchia {{circleName}}"
+  },
+  "tr": {
+    "screenTitle": "Arkadaş Keşfet",
+    "subtitle": "Tanıyor olabileceğin kişiler",
+    "noSuggestionsMessage": "Henüz öneri yok. Keşfetmeye devam et.",
+    "usersSectionTitle": "Kullanıcılar",
+    "noUsersMessage": "Gösterilecek başka kullanıcı yok.",
+    "someoneFallback": "Biri",
+    "mutualFriends_one": "{{count}} ortak arkadaş",
+    "mutualFriends_other": "{{count}} ortak arkadaş",
+    "sharedCircleReason": "{{circleName}} çemberini paylaşıyor"
+  },
+  "pl": {
+    "screenTitle": "Odkrywaj znajomych",
+    "subtitle": "Osoby, które możesz znać",
+    "noSuggestionsMessage": "Brak sugestii. Eksploruj dalej.",
+    "usersSectionTitle": "Użytkownicy",
+    "noUsersMessage": "Brak innych użytkowników do wyświetlenia.",
+    "someoneFallback": "Ktoś",
+    "mutualFriends_one": "{{count}} wspólny znajomy",
+    "mutualFriends_other": "{{count}} wspólnych znajomych",
+    "sharedCircleReason": "Wspólny krąg {{circleName}}"
+  },
+  "ar": {
+    "screenTitle": "اكتشف الأصدقاء",
+    "subtitle": "أشخاص قد تعرفهم",
+    "noSuggestionsMessage": "لا توجد اقتراحات بعد. واصل الاستكشاف.",
+    "usersSectionTitle": "المستخدمون",
+    "noUsersMessage": "لا يوجد مستخدمون آخرون لعرضهم بعد.",
+    "someoneFallback": "شخص ما",
+    "mutualFriends_one": "{{count}} صديق مشترك",
+    "mutualFriends_other": "{{count}} أصدقاء مشتركون",
+    "sharedCircleReason": "يشارك دائرة {{circleName}}"
+  },
+  "id": {
+    "screenTitle": "Temukan Teman",
+    "subtitle": "Orang yang mungkin kamu kenal",
+    "noSuggestionsMessage": "Belum ada saran. Terus jelajahi.",
+    "usersSectionTitle": "Pengguna",
+    "noUsersMessage": "Belum ada pengguna lain untuk ditampilkan.",
+    "someoneFallback": "Seseorang",
+    "mutualFriends_one": "{{count}} teman bersama",
+    "mutualFriends_other": "{{count}} teman bersama",
+    "sharedCircleReason": "Berbagi lingkaran {{circleName}}"
+  },
+  "ru": {
+    "screenTitle": "Найти друзей",
+    "subtitle": "Люди, которых вы можете знать",
+    "noSuggestionsMessage": "Пока нет предложений. Продолжайте исследовать.",
+    "usersSectionTitle": "Пользователи",
+    "noUsersMessage": "Пока нет других пользователей для показа.",
+    "someoneFallback": "Кто-то",
+    "mutualFriends_one": "{{count}} общий друг",
+    "mutualFriends_other": "{{count}} общих друзей",
+    "sharedCircleReason": "Общий круг {{circleName}}"
+  },
+  "uk": {
+    "screenTitle": "Знайти друзів",
+    "subtitle": "Люди, яких ви можете знати",
+    "noSuggestionsMessage": "Поки що немає пропозицій. Продовжуйте досліджувати.",
+    "usersSectionTitle": "Користувачі",
+    "noUsersMessage": "Поки що немає інших користувачів для показу.",
+    "someoneFallback": "Хтось",
+    "mutualFriends_one": "{{count}} спільний друг",
+    "mutualFriends_other": "{{count}} спільних друзів",
+    "sharedCircleReason": "Спільне коло {{circleName}}"
+  }
+}

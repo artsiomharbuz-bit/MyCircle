@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { HugeiconsIcon } from '@hugeicons/react-native';
@@ -41,6 +42,7 @@ export default function ModInboxScreen({
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
   const { run, gate } = useModGate(userId);
+  const { t } = useTranslation(['modInbox', 'common']);
 
   const reports = useQuery(api.moderation.listModInbox, { userId });
   const [openReportId, setOpenReportId] = useState<Id<'reports'> | null>(null);
@@ -62,14 +64,14 @@ export default function ModInboxScreen({
         {reports && reports.length === 0 && (
           <EmptyState
             icon={CheckmarkCircle02Icon}
-            message="Nothing to review. New reports from the community land here."
+            message={t('emptyStateMessage')}
             style={styles.emptyState}
           />
         )}
 
         {reports?.map((report) => {
           const displayName =
-            report.target?.name ?? report.target?.username ?? 'Someone';
+            report.target?.name ?? report.target?.username ?? t('someoneName');
           const letter = (report.target?.username ?? displayName).charAt(0).toUpperCase();
           const gradient = (report.target?.avatarGradient as [string, string]) ?? [
             colors.red,
@@ -121,17 +123,21 @@ export default function ModInboxScreen({
                     <View style={styles.titleLine}>
                       <Text style={styles.rowTitle} numberOfLines={1}>
                         {report.kind === 'profile'
-                          ? 'Profile reported'
+                          ? t('profileReportedLabel')
                           : report.kind === 'sound'
-                            ? `Sound reported${report.soundName ? `: ${report.soundName}` : ''}`
-                            : `${report.postKind === 'clip' ? 'Clip' : 'Post'} reported`}
+                            ? report.soundName
+                              ? t('soundReportedWithNameLabel', { name: report.soundName })
+                              : t('soundReportedLabel')
+                            : report.postKind === 'clip'
+                              ? t('clipReportedLabel')
+                              : t('postReportedLabel')}
                       </Text>
                       <Text style={styles.rowTime}>{formatRelativeTime(report.createdAt)}</Text>
                     </View>
 
                     <View style={styles.targetLine}>
                       <Text style={styles.rowTarget} numberOfLines={1}>
-                        @{report.target?.username ?? 'unknown'}
+                        @{report.target?.username ?? t('unknownUsername')}
                       </Text>
                       <VerifiedBadge verified={report.target?.isVerified} size={13} />
                     </View>
@@ -143,21 +149,20 @@ export default function ModInboxScreen({
                     {investigating && (
                       <View style={styles.investigatingChip}>
                         <Text style={styles.investigatingText}>
-                          Under investigation
                           {report.claimedByMe
-                            ? ' · by you'
+                            ? t('investigatingByYou')
                             : report.claimedBy?.username
-                              ? ` · @${report.claimedBy.username}`
-                              : ''}
+                              ? t('investigatingByUser', { username: report.claimedBy.username })
+                              : t('investigatingPlain')}
                         </Text>
                       </View>
                     )}
 
                     {report.postMissing && (
-                      <Text style={styles.gone}>The reported post has already been deleted.</Text>
+                      <Text style={styles.gone}>{t('postDeletedMessage')}</Text>
                     )}
                     {report.soundMissing && (
-                      <Text style={styles.gone}>This sound has already been removed.</Text>
+                      <Text style={styles.gone}>{t('soundRemovedMessage')}</Text>
                     )}
                   </View>
                 </View>
@@ -168,10 +173,10 @@ export default function ModInboxScreen({
       </ScrollView>
 
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel="Go back">
+        <Pressable style={styles.backButton} onPress={onBack} accessibilityLabel={t('common:back')}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>Reports</Text>
+        <Text style={styles.title}>{t('headerTitle')}</Text>
         {reports && reports.length > 0 && (
           <Text style={styles.count}>{reports.length}</Text>
         )}

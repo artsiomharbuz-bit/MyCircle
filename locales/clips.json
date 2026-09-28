@@ -1,0 +1,134 @@
+{
+  "en": {
+    "forYouLabel": "For You",
+    "allCirclesLabel": "All Circles",
+    "bestFriendsLabel": "Best Friends",
+    "noClipsForYou": "No clips to show right now.",
+    "noClipsHere": "No clips here yet.",
+    "filterButtonLabel": "Choose which clips to show",
+    "someoneFallback": "Someone",
+    "sponsoredLabel": "Sponsored",
+    "moreOptionsLabel": "More options"
+  },
+  "de": {
+    "forYouLabel": "Für dich",
+    "allCirclesLabel": "Alle Circles",
+    "bestFriendsLabel": "Beste Freunde",
+    "noClipsForYou": "Gerade keine Clips zum Anzeigen.",
+    "noClipsHere": "Hier gibt es noch keine Clips.",
+    "filterButtonLabel": "Auswählen, welche Clips angezeigt werden",
+    "someoneFallback": "Jemand",
+    "sponsoredLabel": "Gesponsert",
+    "moreOptionsLabel": "Weitere Optionen"
+  },
+  "es": {
+    "forYouLabel": "Para ti",
+    "allCirclesLabel": "Todos los círculos",
+    "bestFriendsLabel": "Mejores amigos",
+    "noClipsForYou": "No hay clips para mostrar ahora mismo.",
+    "noClipsHere": "Todavía no hay clips aquí.",
+    "filterButtonLabel": "Elegir qué clips mostrar",
+    "someoneFallback": "Alguien",
+    "sponsoredLabel": "Patrocinado",
+    "moreOptionsLabel": "Más opciones"
+  },
+  "fr": {
+    "forYouLabel": "Pour toi",
+    "allCirclesLabel": "Tous les cercles",
+    "bestFriendsLabel": "Meilleurs amis",
+    "noClipsForYou": "Aucun clip à afficher pour le moment.",
+    "noClipsHere": "Aucun clip ici pour le moment.",
+    "filterButtonLabel": "Choisir les clips à afficher",
+    "someoneFallback": "Quelqu'un",
+    "sponsoredLabel": "Sponsorisé",
+    "moreOptionsLabel": "Plus d'options"
+  },
+  "pt": {
+    "forYouLabel": "Para você",
+    "allCirclesLabel": "Todos os círculos",
+    "bestFriendsLabel": "Melhores amigos",
+    "noClipsForYou": "Nenhum clipe para mostrar agora.",
+    "noClipsHere": "Ainda não há clipes aqui.",
+    "filterButtonLabel": "Escolher quais clipes mostrar",
+    "someoneFallback": "Alguém",
+    "sponsoredLabel": "Patrocinado",
+    "moreOptionsLabel": "Mais opções"
+  },
+  "it": {
+    "forYouLabel": "Per te",
+    "allCirclesLabel": "Tutti i circoli",
+    "bestFriendsLabel": "Migliori amici",
+    "noClipsForYou": "Nessuna clip da mostrare al momento.",
+    "noClipsHere": "Ancora nessuna clip qui.",
+    "filterButtonLabel": "Scegli quali clip mostrare",
+    "someoneFallback": "Qualcuno",
+    "sponsoredLabel": "Sponsorizzato",
+    "moreOptionsLabel": "Altre opzioni"
+  },
+  "tr": {
+    "forYouLabel": "Senin İçin",
+    "allCirclesLabel": "Tüm Çevreler",
+    "bestFriendsLabel": "En Yakın Arkadaşlar",
+    "noClipsForYou": "Şu anda gösterilecek klip yok.",
+    "noClipsHere": "Burada henüz klip yok.",
+    "filterButtonLabel": "Hangi kliplerin gösterileceğini seç",
+    "someoneFallback": "Biri",
+    "sponsoredLabel": "Sponsorlu",
+    "moreOptionsLabel": "Diğer seçenekler"
+  },
+  "pl": {
+    "forYouLabel": "Dla Ciebie",
+    "allCirclesLabel": "Wszystkie kręgi",
+    "bestFriendsLabel": "Najlepsi znajomi",
+    "noClipsForYou": "Brak klipów do wyświetlenia w tej chwili.",
+    "noClipsHere": "Nie ma tu jeszcze żadnych klipów.",
+    "filterButtonLabel": "Wybierz, które klipy pokazać",
+    "someoneFallback": "Ktoś",
+    "sponsoredLabel": "Sponsorowane",
+    "moreOptionsLabel": "Więcej opcji"
+  },
+  "ar": {
+    "forYouLabel": "لك",
+    "allCirclesLabel": "كل الدوائر",
+    "bestFriendsLabel": "أفضل الأصدقاء",
+    "noClipsForYou": "لا توجد مقاطع لعرضها الآن.",
+    "noClipsHere": "لا توجد مقاطع هنا بعد.",
+    "filterButtonLabel": "اختر المقاطع التي تريد عرضها",
+    "someoneFallback": "شخص ما",
+    "sponsoredLabel": "إعلان ممول",
+    "moreOptionsLabel": "خيارات إضافية"
+  },
+  "id": {
+    "forYouLabel": "Untuk Anda",
+    "allCirclesLabel": "Semua Circle",
+    "bestFriendsLabel": "Sahabat Terbaik",
+    "noClipsForYou": "Belum ada klip untuk ditampilkan saat ini.",
+    "noClipsHere": "Belum ada klip di sini.",
+    "filterButtonLabel": "Pilih klip mana yang akan ditampilkan",
+    "someoneFallback": "Seseorang",
+    "sponsoredLabel": "Bersponsor",
+    "moreOptionsLabel": "Opsi lainnya"
+  },
+  "ru": {
+    "forYouLabel": "Для вас",
+    "allCirclesLabel": "Все круги",
+    "bestFriendsLabel": "Лучшие друзья",
+    "noClipsForYou": "Сейчас нет клипов для показа.",
+    "noClipsHere": "Здесь пока нет клипов.",
+    "filterButtonLabel": "Выбрать, какие клипы показывать",
+    "someoneFallback": "Кто-то",
+    "sponsoredLabel": "Реклама",
+    "moreOptionsLabel": "Дополнительные параметры"
+  },
+  "uk": {
+    "forYouLabel": "Для вас",
+    "allCirclesLabel": "Усі кола",
+    "bestFriendsLabel": "Найкращі друзі",
+    "noClipsForYou": "Зараз немає кліпів для показу.",
+    "noClipsHere": "Тут поки немає кліпів.",
+    "filterButtonLabel": "Вибрати, які кліпи показувати",
+    "someoneFallback": "Хтось",
+    "sponsoredLabel": "Реклама",
+    "moreOptionsLabel": "Додаткові параметри"
+  }
+}

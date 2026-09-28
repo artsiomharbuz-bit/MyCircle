@@ -1,0 +1,86 @@
+{
+  "en": {
+    "titlePlaceholder": "Title (optional)",
+    "captionPlaceholder": "Caption (optional)",
+    "optionsLabel": "Options",
+    "containsAiBadge": "Contains AI",
+    "pollBadge": "Poll"
+  },
+  "de": {
+    "titlePlaceholder": "Titel (optional)",
+    "captionPlaceholder": "Beschriftung (optional)",
+    "optionsLabel": "Optionen",
+    "containsAiBadge": "Enthält KI",
+    "pollBadge": "Umfrage"
+  },
+  "es": {
+    "titlePlaceholder": "Título (opcional)",
+    "captionPlaceholder": "Descripción (opcional)",
+    "optionsLabel": "Opciones",
+    "containsAiBadge": "Contiene IA",
+    "pollBadge": "Encuesta"
+  },
+  "fr": {
+    "titlePlaceholder": "Titre (facultatif)",
+    "captionPlaceholder": "Légende (facultative)",
+    "optionsLabel": "Options",
+    "containsAiBadge": "Contient de l'IA",
+    "pollBadge": "Sondage"
+  },
+  "pt": {
+    "titlePlaceholder": "Título (opcional)",
+    "captionPlaceholder": "Legenda (opcional)",
+    "optionsLabel": "Opções",
+    "containsAiBadge": "Contém IA",
+    "pollBadge": "Enquete"
+  },
+  "it": {
+    "titlePlaceholder": "Titolo (facoltativo)",
+    "captionPlaceholder": "Didascalia (facoltativa)",
+    "optionsLabel": "Opzioni",
+    "containsAiBadge": "Contiene IA",
+    "pollBadge": "Sondaggio"
+  },
+  "tr": {
+    "titlePlaceholder": "Başlık (isteğe bağlı)",
+    "captionPlaceholder": "Açıklama (isteğe bağlı)",
+    "optionsLabel": "Seçenekler",
+    "containsAiBadge": "Yapay Zeka İçerir",
+    "pollBadge": "Anket"
+  },
+  "pl": {
+    "titlePlaceholder": "Tytuł (opcjonalnie)",
+    "captionPlaceholder": "Podpis (opcjonalnie)",
+    "optionsLabel": "Opcje",
+    "containsAiBadge": "Zawiera SI",
+    "pollBadge": "Ankieta"
+  },
+  "ar": {
+    "titlePlaceholder": "العنوان (اختياري)",
+    "captionPlaceholder": "الوصف (اختياري)",
+    "optionsLabel": "الخيارات",
+    "containsAiBadge": "يحتوي على ذكاء اصطناعي",
+    "pollBadge": "استطلاع"
+  },
+  "id": {
+    "titlePlaceholder": "Judul (opsional)",
+    "captionPlaceholder": "Keterangan (opsional)",
+    "optionsLabel": "Opsi",
+    "containsAiBadge": "Mengandung AI",
+    "pollBadge": "Jajak Pendapat"
+  },
+  "ru": {
+    "titlePlaceholder": "Заголовок (необязательно)",
+    "captionPlaceholder": "Подпись (необязательно)",
+    "optionsLabel": "Параметры",
+    "containsAiBadge": "Содержит ИИ",
+    "pollBadge": "Опрос"
+  },
+  "uk": {
+    "titlePlaceholder": "Заголовок (необов'язково)",
+    "captionPlaceholder": "Підпис (необов'язково)",
+    "optionsLabel": "Параметри",
+    "containsAiBadge": "Містить ШІ",
+    "pollBadge": "Опитування"
+  }
+}

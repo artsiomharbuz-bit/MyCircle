@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { HugeiconsIcon } from '@hugeicons/react-native';
@@ -16,6 +17,8 @@ import {
   Megaphone01Icon,
   Notification01Icon,
   PlayIcon,
+  Share08Icon,
+  UserGroupIcon,
 } from '@hugeicons/core-free-icons';
 import AdReviewModal from '../components/AdReviewModal';
 import AnimatedPressable from '../components/AnimatedPressable';
@@ -49,6 +52,7 @@ export default function NotificationsScreen({
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors);
+  const { t } = useTranslation(['notifications', 'common']);
 
   const notifications = useQuery(api.notifications.listNotifications, { userId });
   const followingIds = useQuery(api.follows.getFollowingIds, { followerId: userId });
@@ -106,17 +110,41 @@ export default function NotificationsScreen({
               <View style={styles.rowText}>
                 <Text style={styles.rowLine}>
                   <Text style={styles.rowName}>
-                    {approved ? 'Your ad was approved' : 'Your ad was rejected'}
+                    {approved ? t('adApprovedTitle') : t('adRejectedTitle')}
                   </Text>
                   {!approved && notif.message && (
                     <Text style={styles.rowAction}> — {notif.message}</Text>
                   )}
-                  {approved && <Text style={styles.rowAction}> — pay to launch it whenever you're ready.</Text>}
+                  {approved && <Text style={styles.rowAction}> — {t('adApprovedHint')}</Text>}
                 </Text>
                 <Text style={styles.rowTime}>{formatRelativeTime(notif.createdAt)}</Text>
               </View>
             </View>
           </AnimatedPressable>
+        </FadeInView>
+      );
+    }
+
+    if (notif.type === 'report_resolved') {
+      const removed = notif.resolution === 'deleted';
+      return (
+        <FadeInView key={`report-resolved-${notif._id}`}>
+          <View style={styles.row}>
+            <View style={styles.systemAvatar}>
+              <HugeiconsIcon icon={Flag02Icon} size={20} color={colors.accentText} />
+            </View>
+            <View style={styles.rowText}>
+              <Text style={styles.rowLine}>
+                <Text style={styles.rowName}>{t('reportResolvedRemovedTitle')}</Text>
+                <Text style={styles.rowAction}>
+                  {' '}
+                  —{' '}
+                  {removed ? t('reportResolvedRemovedDetail') : t('reportResolvedDismissedDetail')}
+                </Text>
+              </Text>
+              <Text style={styles.rowTime}>{formatRelativeTime(notif.createdAt)}</Text>
+            </View>
+          </View>
         </FadeInView>
       );
     }
@@ -138,7 +166,7 @@ export default function NotificationsScreen({
             <View style={styles.rowText}>
               <Text style={styles.rowLine}>
                 <Text style={styles.rowName}>
-                  {isStrike ? 'You received a strike' : 'You received a warning'}
+                  {isStrike ? t('strikeTitle') : t('warningTitle')}
                 </Text>
                 <Text style={styles.rowAction}> — {notif.message}</Text>
               </Text>
@@ -174,7 +202,7 @@ export default function NotificationsScreen({
                   <HugeiconsIcon icon={FavouriteIcon} size={11} color="#ffffff" fill={colors.red} />
                 </View>
               )}
-              {notif.type === 'comment' && (
+              {(notif.type === 'comment' || notif.type === 'reply') && (
                 <View style={styles.badge}>
                   <HugeiconsIcon
                     icon={Comment01Icon}
@@ -184,6 +212,16 @@ export default function NotificationsScreen({
                   />
                 </View>
               )}
+              {notif.type === 'post_share' && (
+                <View style={styles.badge}>
+                  <HugeiconsIcon icon={Share08Icon} size={11} color={colors.white} />
+                </View>
+              )}
+              {notif.type === 'added_to_group' && (
+                <View style={styles.badge}>
+                  <HugeiconsIcon icon={UserGroupIcon} size={11} color={colors.white} />
+                </View>
+              )}
             </View>
 
             <View style={styles.rowText}>
@@ -191,9 +229,13 @@ export default function NotificationsScreen({
                 <Text style={styles.rowName}>{displayName}</Text>
                 {notif.fromUser.isVerified && <VerifiedBadge verified size={13} />}
                 <Text style={styles.rowAction}>
-                  {notif.type === 'follow' && ' started following you.'}
-                  {notif.type === 'like' && ' liked your post.'}
-                  {notif.type === 'comment' && ` commented: "${notif.commentText}"`}
+                  {notif.type === 'follow' && ` ${t('followedYou')}`}
+                  {notif.type === 'like' && ` ${t('likedPost')}`}
+                  {notif.type === 'comment' && ` ${t('commentedText', { comment: notif.commentText })}`}
+                  {notif.type === 'reply' && ` ${t('repliedText', { comment: notif.commentText })}`}
+                  {notif.type === 'post_share' && ` ${t('sharedYourPost')}`}
+                  {notif.type === 'added_to_group' &&
+                    ` ${t('addedYouToGroup', { groupName: notif.groupName })}`}
                 </Text>
               </Text>
               <Text style={styles.rowTime}>{formatRelativeTime(notif.createdAt)}</Text>
@@ -206,7 +248,7 @@ export default function NotificationsScreen({
                   onPress={() => toggleFollow(notif.fromUser._id as Id<'users'>, false)}
                 />
               )
-            ) : (
+            ) : notif.type === 'added_to_group' ? null : (
               <View style={styles.thumb}>
                 {notif.postMediaUrl && (
                   <Image source={{ uri: notif.postMediaUrl }} style={styles.thumbImage} />
@@ -230,7 +272,7 @@ export default function NotificationsScreen({
         {modStatus?.isMod && pendingCount > 0 && (
           <View style={styles.section}>
             <View style={styles.queueTitleRow}>
-              <Text style={styles.queueSectionTitle}>Pending review</Text>
+              <Text style={styles.queueSectionTitle}>{t('pendingReviewTitle')}</Text>
               <View style={styles.queueCount}>
                 <Text style={styles.queueCountText}>{pendingCount}</Text>
               </View>
@@ -249,14 +291,20 @@ export default function NotificationsScreen({
                       <Text style={styles.rowLine}>
                         <Text style={styles.rowName}>
                           {report.kind === 'profile'
-                            ? 'Profile reported'
+                            ? t('profileReported')
                             : report.kind === 'sound'
-                              ? 'Sound reported'
-                              : `${report.postKind === 'clip' ? 'Clip' : 'Post'} reported`}
+                              ? t('soundReported')
+                              : report.postKind === 'clip'
+                                ? t('clipReported')
+                                : t('postReported')}
                         </Text>
                         <Text style={styles.rowAction}>
                           {' '}
-                          — @{report.target?.username ?? 'unknown'}: "{report.reason}"
+                          —{' '}
+                          {t('reportedDetail', {
+                            username: report.target?.username ?? t('unknownUser'),
+                            reason: report.reason,
+                          })}
                         </Text>
                       </Text>
                       <Text style={styles.rowTime}>{formatRelativeTime(report.createdAt)}</Text>
@@ -275,10 +323,16 @@ export default function NotificationsScreen({
                     </View>
                     <View style={styles.rowText}>
                       <Text style={styles.rowLine}>
-                        <Text style={styles.rowName}>{AD_KIND_LABEL[ad.kind]} review</Text>
+                        <Text style={styles.rowName}>
+                          {t('adReviewLabel', { kind: AD_KIND_LABEL[ad.kind] })}
+                        </Text>
                         <Text style={styles.rowAction}>
                           {' '}
-                          — {ad.displayName} by @{ad.creator?.username ?? 'unknown'}
+                          —{' '}
+                          {t('adReviewDetail', {
+                            displayName: ad.displayName,
+                            username: ad.creator?.username ?? t('unknownUser'),
+                          })}
                         </Text>
                       </Text>
                       <Text style={styles.rowTime}>{formatRelativeTime(ad.createdAt)}</Text>
@@ -306,14 +360,14 @@ export default function NotificationsScreen({
 
         {newNotifications && newNotifications.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>New</Text>
+            <Text style={styles.sectionTitle}>{t('newSectionTitle')}</Text>
             {newNotifications.map(renderRow)}
           </View>
         )}
 
         {earlierNotifications && earlierNotifications.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Earlier</Text>
+            <Text style={styles.sectionTitle}>{t('earlierSectionTitle')}</Text>
             {earlierNotifications.map(renderRow)}
           </View>
         )}
@@ -321,7 +375,7 @@ export default function NotificationsScreen({
         {notifications && notifications.length === 0 && (
           <EmptyState
             icon={Notification01Icon}
-            message="No notifications yet. Likes, comments, and new followers will show up here."
+            message={t('emptyStateMessage')}
             style={styles.emptyState}
           />
         )}
@@ -331,14 +385,14 @@ export default function NotificationsScreen({
         <Pressable style={styles.backButton} onPress={onBack}>
           <HugeiconsIcon icon={ArrowLeft01Icon} size={22} color={colors.white} />
         </Pressable>
-        <Text style={styles.title}>Notifications</Text>
+        <Text style={styles.title}>{t('screenTitle')}</Text>
 
         {notifications && notifications.length > 0 && (
           <Pressable
             style={styles.clearButton}
             onPress={() => clearNotifications({ userId })}
           >
-            <Text style={styles.clearButtonText}>Clear</Text>
+            <Text style={styles.clearButtonText}>{t('clearButton')}</Text>
           </Pressable>
         )}
       </View>
