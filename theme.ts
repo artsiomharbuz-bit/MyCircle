@@ -14,25 +14,25 @@
 // Brand palette: Paper #F6F4F1, Stone #E4DED2, Coral #F95C4B, Black #000000.
 // Light mode uses them directly (Paper page, Stone cards, Black text and
 // primary buttons, Coral accent). Dark mode is the same family inverted:
-// warm near-black surfaces, Paper text and Paper primary buttons, same Coral.
+// neutral near-black surfaces, off-white text and primary buttons, same Coral.
 export const darkColors = {
-  background: '#0C0B0A',
-  white: '#F6F4F1',
-  black: '#0C0B0A',
+  background: '#0A0A0B',
+  white: '#F4F4F5',
+  black: '#0A0A0B',
   red: '#E5432F',
   coral: '#F95C4B',
   accentText: '#ffffff',
   yellow: '#f5c542',
-  inputBackground: '#1B1917',
-  buttonSecondary: '#33302C',
-  backButtonBackground: '#25221F',
+  inputBackground: '#18181B',
+  buttonSecondary: '#2E2E33',
+  backButtonBackground: '#232327',
   // Primary controls use the inverse surface in each theme.
-  buttonBackground: '#F6F4F1',
+  buttonBackground: '#F4F4F5',
   buttonText: '#000000',
-  textMuted: 'rgba(246,244,241,0.5)',
-  textLink: 'rgba(246,244,241,0.7)',
-  placeholder: 'rgba(246,244,241,0.4)',
-  border: 'rgba(246,244,241,0.12)',
+  textMuted: 'rgba(244,244,245,0.5)',
+  textLink: 'rgba(244,244,245,0.7)',
+  placeholder: 'rgba(244,244,245,0.4)',
+  border: 'rgba(244,244,245,0.12)',
   errorText: '#F2B8B0',
 };
 

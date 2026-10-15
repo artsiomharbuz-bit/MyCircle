@@ -35,43 +35,43 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --mc-bg: #0c0b0a;
-    --mc-surface: #1b1917;
-    --mc-border: rgba(246, 244, 241, 0.12);
+    --mc-bg: #0a0a0b;
+    --mc-surface: #18181b;
+    --mc-border: rgba(244, 244, 245, 0.12);
     --mc-text: #f6f4f1;
-    --mc-text-muted: rgba(246, 244, 241, 0.5);
+    --mc-text-muted: rgba(244, 244, 245, 0.5);
     --mc-error-text: #f2b8b0;
     --mc-accent: #f6f4f1;
     --mc-accent-hover: #ffffff;
-    --mc-accent-soft: #33302c;
+    --mc-accent-soft: #2e2e33;
     --mc-accent-contrast: #000000;
-    --mc-nav-hover: rgba(246, 244, 241, 0.08);
-    --mc-secondary: #33302c;
+    --mc-nav-hover: rgba(244, 244, 245, 0.08);
+    --mc-secondary: #2e2e33;
     --mc-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     --mc-shadow-up: 0 -4px 20px rgba(0, 0, 0, 0.4);
-    --mc-skeleton-base: #25221f;
-    --mc-skeleton-shine: rgba(246, 244, 241, 0.06);
+    --mc-skeleton-base: #232327;
+    --mc-skeleton-shine: rgba(244, 244, 245, 0.06);
   }
 }
 
 /* Manual theme choice (Settings > Appearance) wins over the OS setting. */
 :root[data-theme='dark'] {
-  --mc-bg: #0c0b0a;
-  --mc-surface: #1b1917;
-  --mc-border: rgba(246, 244, 241, 0.12);
+  --mc-bg: #0a0a0b;
+  --mc-surface: #18181b;
+  --mc-border: rgba(244, 244, 245, 0.12);
   --mc-text: #f6f4f1;
-  --mc-text-muted: rgba(246, 244, 241, 0.5);
+  --mc-text-muted: rgba(244, 244, 245, 0.5);
   --mc-error-text: #f2b8b0;
   --mc-accent: #f6f4f1;
   --mc-accent-hover: #ffffff;
-  --mc-accent-soft: #33302c;
+  --mc-accent-soft: #2e2e33;
   --mc-accent-contrast: #000000;
-  --mc-nav-hover: rgba(246, 244, 241, 0.08);
-  --mc-secondary: #33302c;
+  --mc-nav-hover: rgba(244, 244, 245, 0.08);
+  --mc-secondary: #2e2e33;
   --mc-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   --mc-shadow-up: 0 -4px 20px rgba(0, 0, 0, 0.4);
-  --mc-skeleton-base: #25221f;
-  --mc-skeleton-shine: rgba(246, 244, 241, 0.06);
+  --mc-skeleton-base: #232327;
+  --mc-skeleton-shine: rgba(244, 244, 245, 0.06);
 }
 
 * {
