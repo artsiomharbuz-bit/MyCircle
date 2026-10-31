@@ -16,7 +16,7 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { Logo } from '../components/Logo';
 import { Avatar } from '../components/Avatar';
 import { RowSkeletonList } from '../components/Skeleton';

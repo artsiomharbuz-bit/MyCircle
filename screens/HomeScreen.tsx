@@ -13,9 +13,9 @@ import FadeInView from '../components/FadeInView';
 import PostCard, { Post } from '../components/PostCard';
 import PostCardSkeleton from '../components/PostCardSkeleton';
 import StoriesRow from '../components/StoriesRow';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
-import { IMPRESSIONS } from '../convex/lib/rankingConfig';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
+import { IMPRESSIONS } from '../supabase/rankingConfig';
 import { useAppTheme } from '../ThemeContext';
 import { circles, Colors, space } from '../theme';
 
@@ -111,9 +111,10 @@ export default function HomeScreen({
     const circleIds = new Set(posts.flatMap((post) => post.circleIds ?? []));
     const result: Record<string, boolean> = {};
     for (const circleId of circleIds) {
-      const lastViewedAt = circleLastViewed[circleId] ?? 0;
-      result[circleId] = posts.some(
-        (post) => post.circleIds?.includes(circleId) && post._creationTime > lastViewedAt
+      const id = String(circleId);
+      const lastViewedAt = circleLastViewed[id] ?? 0;
+      result[id] = posts.some(
+        (post) => post.circleIds?.includes(id) && post._creationTime > lastViewedAt
       );
     }
     return result;

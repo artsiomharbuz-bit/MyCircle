@@ -4,6 +4,8 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  envDir: '..',
+  envPrefix: ['VITE_', 'EXPO_PUBLIC_'],
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,

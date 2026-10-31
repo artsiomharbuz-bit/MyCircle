@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useConvex } from 'convex/react';
-import { api } from './convex/_generated/api';
-import { Id } from './convex/_generated/dataModel';
+import { useSupabaseBackend } from './SessionContext';
+import { api } from './supabase/api';
+import { Id } from './supabase/types';
 import { getStoredSessionToken } from './session';
 
 const POLL_MS = 15000;
@@ -14,7 +14,7 @@ export default function useOtherAccountUnread(
   currentUserId: Id<'users'>,
   accountIds: Id<'users'>[]
 ): Record<string, number> {
-  const convex = useConvex();
+  const backend = useSupabaseBackend();
   const [counts, setCounts] = useState<Record<string, number>>({});
   const key = accountIds.filter((id) => id !== currentUserId).join(',');
 
@@ -33,7 +33,7 @@ export default function useOtherAccountUnread(
           try {
             const token = await getStoredSessionToken(id);
             if (!token) return;
-            next[id] = await convex.query(api.messages.getUnreadMessageCount, {
+            next[id] = await backend.query(api.messages.getUnreadMessageCount, {
               userId: id,
               sessionToken: token,
             });
@@ -51,7 +51,7 @@ export default function useOtherAccountUnread(
       cancelled = true;
       clearInterval(timer);
     };
-  }, [convex, key]);
+  }, [backend, key]);
 
   return counts;
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuthedQuery as useQuery } from '../lib/auth';
 import { Search as SearchIcon } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { AppShell } from '../layout/AppShell';
 import { Avatar } from '../components/Avatar';
 import { RowSkeletonList } from '../components/Skeleton';

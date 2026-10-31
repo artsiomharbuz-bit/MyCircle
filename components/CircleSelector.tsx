@@ -9,8 +9,8 @@ import Badge from './Badge';
 import CreateCircleSheet from './CreateCircleSheet';
 import InviteToCircleSheet from './InviteToCircleSheet';
 import CircleActionsSheet from './CircleActionsSheet';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { circles as STATIC_CIRCLES, Colors, radius, space, typography } from '../theme';
 

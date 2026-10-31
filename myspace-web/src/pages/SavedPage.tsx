@@ -1,6 +1,6 @@
 import { useAuthedQuery as useQuery } from '../lib/auth';
 import { Bookmark } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { AppShell } from '../layout/AppShell';
 import { PostCard } from '../components/PostCard';
 import { PostCardSkeleton } from '../components/Skeleton';

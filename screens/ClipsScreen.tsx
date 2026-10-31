@@ -48,8 +48,8 @@ import SharePostSheet from '../components/SharePostSheet';
 import SoundAudioLayer from '../components/SoundAudioLayer';
 import SoundLabel from '../components/SoundLabel';
 import VerifiedBadge from '../components/VerifiedBadge';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { getAppSessionId } from '../appSession';
 import { interleaveAds } from '../interleaveAds';
 // Deliberately not theme-reactive — full-screen video always renders on a
@@ -127,7 +127,7 @@ export default function ClipsScreen({
 
   const items = useMemo<ClipItem[]>(() => {
     if (!filteredClips || filteredClips.length === 0) return [];
-    const merged = interleaveAds(filteredClips, filter === 'for-you' ? clipAds ?? [] : []);
+    const merged = interleaveAds<any, any>(filteredClips, filter === 'for-you' ? clipAds ?? [] : []);
     const all: ClipItem[] = [];
     // With a single clip there is nothing to scroll to, so don't repeat it.
     const loops = merged.length > 1 ? loopCount : 1;

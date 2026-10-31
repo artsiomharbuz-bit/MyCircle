@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../lib/auth';
 import { ChevronRight, LogOut, Megaphone } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { AppShell } from '../layout/AppShell';
 import { useAuth } from '../lib/auth';
 

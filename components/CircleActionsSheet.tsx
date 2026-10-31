@@ -5,8 +5,8 @@ import { HugeiconsIcon } from '@hugeicons/react-native';
 import { AddTeamIcon, ArrowRight01Icon, GroupIcon, Logout01Icon, Sorting05Icon } from '@hugeicons/core-free-icons';
 import NativePopup from './nativepopup';
 import Text from './AppText';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 

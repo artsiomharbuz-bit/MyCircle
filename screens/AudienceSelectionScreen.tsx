@@ -17,13 +17,13 @@ import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '..
 import PostAudienceSwitch from '../components/PostAudienceSwitch';
 import PrimaryButton from '../components/PrimaryButton';
 import WheelPicker from '../components/WheelPicker';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { circles, Colors, radius, space, typography } from '../theme';
 import { compressMedia, getMediaAspect } from '../compressMedia';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 import useEntranceAnimation from '../useEntranceAnimation';
 import type { DraftPoll } from '../components/CreationOptionsMenu';
 import {
@@ -149,7 +149,7 @@ export default function AudienceSelectionScreen({
         media.previewAspect
       );
       const uploadUrl = await generateUploadUrl({ userId });
-      const storageId = await uploadFileToConvex(
+      const storageId = await uploadFileToSupabase(
         compressedUri,
         uploadUrl,
         media.type === 'photo' ? 'image/jpeg' : 'video/mp4'
@@ -160,7 +160,7 @@ export default function AudienceSelectionScreen({
         const extraUri = await compressMedia(extra.uri, 'photo');
         const extraUploadUrl = await generateUploadUrl({ userId });
         extraMediaStorageIds.push(
-          (await uploadFileToConvex(extraUri, extraUploadUrl, 'image/jpeg')) as Id<'_storage'>
+          (await uploadFileToSupabase(extraUri, extraUploadUrl, 'image/jpeg')) as Id<'_storage'>
         );
       }
 

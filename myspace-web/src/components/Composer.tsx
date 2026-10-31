@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../lib/auth';
 import { Globe2, ImagePlus, Star, X } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
+import { uploadFileToSupabase } from '../lib/mediaUpload';
 import { useAuth } from '../lib/auth';
 import { Avatar } from './Avatar';
 
@@ -36,12 +37,7 @@ export function Composer({
     setError(null);
     try {
       const uploadUrl = await generateUploadUrl({ userId });
-      const res = await fetch(uploadUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': file.type },
-        body: file,
-      });
-      const { storageId } = await res.json();
+      const storageId = await uploadFileToSupabase(file, uploadUrl, file.type);
       const mediaType = file.type.startsWith('video') ? 'video' : 'photo';
       await createPost({
         authorId: userId,

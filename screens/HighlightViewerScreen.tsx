@@ -10,8 +10,8 @@ import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Cancel01Icon, Delete02Icon } from '@hugeicons/core-free-icons';
 import PostTextOverlay from '../components/PostTextOverlay';
 import { readableError } from '../errorMessage';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 // Deliberately not theme-reactive — full-screen media stage, always dark
 // regardless of the app's own light/dark setting, same as Stories/Clips.
 import { mediaColors as colors } from '../theme';

@@ -4,7 +4,7 @@ import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery } from '../SessionContext';
-import { api } from '../convex/_generated/api';
+import { api } from '../supabase/api';
 import BackButton from '../components/BackButton';
 import TextField from '../components/TextField';
 import PrimaryButton from '../components/PrimaryButton';

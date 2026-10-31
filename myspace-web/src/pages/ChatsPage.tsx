@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthedQuery as useQuery } from '../lib/auth';
 import { MessageCircle, SquarePen } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { AppShell } from '../layout/AppShell';
 import { Avatar } from '../components/Avatar';
 import { GroupAvatars } from '../components/GroupAvatars';

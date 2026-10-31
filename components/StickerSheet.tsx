@@ -21,9 +21,9 @@ import {
   StarIcon,
   StickerIcon,
 } from '@hugeicons/core-free-icons';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
-import { uploadFileToConvex } from '../uploadMedia';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
+import { uploadFileToSupabase } from '../uploadMedia';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 
@@ -76,7 +76,7 @@ export default function StickerSheet({
     if (!uri || !name.trim()) return;
     setCreating(true);
     try {
-      const id = await uploadFileToConvex(uri, await uploadUrl({ userId }), 'image/jpeg');
+      const id = await uploadFileToSupabase(uri, await uploadUrl({ userId }), 'image/jpeg');
       await create({ ownerId: userId, name, imageStorageId: id as Id<'_storage'> });
       setName('');
       setUri(null);

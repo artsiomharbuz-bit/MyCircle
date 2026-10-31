@@ -6,17 +6,18 @@ import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../SessionContext';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Search01Icon } from '@hugeicons/core-free-icons';
+import { Notification01Icon, Search01Icon, UserAdd01Icon } from '@hugeicons/core-free-icons';
 import AnimatedPressable from '../components/AnimatedPressable';
 import { NAV_BAR_HEIGHT } from '../components/BottomNavBar';
+import CollapsibleHeader, { HEADER_HEIGHT } from '../components/CollapsibleHeader';
 import EmptyState from '../components/EmptyState';
 import FadeInView from '../components/FadeInView';
 import FollowButton from '../components/FollowButton';
 import Skeleton from '../components/Skeleton';
 import StoryRing from '../components/StoryRing';
 import VerifiedBadge from '../components/VerifiedBadge';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 
@@ -28,12 +29,16 @@ export default function SearchScreen({
   userId,
   scrollY,
   onOpenUser,
+  onOpenNotifications,
+  onOpenDiscoverFriends,
 }: {
   userId: Id<'users'>;
   // Shared with the persistent BottomNavBar mounted in App.tsx, so it can
   // hide/show off this same scroll position.
   scrollY: Animated.Value;
   onOpenUser: (userId: Id<'users'>) => void;
+  onOpenNotifications: () => void;
+  onOpenDiscoverFriends: () => void;
 }) {
   const { colors, scheme } = useAppTheme();
   const { t } = useTranslation(['search', 'common']);
@@ -57,6 +62,7 @@ export default function SearchScreen({
   const logSearchQuery = useMutation(api.search.logSearchQuery);
   const recentSearches = useQuery(api.search.getRecentSearches, { userId });
   const trendingSearches = useQuery(api.search.getTrendingSearches, {});
+  const unseenCount = useQuery(api.notifications.getUnseenNotificationCount, { userId });
 
   // Logged once per committed (debounced) search term — search history is
   // per-user and only ever shown back to that same user (see
@@ -77,6 +83,16 @@ export default function SearchScreen({
 
   return (
     <View style={styles.container}>
+      <CollapsibleHeader
+        title={t('common:appName')}
+        brand
+        brandSubtitle={t('common:search')}
+        scrollY={scrollY}
+        leftIcon={Notification01Icon}
+        onPressLeft={onOpenNotifications}
+        leftBadgeCount={unseenCount}
+        rightIcons={[{ icon: UserAdd01Icon, onPress: onOpenDiscoverFriends }]}
+      />
       <AppTextInput
         style={styles.input}
         placeholder={t('searchPlaceholder')}
@@ -321,7 +337,7 @@ const createStyles = (colors: Colors) =>
   input: {
     fontFamily: 'Poppins_400Regular',
     marginHorizontal: space.xl,
-    marginTop: 40,
+    marginTop: HEADER_HEIGHT + space.xs,
     height: 52,
     borderRadius: radius.input,
     paddingHorizontal: space.lg,

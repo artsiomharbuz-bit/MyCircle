@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthedMutation as useMutation } from '../lib/auth';
-import { ConvexError } from 'convex/values';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { Logo } from '../components/Logo';
 import { useAuth } from '../lib/auth';
 import { gradientPalette as GRADIENTS } from '../../../theme';
@@ -34,7 +33,7 @@ export function OnboardingPage() {
       });
       navigate('/');
     } catch (err) {
-      setError(err instanceof ConvexError ? String(err.data) : 'Something went wrong.');
+      setError(err instanceof Error ? err.message : 'Something went wrong.');
     } finally {
       setBusy(false);
     }

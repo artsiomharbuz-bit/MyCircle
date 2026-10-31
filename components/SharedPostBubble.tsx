@@ -3,8 +3,8 @@ import Text from './AppText';
 import { useAuthedQuery as useQuery } from '../SessionContext';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { PlayIcon } from '@hugeicons/core-free-icons';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 

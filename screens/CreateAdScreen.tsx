@@ -22,15 +22,15 @@ import {
   PlayIcon,
   Video01Icon,
 } from '@hugeicons/core-free-icons';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, textToolColors, typography } from '../theme';
 import { AdKind, adDailyPrice, formatUsd } from '../adPricing';
 import { compressMedia, compressPhoto } from '../compressMedia';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
-import { cityNameForCoordinates, coordinatesForCity, normalizeLocationName } from '../convex/lib/locations';
+import { uploadFileToSupabase } from '../uploadMedia';
+import { cityNameForCoordinates, coordinatesForCity, normalizeLocationName } from '../supabase/locations';
 import { useTranslation } from 'react-i18next';
 
 const RADIUS_PRESETS_KM = [10, 25, 50, 100];
@@ -226,7 +226,7 @@ export default function CreateAdScreen({
       if (mediaUri) {
         const compressed = await compressMedia(mediaUri, mediaType);
         const uploadUrl = await generateUploadUrl({ userId });
-        mediaStorageId = (await uploadFileToConvex(
+        mediaStorageId = (await uploadFileToSupabase(
           compressed,
           uploadUrl,
           mediaType === 'photo' ? 'image/jpeg' : 'video/mp4'
@@ -237,7 +237,7 @@ export default function CreateAdScreen({
       if (displayAvatarUri) {
         const compressed = await compressPhoto(displayAvatarUri);
         const uploadUrl = await generateUploadUrl({ userId });
-        displayAvatarStorageId = (await uploadFileToConvex(
+        displayAvatarStorageId = (await uploadFileToSupabase(
           compressed,
           uploadUrl,
           'image/jpeg'

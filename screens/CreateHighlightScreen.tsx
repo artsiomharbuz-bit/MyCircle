@@ -17,11 +17,11 @@ import {
 import TextField from '../components/TextField';
 import PrimaryButton from '../components/PrimaryButton';
 import Skeleton from '../components/Skeleton';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { compressMedia, compressPhoto } from '../compressMedia';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 
@@ -110,13 +110,13 @@ export default function CreateHighlightScreen({
     try {
       const compressedCover = await compressPhoto(coverUri);
       const coverUploadUrl = await generateUploadUrl({ userId });
-      const coverStorageId = await uploadFileToConvex(compressedCover, coverUploadUrl, 'image/jpeg');
+      const coverStorageId = await uploadFileToSupabase(compressedCover, coverUploadUrl, 'image/jpeg');
 
       const uploadedItems: { mediaStorageId: Id<'_storage'>; mediaType: 'photo' | 'video' }[] = [];
       for (const media of pickedMedia) {
         const compressed = await compressMedia(media.uri, media.mediaType);
         const uploadUrl = await generateUploadUrl({ userId });
-        const storageId = await uploadFileToConvex(
+        const storageId = await uploadFileToSupabase(
           compressed,
           uploadUrl,
           media.mediaType === 'photo' ? 'image/jpeg' : 'video/mp4'

@@ -3,11 +3,11 @@ import { FlatList, Image, Pressable, ScrollView, StyleSheet, View } from 'react-
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'convex/react';
+import { useBackendQuery as useQuery } from '../SessionContext';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { Comment01Icon, FavouriteIcon, Image02Icon } from '@hugeicons/core-free-icons';
-import { api } from '../convex/_generated/api';
+import { api } from '../supabase/api';
 import ClipTile from '../components/ClipTile';
 import ClipTileSkeleton from '../components/ClipTileSkeleton';
 import PostCardSkeleton from '../components/PostCardSkeleton';

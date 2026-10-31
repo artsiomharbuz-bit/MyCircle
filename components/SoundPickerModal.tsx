@@ -13,8 +13,8 @@ import {
   Search01Icon,
 } from '@hugeicons/core-free-icons';
 import SoundAudioLayer from './SoundAudioLayer';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 

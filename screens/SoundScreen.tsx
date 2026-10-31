@@ -32,10 +32,10 @@ import PrimaryButton from '../components/PrimaryButton';
 import ProfileContentSwitch, { ProfileContentTab } from '../components/ProfileContentSwitch';
 import Skeleton from '../components/Skeleton';
 import SoundReportModal from '../components/SoundReportModal';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space } from '../theme';
 
@@ -385,7 +385,7 @@ function EditSoundModal({
       let pictureStorageId: Id<'_storage'> | undefined;
       if (pictureUri) {
         const uploadUrl = await generateUploadUrl({ userId });
-        pictureStorageId = (await uploadFileToConvex(
+        pictureStorageId = (await uploadFileToSupabase(
           pictureUri,
           uploadUrl,
           'image/jpeg'

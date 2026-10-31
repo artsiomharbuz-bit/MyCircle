@@ -7,8 +7,8 @@ import { PlusSignIcon } from '@hugeicons/core-free-icons';
 import AnimatedPressable from './AnimatedPressable';
 import Skeleton from './Skeleton';
 import StoryRing from './StoryRing';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, space, typography } from '../theme';
 

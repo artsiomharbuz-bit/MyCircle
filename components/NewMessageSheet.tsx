@@ -5,8 +5,8 @@ import { useAuthedQuery as useQuery } from '../SessionContext';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { SentIcon } from '@hugeicons/core-free-icons';
 import AnimatedPressable from './AnimatedPressable';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 

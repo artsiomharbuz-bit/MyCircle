@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../lib/auth';
-import { api } from '../../../convex/_generated/api';
-import type { Id } from '../../../convex/_generated/dataModel';
+import { api } from '../../../supabase/api';
+import type { Id } from '../../../supabase/types';
 import { UserX } from 'lucide-react';
 import { AppShell } from '../layout/AppShell';
 import { Avatar } from '../components/Avatar';

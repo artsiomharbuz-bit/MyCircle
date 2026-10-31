@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Easing, Image, Pressable, StyleSheet, View } from 'react-native';
 import Text from './AppText';
 import { HugeiconsIcon, IconSvgElement } from '@hugeicons/react-native';
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
@@ -23,11 +23,13 @@ export default function CollapsibleHeader({
   leftBadgeCount,
   rightIcons,
   brand = false,
+  showBrandMark = true,
   titleBadgeCount,
   pinned = false,
   altTitle,
   altSwitchAt = 60,
   onPressAlt,
+  brandSubtitle,
 }: {
   title: string;
   scrollY: Animated.Value;
@@ -38,6 +40,7 @@ export default function CollapsibleHeader({
   rightIcons?: HeaderIcon[];
   // Renders the title as the MyCircle wordmark (Unbounded Medium).
   brand?: boolean;
+  showBrandMark?: boolean;
   // Red count bubble beside the title (e.g. unread messages on another
   // logged-in account).
   titleBadgeCount?: number;
@@ -50,6 +53,7 @@ export default function CollapsibleHeader({
   altTitle?: string;
   altSwitchAt?: number;
   onPressAlt?: () => void;
+  brandSubtitle?: string;
 }) {
   const { colors, scheme } = useAppTheme();
   const styles = createStyles(colors, scheme);
@@ -122,7 +126,30 @@ export default function CollapsibleHeader({
     return () => scrollY.removeListener(id);
   }, [scrollY, translateY, pinned]);
 
-  const titleNode = (
+  const titleNode = brand ? (
+    <View style={styles.brandRow}>
+      {showBrandMark && (
+        <Image
+          source={scheme === 'light' ? require('../assets/circlemark-light.png') : require('../assets/circlemark-dark.png')}
+          style={styles.brandMark}
+        />
+      )}
+      <View style={styles.brandCopy}>
+        <Text style={[styles.title, styles.brandTitle]} numberOfLines={1}>{title}</Text>
+        {altTitle && onPressAlt ? (
+          <Pressable style={styles.brandSelector} onPress={onPressAlt} hitSlop={8}>
+            <Text style={styles.brandSubtitle} numberOfLines={1}>{altTitle}</Text>
+            <HugeiconsIcon icon={ArrowDown01Icon} size={13} color={colors.textMuted} />
+          </Pressable>
+        ) : brandSubtitle ? (
+          <Text style={styles.brandSubtitle} numberOfLines={1}>{brandSubtitle}</Text>
+        ) : null}
+      </View>
+      {!!titleBadgeCount && titleBadgeCount > 0 && (
+        <Badge count={titleBadgeCount} style={styles.titleBadge} />
+      )}
+    </View>
+  ) : (
     <View style={styles.titleWrap}>
       <Animated.View
         style={altTitle ? { opacity: baseOpacity, transform: [{ translateY: baseShift }] } : undefined}
@@ -151,7 +178,7 @@ export default function CollapsibleHeader({
   return (
     <Animated.View style={[styles.header, { transform: [{ translateY }] }]}>
 
-      {leftIcon && (
+      {leftIcon && !brand && (
         <AnimatedPressable style={styles.leftButton} onPress={onPressLeft}>
           <HugeiconsIcon icon={leftIcon} size={20} color={colors.white} />
           <Badge count={leftBadgeCount} />
@@ -164,15 +191,15 @@ export default function CollapsibleHeader({
         titleNode
       )}
 
-      {rightIcons && rightIcons.length > 0 && (
+      {(rightIcons?.length || (brand && leftIcon)) ? (
         <View style={styles.rightButtonsRow}>
-          {rightIcons.map(({ icon, onPress }, index) => (
+          {[...(rightIcons ?? []), ...(brand && leftIcon && onPressLeft ? [{ icon: leftIcon, onPress: onPressLeft }] : [])].map(({ icon, onPress }, index) => (
             <AnimatedPressable key={index} style={styles.rightButton} onPress={onPress}>
               <HugeiconsIcon icon={icon} size={20} color={colors.white} />
             </AnimatedPressable>
           ))}
         </View>
-      )}
+      ) : null}
     </Animated.View>
   );
 }
@@ -185,9 +212,10 @@ const createStyles = (colors: Colors, scheme: 'light' | 'dark') =>
       left: 0,
       right: 0,
       height: HEADER_HEIGHT,
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'flex-end',
       paddingBottom: 14,
+      paddingHorizontal: space.lg,
       overflow: 'hidden',
       backgroundColor: colors.background,
       zIndex: 10,
@@ -228,6 +256,33 @@ const createStyles = (colors: Colors, scheme: 'light' | 'dark') =>
       fontWeight: '500',
       fontSize: 18,
       letterSpacing: 0,
+    },
+    brandRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: space.sm,
+      maxWidth: '72%',
+    },
+    brandMark: {
+      width: 30,
+      height: 30,
+    },
+    brandCopy: {
+      flexShrink: 1,
+      justifyContent: 'center',
+    },
+    brandSelector: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 3,
+      marginTop: 1,
+      alignSelf: 'flex-start',
+    },
+    brandSubtitle: {
+      ...typography.caption,
+      color: colors.textMuted,
+      fontSize: 11,
+      lineHeight: 14,
     },
     leftButton: {
       position: 'absolute',

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { useAuthedQuery as useQuery } from '../lib/auth';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { AppShell } from '../layout/AppShell';
 import { Composer } from '../components/Composer';
 import { PostCard } from '../components/PostCard';

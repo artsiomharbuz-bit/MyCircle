@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../lib/auth';
 import { Heart, X } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
-import type { Id } from '../../../convex/_generated/dataModel';
+import { api } from '../../../supabase/api';
+import type { Id } from '../../../supabase/types';
 import { useAuth } from '../lib/auth';
 import { Avatar } from './Avatar';
 import { formatRelativeTime } from '../../../formatRelativeTime';

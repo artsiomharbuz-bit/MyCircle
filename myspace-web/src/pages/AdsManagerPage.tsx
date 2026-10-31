@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../lib/auth';
-import { ConvexError } from 'convex/values';
+import { useQuery, useMutation } from '../lib/auth';
 import { ImagePlus, Megaphone } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
-import type { Id } from '../../../convex/_generated/dataModel';
+import { api } from '../../../supabase/api';
+import { uploadFileToSupabase } from '../lib/mediaUpload';
+import type { Id } from '../../../supabase/types';
 import { AppShell } from '../layout/AppShell';
 import { Skeleton } from '../components/Skeleton';
 import { useAuth } from '../lib/auth';
@@ -59,8 +59,7 @@ export function AdsManagerPage() {
     setError(null);
     try {
       const uploadUrl = await generateUploadUrl({ userId });
-      const res = await fetch(uploadUrl, { method: 'POST', headers: { 'Content-Type': file.type }, body: file });
-      const { storageId } = await res.json();
+      const storageId = await uploadFileToSupabase(file, uploadUrl, file.type);
       await createAd({
         creatorId: userId,
         kind,
@@ -77,7 +76,7 @@ export function AdsManagerPage() {
       setLink('');
       pickFile(null);
     } catch (err) {
-      setError(err instanceof ConvexError ? String(err.data) : 'Failed to create ad.');
+      setError(err instanceof Error ? err.message : 'Failed to create ad.');
     } finally {
       setSubmitting(false);
     }

@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAction } from 'convex/react';
-import { ConvexError } from 'convex/values';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { Logo } from '../components/Logo';
-import { useAuth } from '../lib/auth';
+import { useAuth, useBackendAction as useAction } from '../lib/auth';
 
 export function LoginPage() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -33,7 +31,7 @@ export function LoginPage() {
         navigate('/onboarding');
       }
     } catch (err) {
-      setError(err instanceof ConvexError ? String(err.data) : 'Something went wrong.');
+      setError(err instanceof Error ? err.message : 'Something went wrong.');
     } finally {
       setBusy(false);
     }

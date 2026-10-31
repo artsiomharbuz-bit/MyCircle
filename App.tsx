@@ -19,14 +19,14 @@ import { Pacifico_400Regular } from '@expo-google-fonts/pacifico';
 import { Anton_400Regular } from '@expo-google-fonts/anton';
 import { ArchivoBlack_400Regular } from '@expo-google-fonts/archivo-black';
 import { Platform } from 'react-native';
-import { ConvexProvider, ConvexReactClient, useMutation, useQuery } from 'convex/react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import StatusBarBackdrop from './components/StatusBarBackdrop';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
-import { api } from './convex/_generated/api';
-import { Id } from './convex/_generated/dataModel';
+import { api } from './supabase/api';
+import { Id } from './supabase/types';
 import {
   getStoredUserId,
   setStoredUserId,
@@ -37,7 +37,7 @@ import {
   setStoredSessionToken,
   clearStoredSessionToken,
 } from './session';
-import { SessionTokenProvider } from './SessionContext';
+import { SessionTokenProvider, useBackendAction, useBackendQuery } from './SessionContext';
 import './i18n';
 import { LanguageProvider } from './LanguageContext';
 import WelcomeScreen from './screens/WelcomeScreen';
@@ -138,18 +138,6 @@ async function registerForPushNotificationsAsync(): Promise<string | null> {
     return null;
   }
 }
-
-// The client's own logger prints every failed call with console.error, which
-// pops up as a red "Convex error" box in a dev build even when the app already
-// handles it. Route it to console.log instead (still visible in Metro).
-const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL as string, {
-  logger: {
-    log: (...args: unknown[]) => console.log(...args),
-    warn: (...args: unknown[]) => console.log(...args),
-    error: (...args: unknown[]) => console.log(...args),
-    logVerbose: () => {},
-  },
-});
 
 type Screen =
   | 'welcome'
@@ -355,7 +343,7 @@ function AppContent() {
     getSavedAccountIds().then((ids) => setSavedAccountIds(ids as Id<'users'>[]));
   }, []);
 
-  const restoredUser = useQuery(
+  const restoredUser = useBackendQuery(
     api.users.getUser,
     storedUserId ? { userId: storedUserId } : 'skip'
   );
@@ -396,15 +384,15 @@ function AppContent() {
   }, [storedUserId, restoredUser, routed]);
 
   // Ban state, active restrictions and any unacknowledged warning or strike.
-  const accountStatus = useQuery(
+  const accountStatus = useBackendQuery(
     api.moderation.getAccountStatus,
     userId && sessionToken ? { userId, sessionToken } : 'skip'
   );
-  const unreadMessageCount = useQuery(
+  const unreadMessageCount = useBackendQuery(
     api.messages.getUnreadMessageCount,
     userId && sessionToken ? { userId, sessionToken } : 'skip'
   );
-  const recordSession = useMutation(api.moderation.recordSession);
+  const recordSession = useBackendAction(api.moderation.recordSession);
 
   // Policy/terms heads-up: shown once per logged-in session whenever their
   // text has changed since this device last acknowledged (see legal.ts).
@@ -449,13 +437,13 @@ function AppContent() {
     };
   }, [userId, sessionToken]);
 
-  const deleteSession = useMutation(api.users.deleteSession);
+  const deleteSession = useBackendAction(api.users.deleteSession);
 
   // The current device's Expo push token, once obtained — held so logOut can
   // unregister it (see below) without asking the OS for it again.
   const pushTokenRef = useRef<string | null>(null);
-  const registerPushToken = useMutation(api.push.registerPushToken);
-  const unregisterPushToken = useMutation(api.push.unregisterPushToken);
+  const registerPushToken = useBackendAction(api.push.registerPushToken);
+  const unregisterPushToken = useBackendAction(api.push.unregisterPushToken);
 
   useEffect(() => {
     if (!userId || !sessionToken) return;
@@ -793,6 +781,8 @@ function AppContent() {
           userId={userId as Id<'users'>}
           scrollY={navScrollY}
           onOpenUser={(targetId) => pushProfileFrame({ screen: 'profile', userId: targetId })}
+          onOpenNotifications={() => setScreen('notifications')}
+          onOpenDiscoverFriends={() => setScreen('discover-friends')}
         />
       );
 
@@ -1309,8 +1299,8 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <LanguageProvider>
         <ThemeProvider>
-          <KeyboardProvider>
-            <ConvexProvider client={convex}>
+          <StatusBarBackdrop>
+            <KeyboardProvider>
               <AppErrorBoundary
                 onReset={(sessionExpired) => {
                   if (sessionExpired) clearStoredUserId();
@@ -1320,9 +1310,9 @@ export default function App() {
                 <AppContent key={appInstance} />
               </AppErrorBoundary>
               <ErrorToast />
-            </ConvexProvider>
-            <SplashOverlay />
-          </KeyboardProvider>
+              <SplashOverlay />
+            </KeyboardProvider>
+          </StatusBarBackdrop>
         </ThemeProvider>
       </LanguageProvider>
     </GestureHandlerRootView>

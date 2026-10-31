@@ -23,11 +23,11 @@ import NativePopup from '../components/nativepopup';
 import SoundAudioLayer from '../components/SoundAudioLayer';
 import SoundPickerModal, { PickedSound } from '../components/SoundPickerModal';
 import TextToolEditor from '../components/TextToolEditor';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { compressMedia } from '../compressMedia';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 // Deliberately not theme-reactive — this is a full-bleed photo/video editing
 // canvas, always dark chrome regardless of the app's own light/dark setting.
 import { mediaColors as colors, radius, space, textToolFonts, TextToolFont, typography } from '../theme';
@@ -269,7 +269,7 @@ export default function EditMediaScreen({
 
       const compressedUri = await compressMedia(storyMedia.uri, storyMedia.type);
       const uploadUrl = await generateUploadUrl({ userId });
-      const storageId = await uploadFileToConvex(
+      const storageId = await uploadFileToSupabase(
         compressedUri,
         uploadUrl,
         storyMedia.type === 'photo' ? 'image/jpeg' : 'video/mp4'

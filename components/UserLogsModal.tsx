@@ -19,8 +19,8 @@ import {
 } from '@hugeicons/core-free-icons';
 import FormModal from './FormModal';
 import { VERIFIED_BLACK } from './VerifiedBadge';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useModToken } from '../modSession';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, space, typography } from '../theme';

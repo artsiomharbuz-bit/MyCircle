@@ -5,8 +5,8 @@ import ActionSheet, { SheetAction } from './ActionSheet';
 import ConfirmActionModal from './ConfirmActionModal';
 import PostReportModal from './PostReportModal';
 import { useModGate } from './ModGate';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 
 // The three-dot menu on a post or clip. Everyone gets Report; moderators also
 // get a direct takedown, which goes through the password gate and a

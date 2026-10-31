@@ -13,8 +13,8 @@ import PostTextOverlay from '../components/PostTextOverlay';
 import RemixFrame from '../components/RemixFrame';
 import VerifiedBadge from '../components/VerifiedBadge';
 import CircleLabel from '../components/CircleLabel';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 // Deliberately not theme-reactive — full-screen story stage, always dark
 // regardless of the app's own light/dark setting, same as Clips.
 import { mediaColors as colors } from '../theme';

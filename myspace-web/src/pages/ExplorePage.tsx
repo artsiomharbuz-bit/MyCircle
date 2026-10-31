@@ -1,6 +1,6 @@
 import { Compass } from 'lucide-react';
 import { useAuthedQuery as useQuery } from '../lib/auth';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { AppShell } from '../layout/AppShell';
 import { PostCard } from '../components/PostCard';
 import { AdCard } from '../components/AdCard';
@@ -13,7 +13,7 @@ export function ExplorePage() {
   const feed = useQuery(api.posts.listExploreFeed, userId ? { viewerId: userId } : 'skip');
   const ads = useQuery(api.ads.listActiveAdsForSurface, userId ? { viewerId: userId, kind: 'post' } : 'skip');
 
-  const entries = feed ? interleaveAds(feed, ads ?? []) : [];
+  const entries = feed ? interleaveAds<any, any>(feed, ads ?? []) : [];
 
   return (
     <AppShell>

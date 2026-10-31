@@ -16,9 +16,9 @@ import EmptyState from '../components/EmptyState';
 import FadeInView from '../components/FadeInView';
 import PostCard, { Post } from '../components/PostCard';
 import PostCardSkeleton from '../components/PostCardSkeleton';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
-import { IMPRESSIONS } from '../convex/lib/rankingConfig';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
+import { IMPRESSIONS } from '../supabase/rankingConfig';
 import { interleaveAds, FeedEntry } from '../interleaveAds';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, space } from '../theme';
@@ -105,7 +105,7 @@ export default function ExploreScreen({
   const feed = useMemo(
     () =>
       visiblePosts
-        ? interleaveAds(visiblePosts, feedFilter === 'for-you' ? postAds ?? [] : [])
+        ? interleaveAds<any, any>(visiblePosts ?? [], feedFilter === 'for-you' ? postAds ?? [] : [])
         : undefined,
     [visiblePosts, postAds, feedFilter]
   );
@@ -256,6 +256,7 @@ export default function ExploreScreen({
       <CollapsibleHeader
         title={t('common:tabExplore')}
         brand
+        showBrandMark={false}
         altTitle={feedFilter === 'for-you' ? t('forYouLabel') : t('friendsLabel')}
         altSwitchAt={34}
         onPressAlt={() => setDropdownOpen(true)}

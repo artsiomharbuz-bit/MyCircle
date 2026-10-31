@@ -11,8 +11,8 @@ import Skeleton from '../components/Skeleton';
 import TextField from '../components/TextField';
 import PrimaryButton from '../components/PrimaryButton';
 import EmptyState from '../components/EmptyState';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, space, typography } from '../theme';
 

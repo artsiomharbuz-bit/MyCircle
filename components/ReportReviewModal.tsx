@@ -15,8 +15,8 @@ import {
 import ConfirmActionModal from './ConfirmActionModal';
 import PostTextOverlay from './PostTextOverlay';
 import PrimaryButton from './PrimaryButton';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useModToken } from '../modSession';
 import { formatRelativeTime } from '../formatRelativeTime';
 import { useAppTheme } from '../ThemeContext';

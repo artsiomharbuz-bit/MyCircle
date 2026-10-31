@@ -18,8 +18,8 @@ import FadeInView from '../components/FadeInView';
 import PostCard from '../components/PostCard';
 import PostCardSkeleton from '../components/PostCardSkeleton';
 import Skeleton from '../components/Skeleton';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 

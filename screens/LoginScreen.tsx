@@ -3,11 +3,11 @@ import { ActivityIndicator, Animated, Pressable, StyleSheet, View } from 'react-
 import Text from '../components/AppText';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
-import { useAction } from 'convex/react';
+import { useBackendAction as useAction } from '../SessionContext';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ViewIcon, ViewOffSlashIcon } from '@hugeicons/core-free-icons';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import BackButton from '../components/BackButton';
 import Logo from '../components/Logo';
 import TextField from '../components/TextField';

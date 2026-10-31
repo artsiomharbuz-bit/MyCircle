@@ -13,9 +13,9 @@ import {
 } from '@hugeicons/core-free-icons';
 import FormModal from './FormModal';
 import PrimaryButton from './PrimaryButton';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
-import { uploadFileToConvex } from '../uploadMedia';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
+import { uploadFileToSupabase } from '../uploadMedia';
 import { readableError } from '../errorMessage';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
@@ -81,7 +81,7 @@ export default function ProfileReportModal({
       let evidenceStorageId: Id<'_storage'> | undefined;
       if (evidenceUri) {
         const uploadUrl = await generateUploadUrl({ userId: reporterId });
-        evidenceStorageId = (await uploadFileToConvex(
+        evidenceStorageId = (await uploadFileToSupabase(
           evidenceUri,
           uploadUrl,
           'image/jpeg'

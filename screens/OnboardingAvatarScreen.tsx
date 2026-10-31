@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuthedMutation as useMutation } from '../SessionContext';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import BackButton from '../components/BackButton';
 import PrimaryButton from '../components/PrimaryButton';
 import useEntranceAnimation from '../useEntranceAnimation';
@@ -16,7 +16,7 @@ import { Colors, randomGradient, space } from '../theme';
 import { compressPhoto } from '../compressMedia';
 import { getDeviceLanguage } from '../deviceInfo';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 
 export default function OnboardingAvatarScreen({
   userId,
@@ -39,6 +39,7 @@ export default function OnboardingAvatarScreen({
   const { t } = useTranslation(['onboardingAvatar', 'common']);
   const [gradient, setGradient] = useState(randomGradient);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [bannerUri, setBannerUri] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,17 +68,45 @@ export default function OnboardingAvatarScreen({
     }
   };
 
+  const pickBanner = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      setError(t('photoAccessDeniedError'));
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [3, 1],
+      quality: 0.8,
+    });
+    if (!result.canceled) setBannerUri(result.assets[0].uri);
+  };
+
   const finish = async () => {
     setError(null);
     setFinishing(true);
     try {
       let avatarStorageId: Id<'_storage'> | undefined;
+      let bannerStorageId: Id<'_storage'> | undefined;
 
       if (photoUri) {
         setUploading(true);
         const compressedUri = await compressPhoto(photoUri);
         const uploadUrl = await generateUploadUrl({ userId });
-        avatarStorageId = (await uploadFileToConvex(
+        avatarStorageId = (await uploadFileToSupabase(
+          compressedUri,
+          uploadUrl,
+          'image/jpeg'
+        )) as Id<'_storage'>;
+        setUploading(false);
+      }
+
+      if (bannerUri) {
+        setUploading(true);
+        const compressedUri = await compressPhoto(bannerUri);
+        const uploadUrl = await generateUploadUrl({ userId });
+        bannerStorageId = (await uploadFileToSupabase(
           compressedUri,
           uploadUrl,
           'image/jpeg'
@@ -92,6 +121,7 @@ export default function OnboardingAvatarScreen({
         dateOfBirth,
         avatarGradient: gradient,
         avatarStorageId,
+        bannerStorageId,
         deviceLanguage: getDeviceLanguage(),
       });
 
@@ -134,6 +164,23 @@ export default function OnboardingAvatarScreen({
             {t('hint')}
           </Text>
         )}
+
+        <Pressable style={styles.bannerPicker} onPress={pickBanner} disabled={finishing}>
+          {bannerUri ? (
+            <Image source={{ uri: bannerUri }} style={styles.bannerPreview} />
+          ) : (
+            <View style={styles.bannerPlaceholder}>
+              <Text variant="footnote" style={styles.bannerPlaceholderText}>
+                {t('addBannerLabel', { defaultValue: 'Add a profile banner (optional)' })}
+              </Text>
+            </View>
+          )}
+          {bannerUri && (
+            <Text variant="footnote" style={styles.bannerChangeText}>
+              {t('changeBannerLabel', { defaultValue: 'Change banner' })}
+            </Text>
+          )}
+        </Pressable>
 
         {!!error && (
           <Text variant="footnote" style={styles.error}>
@@ -209,6 +256,35 @@ const createStyles = (colors: Colors) =>
     },
     hint: {
       marginTop: space.sm,
+      color: colors.textMuted,
+    },
+    bannerPicker: {
+      width: '100%',
+      marginTop: space.lg,
+      alignItems: 'center',
+    },
+    bannerPreview: {
+      width: '100%',
+      height: 78,
+      borderRadius: 12,
+      backgroundColor: colors.inputBackground,
+    },
+    bannerPlaceholder: {
+      width: '100%',
+      height: 58,
+      borderRadius: 12,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderStyle: 'dashed',
+      borderColor: colors.border,
+      backgroundColor: colors.inputBackground,
+    },
+    bannerPlaceholderText: {
+      color: colors.textMuted,
+    },
+    bannerChangeText: {
+      marginTop: space.xxs,
       color: colors.textMuted,
     },
     error: {

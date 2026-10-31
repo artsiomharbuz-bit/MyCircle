@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react';
 import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '../lib/auth';
 import { Plus } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
-import type { Id } from '../../../convex/_generated/dataModel';
+import { api } from '../../../supabase/api';
+import { uploadFileToSupabase } from '../lib/mediaUpload';
+import type { Id } from '../../../supabase/types';
 import { useAuth } from '../lib/auth';
 import { Avatar } from './Avatar';
 import { StoryRing } from './StoryRing';
@@ -27,8 +28,7 @@ export function StoriesRow() {
     setUploading(true);
     try {
       const uploadUrl = await generateUploadUrl({ userId });
-      const res = await fetch(uploadUrl, { method: 'POST', headers: { 'Content-Type': file.type }, body: file });
-      const { storageId } = await res.json();
+      const storageId = await uploadFileToSupabase(file, uploadUrl, file.type);
       const mediaType = file.type.startsWith('video') ? 'video' : 'photo';
       await createStory({ authorId: userId, mediaStorageId: storageId, mediaType });
     } finally {

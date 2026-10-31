@@ -1,14 +1,9 @@
-import { createContext, ReactNode, useContext } from 'react';
-import { useMutation, useQuery } from 'convex/react';
-import type { FunctionReference, OptionalRestArgs } from 'convex/server';
-import type { OptionalRestArgsOrSkip } from 'convex/react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { reportError } from './errorReporting';
+import { supabase } from './lib/supabase';
 
-// Holds the active account's session token (see convex/lib/session.ts on
-// the backend) so useAuthedQuery/useAuthedMutation below can attach it to
-// every call automatically, instead of every one of this app's screens
-// having to thread it through by hand.
 const SessionTokenContext = createContext<string | null>(null);
+const queryListeners = new Set<() => void>();
 
 export function SessionTokenProvider({
   sessionToken,
@@ -17,51 +12,103 @@ export function SessionTokenProvider({
   sessionToken: string | null;
   children: ReactNode;
 }) {
-  return (
-    <SessionTokenContext.Provider value={sessionToken}>{children}</SessionTokenContext.Provider>
-  );
+  return <SessionTokenContext.Provider value={sessionToken}>{children}</SessionTokenContext.Provider>;
 }
 
-// Drop-in replacement for convex/react's useQuery that adds `sessionToken`
-// to the args for you. Pass 'skip' exactly like useQuery; also auto-skips
-// (rather than sending a call the server will reject) while there's no
-// session yet, e.g. during the brief window before login/register resolves.
-export function useAuthedQuery<Query extends FunctionReference<'query'>>(
-  query: Query,
-  args: Query['_args'] extends Record<string, unknown>
-    ? Omit<Query['_args'], 'sessionToken'> | 'skip'
-    : 'skip'
+function getFunctionName(reference: any): string {
+  const name = typeof reference === 'string' ? reference : reference?.[Symbol.for('functionName')];
+  if (typeof name !== 'string') throw new Error('Invalid Supabase function reference.');
+  return name;
+}
+
+export async function callSupabaseFunction(
+  reference: any,
+  args: Record<string, unknown> = {},
+  invalidate = false
 ) {
-  const sessionToken = useContext(SessionTokenContext);
-  const finalArgs =
-    args === 'skip' || !sessionToken
-      ? 'skip'
-      : { ...(args as Record<string, unknown>), sessionToken };
-  return useQuery(query, ...([finalArgs] as unknown as OptionalRestArgsOrSkip<Query>));
+  const name = getFunctionName(reference);
+  const { data, error } = await supabase.functions.invoke('api', { body: { name, args } });
+  if (error) throw new Error(error.message || 'Could not reach the Supabase backend.');
+  if (data?.error) throw new Error(String(data.error));
+  if (invalidate) for (const listener of queryListeners) listener();
+  return data?.data;
 }
 
-// Drop-in replacement for convex/react's useMutation — call the returned
-// function with the same args as always (no sessionToken needed at the call
-// site), and it gets merged in before the request goes out.
-export function useAuthedMutation<Mutation extends FunctionReference<'mutation'>>(mutation: Mutation) {
+export function useBackendQuery(query: any, args: any) {
+  const name = getFunctionName(query);
   const sessionToken = useContext(SessionTokenContext);
-  const run = useMutation(mutation);
-  return (args: Omit<Mutation['_args'], 'sessionToken'>) => {
-    if (!sessionToken) {
-      // Same as any failed call: callers that handle errors get a rejection,
-      // and if nobody does, it shows as a friendly toast (see below).
-      const failed = Promise.reject(new Error('Please log in again.'));
-      return watchUnhandled(failed) as ReturnType<typeof run>;
+  const argsKey = args === 'skip' ? 'skip' : JSON.stringify(args ?? {});
+  const [value, setValue] = useState<any>(undefined);
+  const [refreshIndex, setRefreshIndex] = useState(0);
+
+  useEffect(() => {
+    if (argsKey === 'skip') {
+      setValue(undefined);
+      return;
     }
-    return watchUnhandled(run({ ...args, sessionToken } as OptionalRestArgs<Mutation>[0]));
-  };
+    let live = true;
+    setValue(undefined);
+    const actualArgs = JSON.parse(argsKey);
+    if (sessionToken && actualArgs && typeof actualArgs === 'object') {
+      actualArgs.sessionToken = sessionToken;
+    }
+    callSupabaseFunction(name, actualArgs)
+      .then((result) => { if (live) setValue(result); })
+      .catch((error) => { if (live) { setValue(undefined); reportError(error); } });
+    return () => { live = false; };
+  }, [name, argsKey, sessionToken, refreshIndex]);
+
+  useEffect(() => {
+    if (argsKey === 'skip') return;
+    const refresh = () => setRefreshIndex((index) => index + 1);
+    queryListeners.add(refresh);
+    const livePoll = /(?:messages\.(?:listMessages|listConversations|getUnreadMessageCount|getOtherLastRead)|groups\.listGroupMessages|typing\.|notifications\.getUnseenNotificationCount)/.test(name);
+    const timer = livePoll ? setInterval(refresh, 2500) : null;
+    return () => {
+      queryListeners.delete(refresh);
+      if (timer) clearInterval(timer);
+    };
+  }, [argsKey, name]);
+
+  return value;
 }
 
-// A rejected backend call whose caller never attaches a handler would land as
-// an unhandled promise rejection (the red "Convex error" screen in a dev
-// build). This leaves the promise exactly as the caller expects — anyone who
-// awaits or .catch()es it still gets the rejection — but when nobody does, the
-// failure is shown as a toast instead.
+export function useAuthedQuery(query: any, args: any) {
+  const sessionToken = useContext(SessionTokenContext);
+  return useBackendQuery(query, args === 'skip' || !sessionToken ? 'skip' : args);
+}
+
+export function useAuthedMutation(mutation: any) {
+  const sessionToken = useContext(SessionTokenContext);
+  const name = getFunctionName(mutation);
+  return useCallback((args: Record<string, any> = {}) => {
+    if (!sessionToken) {
+      return watchUnhandled(Promise.reject(new Error('Please log in again.')));
+    }
+    return watchUnhandled(callSupabaseFunction(name, { ...args, sessionToken }, true));
+  }, [name, sessionToken]);
+}
+
+export function useBackendAction(action: any) {
+  const name = getFunctionName(action);
+  return useCallback((args: Record<string, any> = {}) =>
+    watchUnhandled(callSupabaseFunction(name, args, true)), [name]);
+}
+
+export const useAction = useBackendAction;
+export function useMutation<T = any>(mutation: T) {
+  return useAuthedMutation(mutation);
+}
+export function useQuery<T = any>(query: T, args: any): any {
+  return useBackendQuery(query, args);
+}
+
+export function useSupabaseBackend() {
+  return useMemo(() => ({
+    query: (reference: any, args: Record<string, any>) => callSupabaseFunction(reference, args),
+  }), []);
+}
+
 function watchUnhandled<T>(promise: Promise<T>): Promise<T> {
   let handled = false;
   const originalThen = promise.then.bind(promise);
@@ -72,10 +119,8 @@ function watchUnhandled<T>(promise: Promise<T>): Promise<T> {
     handled = true;
     return originalThen(onFulfilled, onRejected);
   };
-  originalThen(undefined, (err: unknown) => {
-    setTimeout(() => {
-      if (!handled) reportError(err);
-    }, 0);
+  originalThen(undefined, (error: unknown) => {
+    setTimeout(() => { if (!handled) reportError(error); }, 0);
   });
   return promise;
 }

@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import {
   ArrowLeft01Icon,
+  ArrowDown01Icon,
   BookmarkIcon,
   FavouriteIcon,
   MoreHorizontalIcon,
@@ -23,7 +24,6 @@ import AccountSwitcherSheet from '../components/AccountSwitcherSheet';
 import ProfileOptionsSheet from '../components/ProfileOptionsSheet';
 import VerifiedBadge from '../components/VerifiedBadge';
 import { NAV_BAR_HEIGHT } from '../components/BottomNavBar';
-import CollapsibleHeader, { HEADER_HEIGHT } from '../components/CollapsibleHeader';
 import FadeInView from '../components/FadeInView';
 import FollowButton from '../components/FollowButton';
 import FollowCounts from '../components/FollowCounts';
@@ -35,18 +35,21 @@ import PostCard from '../components/PostCard';
 import PostCardSkeleton from '../components/PostCardSkeleton';
 import Skeleton from '../components/Skeleton';
 import StoryRing from '../components/StoryRing';
+import Badge from '../components/Badge';
 import TextField from '../components/TextField';
 import EmptyState from '../components/EmptyState';
 import HighlightsRow from '../components/HighlightsRow';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
+import { compressPhoto } from '../compressMedia';
 import useOtherAccountUnread from '../useOtherAccountUnread';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 
-const AVATAR_SIZE = 84;
+const AVATAR_SIZE = 92;
+const PROFILE_BANNER_HEIGHT = 192;
 const ACTION_HEIGHT = 32;
 const GRID_GAP = 3;
 const GRID_COLUMNS = 3;
@@ -155,7 +158,7 @@ export default function ProfileScreen({
     <View style={styles.container}>
       <Animated.ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.scrollContent, styles.scrollContentWithHeader]}
+        contentContainerStyle={styles.scrollContent}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
           useNativeDriver: true,
         })}
@@ -176,31 +179,85 @@ export default function ProfileScreen({
             <PostCardSkeleton />
           </>
         ) : user && user.isBlocked ? (
-          <FadeInView style={[styles.header, styles.blockedHeader]}>
-            <View style={[styles.avatar, styles.blockedAvatar]}>
-              <HugeiconsIcon icon={UserBlock01Icon} size={34} color={colors.textMuted} />
-            </View>
-            <Text style={[styles.name, styles.blockedTitle]}>
-              {user.blockedByMe ? t('blockedByMeTitle') : t('blockedOtherTitle')}
-            </Text>
-            <Text style={styles.blockedBody}>
-              {user.blockedByMe
-                ? t('blockedByMeBody', { username: user.username ?? t('thisAccountFallback') })
-                : t('blockedOtherBody')}
-            </Text>
-            {user.blockedByMe && (
-              <Pressable
-                style={styles.unblockButton}
-                onPress={() => unblockUser({ blockerId: currentUserId, blockedId: viewedUserId })}
-              >
-                <Text style={styles.unblockButtonText}>{t('common:unblock')}</Text>
+          <View style={styles.blockedProfile}>
+            <View style={styles.profileToolbar}>
+              <Pressable style={styles.bannerAction} onPress={onBack} accessibilityLabel={t('common:back')}>
+                <HugeiconsIcon icon={ArrowLeft01Icon} size={20} color={colors.white} />
               </Pressable>
-            )}
-          </FadeInView>
+            </View>
+            <FadeInView style={[styles.header, styles.blockedHeader]}>
+              <View style={[styles.avatar, styles.blockedAvatar]}>
+                <HugeiconsIcon icon={UserBlock01Icon} size={34} color={colors.textMuted} />
+              </View>
+              <Text style={[styles.name, styles.blockedTitle]}>
+                {user.blockedByMe ? t('blockedByMeTitle') : t('blockedOtherTitle')}
+              </Text>
+              <Text style={styles.blockedBody}>
+                {user.blockedByMe
+                  ? t('blockedByMeBody', { username: user.username ?? t('thisAccountFallback') })
+                  : t('blockedOtherBody')}
+              </Text>
+              {user.blockedByMe && (
+                <Pressable
+                  style={styles.unblockButton}
+                  onPress={() => unblockUser({ blockerId: currentUserId, blockedId: viewedUserId })}
+                >
+                  <Text style={styles.unblockButtonText}>{t('common:unblock')}</Text>
+                </Pressable>
+              )}
+            </FadeInView>
+          </View>
         ) : user ? (
           <>
-            <FadeInView style={styles.header}>
-              <View style={styles.headerTop}>
+            <View style={styles.profileBanner}>
+              {user.bannerUrl ? (
+                <>
+                  <Image source={{ uri: user.bannerUrl }} style={styles.bannerImage} />
+                  <LinearGradient
+                    pointerEvents="none"
+                    colors={scheme === 'dark'
+                      ? ['rgba(0,0,0,0.22)', 'rgba(0,0,0,0.1)', colors.background]
+                      : ['rgba(255,255,255,0.08)', 'rgba(255,255,255,0.12)', colors.background]}
+                    locations={[0, 0.72, 1]}
+                    style={styles.bannerFade}
+                  />
+                </>
+              ) : null}
+              <View style={styles.profileToolbar}>
+                {!isSelf && (
+                  <Pressable style={styles.bannerAction} onPress={onBack} accessibilityLabel={t('common:back')}>
+                    <HugeiconsIcon icon={ArrowLeft01Icon} size={20} color={colors.white} />
+                  </Pressable>
+                )}
+                <View style={styles.toolbarSpacer} />
+                {isSelf ? (
+                  <>
+                    <Pressable style={styles.bannerAction} onPress={() => setSwitcherVisible(true)} accessibilityLabel={t('switchAccountButton')}>
+                      <HugeiconsIcon icon={ArrowDown01Icon} size={19} color={colors.white} />
+                      <Badge count={otherUnreadTotal} />
+                    </Pressable>
+                    <Pressable style={styles.bannerAction} onPress={onOpenSettings} accessibilityLabel="Settings">
+                      <HugeiconsIcon icon={Settings02Icon} size={20} color={colors.white} />
+                    </Pressable>
+                  </>
+                ) : (
+                  <>
+                    <Pressable
+                      style={styles.bannerAction}
+                      onPress={() => Share.share({ message: user.username
+                        ? t('shareMessageWithUsername', { username: user.username })
+                        : t('shareMessageWithName', { name: user.name ?? t('thisProfileFallback') }) })}
+                      accessibilityLabel={t('shareProfileButton')}
+                    >
+                      <HugeiconsIcon icon={Share08Icon} size={19} color={colors.white} />
+                    </Pressable>
+                    <Pressable style={styles.bannerAction} onPress={() => setOptionsVisible(true)} accessibilityLabel="More options">
+                      <HugeiconsIcon icon={MoreHorizontalIcon} size={20} color={colors.white} />
+                    </Pressable>
+                  </>
+                )}
+              </View>
+              <View style={styles.bannerIdentity}>
                 <Pressable
                   disabled={!hasStory}
                   onPress={() => onOpenStory(viewedUserId)}
@@ -223,21 +280,33 @@ export default function ProfileScreen({
                   </StoryRing>
                 </Pressable>
 
-                <View style={styles.headerTopText}>
-                  <View style={styles.nameRow}>
+                <View style={styles.bannerIdentityText}>
+                  <Pressable
+                    style={styles.nameRow}
+                    onPress={() => isSelf && setSwitcherVisible(true)}
+                    disabled={!isSelf}
+                    accessibilityRole={isSelf ? 'button' : undefined}
+                    accessibilityLabel={isSelf ? t('switchAccountButton') : undefined}
+                  >
                     <Text style={styles.name} numberOfLines={1}>{user.name}</Text>
                     <VerifiedBadge verified={user.isVerified} size={18} />
-                  </View>
-
-                  <FollowCounts
-                    posts={posts?.length ?? 0}
-                    followers={counts?.followers ?? 0}
-                    following={counts?.following ?? 0}
-                    onPressFollowers={onOpenFollowers}
-                    onPressFollowing={onOpenFollowing}
-                  />
+                  </Pressable>
+                  <Text style={styles.bannerUsername} numberOfLines={1}>@{user.username ?? ''}</Text>
                 </View>
               </View>
+            </View>
+
+            <View style={styles.profileStats}>
+              <FollowCounts
+                posts={posts?.length ?? 0}
+                followers={counts?.followers ?? 0}
+                following={counts?.following ?? 0}
+                onPressFollowers={onOpenFollowers}
+                onPressFollowing={onOpenFollowing}
+              />
+            </View>
+
+            <FadeInView style={styles.profileDetails}>
 
               {!!user.bio && <Text style={styles.bio}>{user.bio}</Text>}
               {(!!user.pronouns || !!user.link) && (
@@ -357,20 +426,6 @@ export default function ProfileScreen({
         ) : null}
       </Animated.ScrollView>
 
-      <CollapsibleHeader
-        title={user?.username ? `@${user.username}` : ''}
-        scrollY={scrollY}
-        onPressTitle={isSelf ? () => setSwitcherVisible(true) : undefined}
-        titleBadgeCount={isSelf ? otherUnreadTotal : undefined}
-        leftIcon={isSelf ? undefined : ArrowLeft01Icon}
-        onPressLeft={isSelf ? undefined : onBack}
-        rightIcons={
-          isSelf
-            ? [{ icon: Settings02Icon, onPress: onOpenSettings }]
-            : [{ icon: MoreHorizontalIcon, onPress: () => setOptionsVisible(true) }]
-        }
-      />
-
       {isSelf && (
         <AccountSwitcherSheet
           visible={switcherVisible}
@@ -404,6 +459,7 @@ export default function ProfileScreen({
           currentName={user.name ?? ''}
           currentUsername={user.username ?? ''}
           currentAvatarUrl={user.avatarUrl}
+          currentBannerUrl={user.bannerUrl ?? null}
           currentBio={user.bio ?? ''}
           currentPronouns={user.pronouns ?? ''}
           currentLink={user.link ?? ''}
@@ -425,6 +481,7 @@ function EditProfileModal({
   currentName,
   currentUsername,
   currentAvatarUrl,
+  currentBannerUrl,
   currentBio,
   currentPronouns,
   currentLink,
@@ -435,6 +492,7 @@ function EditProfileModal({
   currentName: string;
   currentUsername: string;
   currentAvatarUrl: string | null;
+  currentBannerUrl: string | null;
   currentBio: string;
   currentPronouns: string;
   currentLink: string;
@@ -453,6 +511,8 @@ function EditProfileModal({
   const [pronouns, setPronouns] = useState(currentPronouns);
   const [link, setLink] = useState(currentLink);
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
+  const [bannerUri, setBannerUri] = useState<string | null>(null);
+  const [removeBanner, setRemoveBanner] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -465,6 +525,8 @@ function EditProfileModal({
     setPronouns(currentPronouns);
     setLink(currentLink);
     setAvatarUri(null);
+    setBannerUri(null);
+    setRemoveBanner(false);
     setError('');
   }, [visible, currentName, currentUsername, currentBio, currentPronouns, currentLink]);
 
@@ -507,16 +569,44 @@ function EditProfileModal({
     if (!result.canceled) setAvatarUri(result.assets[0].uri);
   };
 
+  const pickBanner = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      setError(t('photoAccessDeniedError'));
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [3, 1],
+      quality: 0.85,
+    });
+    if (!result.canceled) {
+      setBannerUri(result.assets[0].uri);
+      setRemoveBanner(false);
+    }
+  };
+
   const save = async () => {
     if (!canSave || submitting) return;
     setSubmitting(true);
     setError('');
     try {
       let avatarStorageId: Id<'_storage'> | undefined;
+      let bannerStorageId: Id<'_storage'> | undefined;
       if (avatarUri) {
         const uploadUrl = await generateUploadUrl({ userId });
-        avatarStorageId = (await uploadFileToConvex(
+        avatarStorageId = (await uploadFileToSupabase(
           avatarUri,
+          uploadUrl,
+          'image/jpeg'
+        )) as Id<'_storage'>;
+      }
+      if (bannerUri) {
+        const compressedUri = await compressPhoto(bannerUri);
+        const uploadUrl = await generateUploadUrl({ userId });
+        bannerStorageId = (await uploadFileToSupabase(
+          compressedUri,
           uploadUrl,
           'image/jpeg'
         )) as Id<'_storage'>;
@@ -526,6 +616,8 @@ function EditProfileModal({
         name: name.trim(),
         username: debouncedUsername,
         avatarStorageId,
+        bannerStorageId,
+        clearBanner: removeBanner,
         bio,
         pronouns,
         link,
@@ -561,6 +653,33 @@ function EditProfileModal({
           <HugeiconsIcon icon={PencilEdit01Icon} size={12} color="#ffffff" />
         </View>
       </Pressable>
+
+      {(bannerUri || currentBannerUrl) && !removeBanner ? (
+        <Image source={{ uri: bannerUri ?? currentBannerUrl ?? undefined }} style={styles.editBannerPreview} />
+      ) : (
+        <View style={styles.editBannerPlaceholder}>
+          <Text variant="footnote" style={styles.editBannerPlaceholderText}>
+            {t('addBannerLabel', { defaultValue: 'Add a profile banner (optional)' })}
+          </Text>
+        </View>
+      )}
+      <View style={styles.editBannerActions}>
+        <Pressable onPress={pickBanner} style={styles.editBannerAction}>
+          <Text style={styles.editBannerActionText}>
+            {t(bannerUri || currentBannerUrl ? 'changeBannerLabel' : 'addBannerAction', {
+              defaultValue: bannerUri || currentBannerUrl ? 'Change banner' : 'Add banner',
+            })}
+          </Text>
+        </Pressable>
+        {!!(bannerUri || currentBannerUrl) && (
+          <Pressable
+            onPress={() => { setBannerUri(null); setRemoveBanner(true); }}
+            style={styles.editBannerAction}
+          >
+            <Text style={styles.editBannerActionText}>{t('removeBannerLabel', { defaultValue: 'Remove' })}</Text>
+          </Pressable>
+        )}
+      </View>
 
       <View style={styles.editFieldGroup}>
         <TextField placeholder={t('namePlaceholder')} value={name} onChangeText={setName} maxLength={40} />
@@ -672,11 +791,82 @@ const createStyles = (colors: Colors) =>
     flex: 1,
   },
   scrollContent: {
-    paddingTop: space.xxl,
+    paddingTop: 0,
     paddingBottom: NAV_BAR_HEIGHT + space.xl,
   },
-  scrollContentWithHeader: {
-    paddingTop: HEADER_HEIGHT + space.md,
+  profileBanner: {
+    width: SCREEN_WIDTH,
+    height: PROFILE_BANNER_HEIGHT,
+    marginBottom: 0,
+    paddingHorizontal: space.xl,
+    paddingTop: 80,
+    paddingBottom: 0,
+    backgroundColor: colors.background,
+  },
+  bannerImage: {
+    ...StyleSheet.absoluteFill,
+    width: SCREEN_WIDTH,
+    height: PROFILE_BANNER_HEIGHT,
+    resizeMode: 'cover',
+  },
+  bannerFade: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: PROFILE_BANNER_HEIGHT + 120,
+  },
+  profileStats: {
+    paddingHorizontal: space.xl,
+    marginBottom: space.md,
+  },
+  profileToolbar: {
+    position: 'absolute',
+    top: 40,
+    left: space.lg,
+    right: space.lg,
+    zIndex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.xs,
+  },
+  toolbarSpacer: {
+    flex: 1,
+  },
+  bannerAction: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.24)',
+  },
+  bannerIdentity: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    marginBottom: space.md,
+    zIndex: 1,
+  },
+  bannerIdentityText: {
+    flex: 1,
+    justifyContent: 'center',
+    gap: 2,
+  },
+  bannerUsername: {
+    ...typography.caption,
+    color: colors.textMuted,
+    fontSize: 12,
+  },
+  blockedProfile: {
+    minHeight: 278,
+  },
+  blockedProfileToolbar: {
+    paddingTop: 42,
+  },
+  profileDetails: {
+    paddingHorizontal: space.xl,
+    marginBottom: space.lg,
   },
   header: {
     paddingHorizontal: space.xl,
@@ -846,6 +1036,41 @@ const createStyles = (colors: Colors) =>
     backgroundColor: colors.coral,
     borderWidth: 3,
     borderColor: colors.background,
+  },
+  editBannerPreview: {
+    width: '100%',
+    height: 82,
+    borderRadius: radius.md,
+    backgroundColor: colors.inputBackground,
+  },
+  editBannerPlaceholder: {
+    width: '100%',
+    height: 70,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: colors.border,
+    backgroundColor: colors.inputBackground,
+  },
+  editBannerPlaceholderText: {
+    color: colors.textMuted,
+  },
+  editBannerActions: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: space.lg,
+    marginTop: space.xs,
+    marginBottom: space.sm,
+  },
+  editBannerAction: {
+    paddingVertical: space.xxs,
+    paddingHorizontal: space.sm,
+  },
+  editBannerActionText: {
+    ...typography.footnote,
+    color: colors.coral,
   },
   bioInput: {
     height: 88,

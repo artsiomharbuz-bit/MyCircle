@@ -14,8 +14,8 @@ import ProfileReportModal from './ProfileReportModal';
 import UserInformationModal from './UserInformationModal';
 import UserLogsModal from './UserLogsModal';
 import { useModGate } from './ModGate';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 
 // The three-dot menu on a profile. Members see Report; moderators also get
 // Moderation, Information and Logs — each of which needs the session unlocked

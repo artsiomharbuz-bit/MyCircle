@@ -33,8 +33,8 @@ import { AppearanceMode, useAppTheme } from '../ThemeContext';
 import { useAppLanguage } from '../LanguageContext';
 import { SUPPORTED_LANGUAGES } from '../i18n';
 import { Colors, radius, space, typography } from '../theme';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import Badge from '../components/Badge';
 import StickerSheet from '../components/StickerSheet';
 

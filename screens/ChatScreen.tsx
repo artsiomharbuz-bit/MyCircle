@@ -20,14 +20,14 @@ import MediaMessageBubble from '../components/MediaMessageBubble';
 import MediaViewerModal, { ViewerMedia } from '../components/MediaViewerModal';
 import TypingDots from '../components/TypingDots';
 import VerifiedBadge from '../components/VerifiedBadge';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, gradientPalette, radius, space, typography } from '../theme';
 import { ChatBackground, getChatBackground } from '../chatBackgrounds';
 import { BubbleStyleKey, DEFAULT_BUBBLE_STYLE, bubbleStylePresets, getChatBubbleStyle } from '../chatBubbleStyle';
 import { compressMedia } from '../compressMedia';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 import StickerSheet from '../components/StickerSheet';
 import NativePopup from '../components/nativepopup';
 
@@ -198,7 +198,7 @@ export default function ChatScreen({
     try {
       const compressedUri = await compressMedia(asset.uri, mediaType);
       const uploadUrl = await generateUploadUrl({ userId: currentUserId });
-      const storageId = await uploadFileToConvex(
+      const storageId = await uploadFileToSupabase(
         compressedUri,
         uploadUrl,
         mediaType === 'photo' ? 'image/jpeg' : 'video/mp4'

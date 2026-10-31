@@ -1,81 +1,101 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { useMutation, useQuery } from 'convex/react';
-import type { FunctionReference, OptionalRestArgs } from 'convex/server';
-import type { OptionalRestArgsOrSkip } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { api } from '../../../supabase/api';
+import type { Id } from '../../../supabase/types';
+import { clearStoredSessionToken, clearStoredUserId, getStoredSessionToken, getStoredUserId, setStoredSessionToken, setStoredUserId } from './session';
 import { isSessionExpiredError, reportError } from './errors';
-import type { Id } from '../../../convex/_generated/dataModel';
-import {
-  clearStoredSessionToken,
-  clearStoredUserId,
-  getStoredSessionToken,
-  getStoredUserId,
-  setStoredSessionToken,
-  setStoredUserId,
-} from './session';
+import { supabase } from './supabaseClient';
 
 type AuthContextValue = {
   userId: Id<'users'> | null;
   sessionToken: string | null;
   isLoading: boolean;
-  user: ReturnType<typeof useQuery<typeof api.users.getUser>> | null | undefined;
+  user: any;
   signIn: (userId: string, sessionToken: string) => void;
   signOut: () => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+const queryListeners = new Set<() => void>();
+
+function functionName(ref: any): string {
+  const name = typeof ref === 'string' ? ref : ref?.[Symbol.for('functionName')];
+  if (typeof name !== 'string') throw new Error('Invalid Supabase function reference.');
+  return name;
+}
+
+export async function callBackend(ref: any, args: Record<string, unknown> = {}, invalidate = false) {
+  const { data, error } = await supabase.functions.invoke('api', { body: { name: functionName(ref), args } });
+  if (error) throw new Error(error.message || 'Could not reach the Supabase backend.');
+  if (data?.error) throw new Error(String(data.error));
+  if (invalidate) for (const listener of queryListeners) listener();
+  return data?.data;
+}
+
+function useBackendQuery(ref: any, args: any) {
+  const name = functionName(ref);
+  const argsKey = args === 'skip' ? 'skip' : JSON.stringify(args ?? {});
+  const [value, setValue] = useState<any>(undefined);
+  const [refresh, setRefresh] = useState(0);
+  useEffect(() => {
+    if (argsKey === 'skip') { setValue(undefined); return; }
+    let active = true;
+    const parsed = JSON.parse(argsKey);
+    setValue(undefined);
+    callBackend(name, parsed).then((data) => { if (active) setValue(data); }).catch((error) => {
+      if (!active) return;
+      setValue(undefined);
+      reportError(error);
+    });
+    return () => { active = false; };
+  }, [name, argsKey, refresh]);
+
+  useEffect(() => {
+    if (argsKey === 'skip') return;
+    const listener = () => setRefresh((n) => n + 1);
+    queryListeners.add(listener);
+    const poll = /messages\.|groups\.listGroupMessages|typing\.|notifications\./.test(name);
+    const timer = poll ? window.setInterval(listener, 3000) : undefined;
+    return () => { queryListeners.delete(listener); if (timer !== undefined) window.clearInterval(timer); };
+  }, [name, argsKey]);
+  return value;
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [userId, setUserId] = useState<Id<'users'> | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
-  const deleteSession = useMutation(api.users.deleteSession);
 
   useEffect(() => {
     const stored = getStoredUserId();
-    const storedToken = getStoredSessionToken();
-    // A userId saved from before session tokens existed (or a token that
-    // failed to persist) can't make any protected call — treat it as
-    // logged out rather than getting stuck skipping every query forever.
-    if (stored && storedToken) {
+    const token = getStoredSessionToken();
+    if (stored && token) {
       setUserId(stored as Id<'users'>);
-      setSessionToken(storedToken);
-    } else if (stored) {
-      clearStoredUserId();
-    }
+      setSessionToken(token);
+    } else if (stored) clearStoredUserId();
     setReady(true);
   }, []);
 
-  const user = useQuery(
-    api.users.getUser,
-    userId ? { userId, viewerId: userId, sessionToken: sessionToken ?? undefined } : 'skip'
-  );
+  const user = useBackendQuery(api.users.getUser,
+    userId ? { userId, viewerId: userId, sessionToken: sessionToken ?? undefined } : 'skip');
 
-  const value = useMemo<AuthContextValue>(
-    () => ({
-      userId,
-      sessionToken,
-      isLoading: !ready,
-      user,
-      signIn: (id: string, token: string) => {
-        setStoredUserId(id);
-        setStoredSessionToken(token);
-        setUserId(id as Id<'users'>);
-        setSessionToken(token);
-      },
-      signOut: () => {
-        if (sessionToken) {
-          deleteSession({ token: sessionToken });
-        }
-        clearStoredUserId();
-        clearStoredSessionToken();
-        setUserId(null);
-        setSessionToken(null);
-      },
-    }),
-    [userId, sessionToken, ready, user, deleteSession]
-  );
+  const signIn = useCallback((id: string, token: string) => {
+    setStoredUserId(id);
+    setStoredSessionToken(token);
+    setUserId(id as Id<'users'>);
+    setSessionToken(token);
+  }, []);
 
+  const signOut = useCallback(() => {
+    if (sessionToken) callBackend(api.users.deleteSession, { token: sessionToken }, true).catch(() => {});
+    clearStoredUserId();
+    clearStoredSessionToken();
+    setUserId(null);
+    setSessionToken(null);
+  }, [sessionToken]);
+
+  const value = useMemo<AuthContextValue>(() => ({
+    userId, sessionToken, isLoading: !ready, user, signIn, signOut,
+  }), [userId, sessionToken, ready, user, signIn, signOut]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
@@ -85,60 +105,43 @@ export function useAuth(): AuthContextValue {
   return ctx;
 }
 
-// Drop-in replacement for convex/react's useQuery that adds `sessionToken`
-// to the args for you — mirrors SessionContext.tsx's useAuthedQuery in the
-// mobile app. Pass 'skip' exactly like useQuery; also auto-skips while
-// there's no session yet.
-export function useAuthedQuery<Query extends FunctionReference<'query'>>(
-  query: Query,
-  args: Query['_args'] extends Record<string, unknown>
-    ? Omit<Query['_args'], 'sessionToken'> | 'skip'
-    : 'skip'
-) {
+export function useAuthedQuery(ref: any, args: any) {
   const { sessionToken } = useAuth();
-  const finalArgs =
-    args === 'skip' || !sessionToken
-      ? 'skip'
-      : { ...(args as Record<string, unknown>), sessionToken };
-  return useQuery(query, ...([finalArgs] as unknown as OptionalRestArgsOrSkip<Query>));
+  return useBackendQuery(ref, args === 'skip' || !sessionToken ? 'skip' : { ...args, sessionToken });
 }
 
-// Drop-in replacement for convex/react's useMutation — call the returned
-// function with the same args as always, sessionToken is merged in for you.
-// A rejected call whose caller never handles it would surface as an unhandled
-// rejection; this leaves the promise exactly as callers expect, but shows the
-// failure as a toast when nobody handled it (same as the app's SessionContext).
 function watchUnhandled<T>(promise: Promise<T>, onExpired: () => void): Promise<T> {
   let handled = false;
-  const originalThen = promise.then.bind(promise);
-  (promise as { then: unknown }).then = (
-    onFulfilled?: (value: T) => unknown,
-    onRejected?: (reason: unknown) => unknown
-  ) => {
+  const then = promise.then.bind(promise);
+  (promise as { then: unknown }).then = (ok?: (value: T) => unknown, fail?: (error: unknown) => unknown) => {
     handled = true;
-    return originalThen(onFulfilled, onRejected);
+    return then(ok, fail);
   };
-  originalThen(undefined, (err: unknown) => {
-    if (isSessionExpiredError(err)) onExpired();
-    setTimeout(() => {
-      if (!handled) reportError(err);
-    }, 0);
+  then(undefined, (error) => {
+    if (isSessionExpiredError(error)) onExpired();
+    setTimeout(() => { if (!handled) reportError(error); }, 0);
   });
   return promise;
 }
 
-// Drop-in replacement for convex/react's useMutation — call the returned
-// function with the same args as always, sessionToken is merged in for you.
-export function useAuthedMutation<Mutation extends FunctionReference<'mutation'>>(mutation: Mutation) {
+export function useAuthedMutation(ref: any) {
   const { sessionToken, signOut } = useAuth();
-  const run = useMutation(mutation);
-  return (args: Omit<Mutation['_args'], 'sessionToken'>) => {
-    if (!sessionToken) {
-      return watchUnhandled(Promise.reject(new Error('Please log in again.')), () => {}) as ReturnType<typeof run>;
-    }
-    return watchUnhandled(
-      run({ ...args, sessionToken } as OptionalRestArgs<Mutation>[0]),
-      () => signOut()
-    );
-  };
+  const name = functionName(ref);
+  return useCallback((args: Record<string, any> = {}) => {
+    if (!sessionToken) return watchUnhandled(Promise.reject(new Error('Please log in again.')), () => {});
+    return watchUnhandled(callBackend(name, { ...args, sessionToken }, true), signOut);
+  }, [name, sessionToken, signOut]);
+}
+
+export function useBackendAction(ref: any) {
+  const name = functionName(ref);
+  return useCallback((args: Record<string, any> = {}) => callBackend(name, args, true), [name]);
+}
+
+export const useAction = useBackendAction;
+export function useMutation<T = any>(mutation: T) {
+  return useAuthedMutation(mutation);
+}
+export function useQuery<T = any>(query: T, args: any): any {
+  return useBackendQuery(query, args);
 }

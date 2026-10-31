@@ -18,8 +18,8 @@ import FormModal from './FormModal';
 import NativePopup from './nativepopup';
 import PrimaryButton from './PrimaryButton';
 import { VERIFIED_BLACK } from './VerifiedBadge';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useModToken } from '../modSession';
 import {
   DURATIONS,

@@ -1,8 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { useAuthedQuery as useQuery } from '../lib/auth';
 import { BadgeCheck, FileX } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
-import type { Id } from '../../../convex/_generated/dataModel';
+import { api } from '../../../supabase/api';
+import type { Id } from '../../../supabase/types';
 import { AppShell } from '../layout/AppShell';
 import { PostCard } from '../components/PostCard';
 import { PostCardSkeleton } from '../components/Skeleton';

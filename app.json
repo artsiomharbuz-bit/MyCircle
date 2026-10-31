@@ -17,7 +17,11 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.MyCircle"
+      "package": "com.anonymous.MyCircle",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -27,12 +31,12 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/splash-icon.png",
-          "imageWidth": 288,
+          "image": "./assets/circlemark-light.png",
+          "imageWidth": 120,
           "resizeMode": "contain",
           "backgroundColor": "#FFFFFF",
           "dark": {
-            "image": "./assets/splash-icon.png",
+            "image": "./assets/circlemark-dark.png",
             "backgroundColor": "#000000"
           }
         }
@@ -42,6 +46,18 @@
       "expo-camera",
       "expo-video",
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "47c0a102-5be2-4dfc-80d8-64f0d062653b"
+      }
+    },
+    "owner": "softruno",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/47c0a102-5be2-4dfc-80d8-64f0d062653b"
+    }
   }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Dimensions, Modal, PanResponder, Pressable, StatusBar, StyleSheet, View } from 'react-native';
 import CommentsPanel from './CommentsPanel';
-import { Id } from '../convex/_generated/dataModel';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space } from '../theme';
 

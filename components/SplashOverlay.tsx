@@ -8,16 +8,13 @@ const INTRO_MS = 520;
 const HOLD_MS = 900;
 const FADE_MS = 350;
 
-// The mark is drawn from a 176dp square whose white shape is ~140dp wide —
-// the same size and position as the native launch splash icon, so the
-// hand-off is seamless. From there the mark lifts a little above center while
-// the MyCircle wordmark fades in beneath it.
-const MARK_SIZE = 176;
-const LIFT = 34;
-const TEXT_TOP = MARK_SIZE / 2 + 22;
+// Keep the mark compact and place the wordmark below it for a cleaner launch.
+const MARK_SIZE = 120;
+const GROUP_HEIGHT = 202;
+const LIFT = 24;
+const TEXT_TOP = 164;
 
-// White background in light mode, black in dark mode; the coral/red gradient
-// outline is the same in both.
+// Keep the splash background matched to the current color scheme.
 export default function SplashOverlay() {
   const { scheme } = useAppTheme();
   const dark = scheme === 'dark';
@@ -65,7 +62,7 @@ export default function SplashOverlay() {
       ]}>
       <Animated.View style={[styles.group, { transform: [{ translateY: lift }] }]}>
         <Animated.Image
-          source={require('../assets/mycirclelogo.png')}
+          source={dark ? require('../assets/circlemark-dark.png') : require('../assets/circlemark-light.png')}
           resizeMode="contain"
           style={styles.mark}
         />
@@ -84,8 +81,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   group: {
-    width: MARK_SIZE,
-    height: MARK_SIZE,
+    width: 180,
+    height: GROUP_HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
   },

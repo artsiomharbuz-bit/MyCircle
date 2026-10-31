@@ -6,7 +6,7 @@ import { Flag02Icon } from '@hugeicons/core-free-icons';
 import ActionSheet, { SheetAction } from './ActionSheet';
 import PostReportModal from './PostReportModal';
 import VerifiedBadge from './VerifiedBadge';
-import { Id } from '../convex/_generated/dataModel';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 

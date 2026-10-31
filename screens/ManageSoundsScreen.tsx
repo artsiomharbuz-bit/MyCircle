@@ -19,10 +19,10 @@ import EmptyState from '../components/EmptyState';
 import FormModal from '../components/FormModal';
 import PrimaryButton from '../components/PrimaryButton';
 import Skeleton from '../components/Skeleton';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space } from '../theme';
 
@@ -94,7 +94,7 @@ export default function ManageSoundsScreen({
     setError('');
     try {
       const uploadUrl = await generateUploadUrl({ userId });
-      const audioStorageId = await uploadFileToConvex(
+      const audioStorageId = await uploadFileToSupabase(
         pendingSource.uri,
         uploadUrl,
         pendingSource.kind === 'file' ? pendingSource.mimeType : 'video/mp4'

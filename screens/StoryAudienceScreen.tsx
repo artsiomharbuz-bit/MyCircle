@@ -7,13 +7,13 @@ import { useAuthedQuery as useQuery, useAuthedMutation as useMutation } from '..
 import { HugeiconsIcon } from '@hugeicons/react-native';
 import { ArrowLeft01Icon } from '@hugeicons/core-free-icons';
 import PrimaryButton from '../components/PrimaryButton';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space, typography } from '../theme';
 import { compressMedia } from '../compressMedia';
 import { readableError } from '../errorMessage';
-import { uploadFileToConvex } from '../uploadMedia';
+import { uploadFileToSupabase } from '../uploadMedia';
 import useEntranceAnimation from '../useEntranceAnimation';
 import type { CapturedMedia } from './CameraScreen';
 import type { PersistedTextOverlay } from './EditMediaScreen';
@@ -60,7 +60,7 @@ export default function StoryAudienceScreen({
     try {
       const compressedUri = await compressMedia(media.uri, media.type);
       const uploadUrl = await generateUploadUrl({ userId });
-      const storageId = await uploadFileToConvex(
+      const storageId = await uploadFileToSupabase(
         compressedUri,
         uploadUrl,
         media.type === 'photo' ? 'image/jpeg' : 'video/mp4'

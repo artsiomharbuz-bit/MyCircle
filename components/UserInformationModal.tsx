@@ -12,8 +12,8 @@ import {
   Time04Icon,
 } from '@hugeicons/core-free-icons';
 import FormModal from './FormModal';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useModToken } from '../modSession';
 import { formatSanctionExpiry, formatTimeLeft, isSanctionActive, MAX_STRIKES } from '../moderationOptions';
 import { useAppTheme } from '../ThemeContext';

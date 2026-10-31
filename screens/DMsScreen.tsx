@@ -19,13 +19,14 @@ import GroupAvatarStack from '../components/GroupAvatarStack';
 import VerifiedBadge from '../components/VerifiedBadge';
 import { NAV_BAR_HEIGHT } from '../components/BottomNavBar';
 import { HEADER_HEIGHT } from '../components/CollapsibleHeader';
+import CollapsibleHeader from '../components/CollapsibleHeader';
 import EmptyState from '../components/EmptyState';
 import FadeInView from '../components/FadeInView';
 import NewMessageSheet from '../components/NewMessageSheet';
 import Skeleton from '../components/Skeleton';
 import Badge from '../components/Badge';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { useAppTheme } from '../ThemeContext';
 import { Colors, radius, space } from '../theme';
 
@@ -56,7 +57,7 @@ export default function DMsScreen({
   const conversations = useQuery(api.messages.listConversations, { userId });
   const groups = useQuery(api.groups.listMyGroups, { userId });
   const typingSenderIds = useQuery(api.typing.listTypingSenders, { userId });
-  const typingSet = new Set(typingSenderIds);
+  const typingSet = new Set(typingSenderIds ?? []);
   const followingIds = useQuery(api.follows.getFollowingIds, { followerId: userId });
   const hasFriends = (followingIds?.length ?? 0) > 0;
 
@@ -236,21 +237,17 @@ export default function DMsScreen({
         </FadeInView>
       )}
 
-      <View style={styles.header}>
-        <Text variant="h3" style={styles.title}>{t('title')}</Text>
-
-        <AnimatedPressable
-          style={styles.groupButton}
-          onPress={onOpenCreateGroup}
-          accessibilityLabel={t('createGroupLabel')}
-        >
-          <HugeiconsIcon icon={AddTeamIcon} size={19} color={colors.white} />
-        </AnimatedPressable>
-
-        <AnimatedPressable style={styles.editButton} onPress={() => setComposeVisible(true)}>
-          <HugeiconsIcon icon={Edit02Icon} size={20} color={colors.white} />
-        </AnimatedPressable>
-      </View>
+      <CollapsibleHeader
+        title={t('common:appName')}
+        brand
+        showBrandMark={false}
+        brandSubtitle={t('title')}
+        scrollY={scrollY}
+        rightIcons={[
+          { icon: AddTeamIcon, onPress: onOpenCreateGroup },
+          { icon: Edit02Icon, onPress: () => setComposeVisible(true) },
+        ]}
+      />
 
       <NewMessageSheet
         visible={composeVisible}

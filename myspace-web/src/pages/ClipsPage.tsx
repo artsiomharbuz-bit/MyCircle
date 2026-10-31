@@ -1,6 +1,6 @@
 import { useAuthedQuery as useQuery } from '../lib/auth';
 import { Clapperboard } from 'lucide-react';
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../supabase/api';
 import { AppShell } from '../layout/AppShell';
 import { PostCard } from '../components/PostCard';
 import { AdCard } from '../components/AdCard';
@@ -13,7 +13,7 @@ export function ClipsPage() {
   const clips = useQuery(api.posts.listClips, userId ? { viewerId: userId } : 'skip');
   const ads = useQuery(api.ads.listActiveAdsForSurface, userId ? { viewerId: userId, kind: 'clip' } : 'skip');
 
-  const entries = clips ? interleaveAds(clips, ads ?? []) : [];
+  const entries = clips ? interleaveAds<any, any>(clips, ads ?? []) : [];
 
   return (
     <AppShell>

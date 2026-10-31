@@ -17,8 +17,8 @@ import {
 } from '@hugeicons/core-free-icons';
 import AdPaymentSheet from '../components/AdPaymentSheet';
 import EmptyState from '../components/EmptyState';
-import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { api } from '../supabase/api';
+import { Id } from '../supabase/types';
 import { AD_KIND_LABEL } from '../adPricing';
 import { formatTimeLeft } from '../moderationOptions';
 import { useAppTheme } from '../ThemeContext';
